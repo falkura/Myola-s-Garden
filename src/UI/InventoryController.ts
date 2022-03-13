@@ -21,6 +21,9 @@ export class InventoryController extends PIXI.Container {
             this.itemCells.push(cell);
             cell.position.x = cell.width * i - Config.inventoryCellBorder * i;
             cell.position.y = Config.inventoryCellBorder / 2;
+            cell.addListener("click", () => {
+                this.choose(i);
+            });
             this.addChild(cell);
         }
     };
@@ -28,7 +31,7 @@ export class InventoryController extends PIXI.Container {
     insertItem = (drop: Drop): boolean => {
         for (const cell of this.itemCells) {
             if (cell.id && cell.id === drop.data.drop.id) {
-                cell.addItem();
+                cell.addItem(drop.data.drop.count);
                 return true;
             }
         }
@@ -42,5 +45,11 @@ export class InventoryController extends PIXI.Container {
 
         console.log("not enough space");
         return false;
+    };
+
+    choose = (i: number) => {
+        this.itemCells.forEach((cell, index) => {
+            cell.isActive = index === i;
+        });
     };
 }

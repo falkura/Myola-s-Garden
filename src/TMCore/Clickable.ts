@@ -1,7 +1,7 @@
 import { EVENTS } from "../Events";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
-import { iDescription, iPlantData, iRightClick } from "./TMModel";
+import { iPlantData, iRightClick } from "./TMModel";
 
 export interface iClickableEvents {
     left?: () => void;
@@ -11,9 +11,11 @@ export interface iClickableEvents {
 export class Clickable extends PIXI.Sprite {
     is_hovered = false;
     on_click?: () => void;
-    description: iDescription;
+    data: iPlantData;
+    additionalData = "";
     mapData: TiledMap;
     tileset: TileSet;
+    defaultScale = 1;
 
     constructor(
         data: iPlantData,
@@ -26,12 +28,7 @@ export class Clickable extends PIXI.Sprite {
 
         this.tileset = tileset;
         this.mapData = mapData;
-
-        this.description = {
-            title: data.name,
-            info: data.description,
-            rarity: data.rarity,
-        };
+        this.data = data;
 
         this.setupInteractivity(events);
     }
@@ -55,18 +52,22 @@ export class Clickable extends PIXI.Sprite {
         this.addListener("mouseupoutside", this.unpressEvent);
     };
 
-    setOnClick = (callback: () => void) => {
+    setOnClick = (callback: () => any) => {
         this.on_click = callback;
     };
 
     addOption = () => {};
     removeOption = () => {};
     changeOption = () => {};
-    update = () => {};
+
+    update = () => {
+        console.log(1);
+    };
 
     leftClickEvent = () => {
-        console.log(this.description.title);
-        this.scale.set(1);
+        console.log(this.data.name);
+        this.scale.set(this.defaultScale);
+
         if (this.on_click) {
             this.on_click();
         }
@@ -78,28 +79,30 @@ export class Clickable extends PIXI.Sprite {
     };
 
     unpressEvent = () => {
-        this.scale.set(1);
-        if (this.is_hovered) this.hoverEvent();
+        this.scale.set(this.defaultScale);
+        document.dispatchEvent(new Event(EVENTS.WAILA.Clean));
     };
 
     hoverEvent = () => {
         this.is_hovered = true;
-        this.scale.set(1.2);
+        this.scale.set(this.defaultScale * 1.2);
 
         document.dispatchEvent(
-            new CustomEvent<iDescription>(EVENTS.WAILA.Set, {
-                detail: {
-                    title: this.description.title,
-                    info: this.description.info,
-                    time: this.description.time,
-                },
-            })
+            new CustomEvent<{ data: iPlantData; time: string }>(
+                EVENTS.WAILA.Set,
+                {
+                    detail: {
+                        data: this.data,
+                        time: this.additionalData,
+                    },
+                }
+            )
         );
     };
 
     unhoverEvent = () => {
         this.is_hovered = false;
-        this.scale.set(1);
+        this.scale.set(this.defaultScale);
 
         document.dispatchEvent(new Event(EVENTS.WAILA.Clean));
     };

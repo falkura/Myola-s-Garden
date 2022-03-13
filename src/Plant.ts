@@ -5,6 +5,7 @@ import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { iPlantData } from "./TMCore/TMModel";
+import { formatTime } from "./Util";
 
 export class Plant extends Clickable {
     isGrown = false;
@@ -49,7 +50,7 @@ export class Plant extends Clickable {
 
         if (!this.isGrown) {
             if (time <= 0) {
-                this.description.time = "grown";
+                this.additionalData = "Grown!";
                 this.isGrown = true;
             } else {
                 const textureId =
@@ -60,11 +61,7 @@ export class Plant extends Clickable {
                     );
 
                 this.texture = this.animations[textureId - 1];
-
-                const date = new Date(time);
-                const sz = date.getSeconds() > 9 ? "" : "0";
-
-                this.description.time = `${date.getMinutes()}:${sz}${date.getSeconds()}`;
+                this.additionalData = `Time to collect: ${formatTime(time)}`;
             }
         } else {
             this.needUpdate = false;

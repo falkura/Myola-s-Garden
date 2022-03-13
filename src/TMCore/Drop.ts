@@ -15,6 +15,7 @@ export class Drop extends Clickable {
         );
 
         this.data = data;
+        this.additionalData = `Collectable`;
         this.mapData = mapData;
         this.mapData.drop.push(this);
 

@@ -1,11 +1,12 @@
 import anime from "animejs";
 import { Config } from "./Config";
+import { Clickable } from "./TMCore/Clickable";
 import TiledMap from "./TMCore/TiledMap";
-import { calculateCoordinate } from "./Util";
+import { calculateCoordinate, formatTime } from "./Util";
 
 export class SeedOption extends PIXI.Sprite {
     mapData: TiledMap;
-    sprites: PIXI.Sprite[] = [];
+    sprites: Clickable[] = [];
     is_shown = false;
     private current_anim?: anime.AnimeInstance;
 
@@ -87,28 +88,24 @@ export class SeedOption extends PIXI.Sprite {
 
             for (let i = 0; i < coords.length; i++) {
                 const plant = Config.plants_[i];
-                const texture = this.mapData.getTileset(plant.seed.tileset)!
-                    .textures[plant.seed.id];
-                const plate = new PIXI.Sprite(texture);
-                plate.anchor.set(0.5, 0.5);
-                plate.interactive = true;
-                plate.addListener("mouseover", () => {
-                    plate.scale.set(1.2);
-                });
-                plate.addListener("mouseout", () => plate.scale.set(1));
-                plate.addListener("mousedown", () => {
-                    // document.dispatchEvent(
-                    //     new CustomEvent<number>("seedChosen", {
-                    //         detail: seed.plant,
-                    //     })
-                    // );
-
+                const tileset = this.mapData.getTileset(plant.seed.tileset)!;
+                const item = new Clickable(
+                    plant,
+                    plant.seed.id,
+                    tileset,
+                    this.mapData
+                );
+                item.additionalData = `Grow Time: ${formatTime(
+                    plant.plant.growTime
+                )}`;
+                item.anchor.set(0.5, 0.5);
+                item.addListener("mousedown", () => {
                     resolve(i);
                 });
 
-                plate.position.set(coords[i].x, coords[i].y);
+                item.position.set(coords[i].x, coords[i].y);
 
-                this.sprites.push(plate);
+                this.sprites.push(item);
             }
 
             this.addChild(...this.sprites);

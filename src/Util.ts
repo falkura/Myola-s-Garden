@@ -93,3 +93,10 @@ export function calculateCoordinate(
     }
     return sectors;
 }
+
+export function formatTime(time: number): string {
+    const date = new Date(time);
+    const sz = date.getSeconds() > 9 ? "" : "0";
+
+    return `${date.getMinutes()}:${sz}${date.getSeconds()}`;
+}

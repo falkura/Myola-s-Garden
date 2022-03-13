@@ -117,6 +117,8 @@ export interface iPlantData {
 export interface iItemData {
     tileset: string;
     id: number;
+    price: number;
+    count: number;
 }
 export interface iPlantInfo {
     tileset: string;
@@ -174,13 +176,6 @@ export interface iTileData {
     i: number;
     x: number;
     y: number;
-}
-
-export interface iDescription {
-    title: string;
-    info?: string;
-    time?: string;
-    rarity?: Rarity;
 }
 
 export interface iRightClick {

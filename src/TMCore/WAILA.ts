@@ -8,12 +8,12 @@ export const enum Rarity {
 }
 
 import { EVENTS } from "../Events";
-import { iDescription } from "./TMModel";
+import { iPlantData } from "./TMModel";
 
 export class WAILA extends PIXI.Container {
     title: PIXI.Text;
     info: PIXI.Text;
-    time: PIXI.Text;
+    additionalData: PIXI.Text;
     border?: PIXI.Graphics;
     // mapData: TiledMap;
 
@@ -22,7 +22,7 @@ export class WAILA extends PIXI.Container {
         // this.mapData = mapData;
         this.title = new PIXI.Text("");
         this.info = new PIXI.Text("");
-        this.time = new PIXI.Text("");
+        this.additionalData = new PIXI.Text("");
         this.visible = false;
 
         document.addEventListener(EVENTS.WAILA.Set, this.setActive);
@@ -39,29 +39,25 @@ export class WAILA extends PIXI.Container {
         bg.addChild(this.title);
         this.info.position.y = 60;
         bg.addChild(this.info);
-        this.time.position.y = 30;
-        bg.addChild(this.time);
+        this.additionalData.position.y = 30;
+        bg.addChild(this.additionalData);
         this.addChild(bg);
     };
 
     setActive = (event: Event) => {
         this.visible = true;
-        const description = (event as CustomEvent<iDescription>).detail;
+        const detail = (
+            event as CustomEvent<{ data: iPlantData; time: string }>
+        ).detail;
 
-        this.title.text = description.title;
-
-        if (description.info) {
-            this.info.text = description.info;
-        }
-
-        if (description.time) {
-            this.time.text = description.time;
-        }
+        this.title.text = detail.data.name;
+        this.info.text = detail.data.description;
+        this.additionalData.text = detail.time;
     };
 
     cleanup = () => {
         this.title.text = "";
-        this.time.text = "";
+        this.additionalData.text = "";
         this.visible = false;
     };
 
