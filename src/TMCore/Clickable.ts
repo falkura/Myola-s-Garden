@@ -1,7 +1,7 @@
 import { EVENTS } from "../Events";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
-import { iDescription, iDrop, iPlant, iRightClick } from "./TMModel";
+import { iDescription, iPlantData, iRightClick } from "./TMModel";
 
 export interface iClickableEvents {
     left?: () => void;
@@ -13,16 +13,16 @@ export class Clickable extends PIXI.Sprite {
     on_click?: () => void;
     description: iDescription;
     mapData: TiledMap;
-    cm?: iDrop | iPlant; //ContextMenu;
     tileset: TileSet;
 
     constructor(
-        data: iDrop | iPlant,
+        data: iPlantData,
+        id: number,
         tileset: TileSet,
         mapData: TiledMap,
         events?: iClickableEvents
     ) {
-        super(tileset!.textures[data.id]);
+        super(tileset!.textures[id]);
 
         this.tileset = tileset;
         this.mapData = mapData;

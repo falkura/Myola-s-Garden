@@ -108,7 +108,7 @@ export default class CharakterController {
         this.elapsedTime += delta;
 
         this.map.plants.forEach((plant) => {
-            plant.update();
+            plant.plant.update();
         });
 
         if (char) {

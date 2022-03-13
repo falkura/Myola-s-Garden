@@ -31,7 +31,7 @@ export default class TiledMap extends PIXI.Container implements iTiledMap {
     collisionLayer?: CollisionLayer;
     source: iMapData;
 
-    plants: Plant[] = [];
+    plants: Array<{ time: number; plant: Plant }> = [];
 
     constructor(resourceId: string, app: PIXI.Application) {
         super();

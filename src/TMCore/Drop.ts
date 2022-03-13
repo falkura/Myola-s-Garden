@@ -1,13 +1,18 @@
 import { Clickable } from "./Clickable";
 import TiledMap from "./TiledMap";
-import { iDrop } from "./TMModel";
+import { iPlantData } from "./TMModel";
 
 export class Drop extends Clickable {
     mapData: TiledMap;
-    data: iDrop;
+    data: iPlantData;
 
-    constructor(data: iDrop, mapData: TiledMap) {
-        super(data, mapData.getTileset(data.tileset)!, mapData);
+    constructor(data: iPlantData, mapData: TiledMap) {
+        super(
+            data,
+            data.drop.id,
+            mapData.getTileset(data.drop.tileset)!,
+            mapData
+        );
 
         this.data = data;
         this.mapData = mapData;

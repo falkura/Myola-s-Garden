@@ -106,23 +106,23 @@ export interface iTiles {
     id: number;
 }
 
-export interface iPlant {
-    growTime: number;
-    drop: number;
-    tileset: string;
+export interface iPlantData {
+    plant: iPlantInfo;
+    seed: iItemData;
+    drop: iItemData;
     name: string;
     description: string;
-    id: number;
     rarity: Rarity;
-    animation?: number[];
 }
-
-export interface iDrop {
+export interface iItemData {
     tileset: string;
-    name: string;
-    description: string;
     id: number;
-    rarity: Rarity;
+}
+export interface iPlantInfo {
+    tileset: string;
+    id: number;
+    growTime: number;
+    animation: number[];
 }
 
 export interface iObjectGroup {

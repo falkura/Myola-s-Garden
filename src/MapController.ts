@@ -48,12 +48,12 @@ export class MapController {
             tile.setDirt(texture!);
         } else if (!tile.Plant) {
             this.se.position.set(tile.x, tile.y);
-            const seed = await this.se.drawOptions();
+            const plant = await this.se.drawOptions();
 
-            if (isNaN(seed)) {
+            if (isNaN(plant)) {
                 console.log("rejected");
             } else {
-                tile.setPlant(seed);
+                tile.setPlant(plant);
             }
         } else {
             console.log("dirt and plant exist");

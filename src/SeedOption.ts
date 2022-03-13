@@ -79,17 +79,16 @@ export class SeedOption extends PIXI.Sprite {
             document.addEventListener("mousedown", listener);
 
             const coords = calculateCoordinate(
-                Config.seeds.length,
+                Config.plants_.length,
                 this.mapData.source.tilewidth * 1.5,
                 0,
                 0
             );
 
             for (let i = 0; i < coords.length; i++) {
-                const seed = Config.seeds[i];
-                const texture = this.mapData.getTileset(seed.tileset)!.textures[
-                    seed.id
-                ];
+                const plant = Config.plants_[i];
+                const texture = this.mapData.getTileset(plant.seed.tileset)!
+                    .textures[plant.seed.id];
                 const plate = new PIXI.Sprite(texture);
                 plate.anchor.set(0.5, 0.5);
                 plate.interactive = true;
@@ -98,13 +97,13 @@ export class SeedOption extends PIXI.Sprite {
                 });
                 plate.addListener("mouseout", () => plate.scale.set(1));
                 plate.addListener("mousedown", () => {
-                    document.dispatchEvent(
-                        new CustomEvent<number>("seedChosen", {
-                            detail: seed.plant,
-                        })
-                    );
+                    // document.dispatchEvent(
+                    //     new CustomEvent<number>("seedChosen", {
+                    //         detail: seed.plant,
+                    //     })
+                    // );
 
-                    resolve(seed.plant);
+                    resolve(i);
                 });
 
                 plate.position.set(coords[i].x, coords[i].y);

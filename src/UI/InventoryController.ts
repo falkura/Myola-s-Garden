@@ -27,7 +27,7 @@ export class InventoryController extends PIXI.Container {
 
     insertItem = (drop: Drop): boolean => {
         for (const cell of this.itemCells) {
-            if (cell.id && cell.id === drop.data.id) {
+            if (cell.id && cell.id === drop.data.drop.id) {
                 cell.addItem();
                 return true;
             }

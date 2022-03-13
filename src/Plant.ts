@@ -4,7 +4,7 @@ import { Clickable } from "./TMCore/Clickable";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
-import { iDrop, iPlant } from "./TMCore/TMModel";
+import { iPlantData } from "./TMCore/TMModel";
 
 export class Plant extends Clickable {
     isGrown = false;
@@ -13,23 +13,23 @@ export class Plant extends Clickable {
     animations: PIXI.Texture[] = [];
     cell: Tile;
 
-    data: iPlant;
-    dropData: iDrop;
+    data: iPlantData;
 
     constructor(id: number, mapData: TiledMap, tile: Tile) {
         super(
-            Config.plants[id],
-            mapData.getTileset(Config.plants[id].tileset)!,
+            Config.plants_[id],
+            Config.plants_[id].plant.id,
+            mapData.getTileset(Config.plants_[id].plant.tileset)!,
             mapData
         );
-        this.data = Config.plants[id];
+        this.data = Config.plants_[id];
 
         this.cell = tile;
-        this.dropData = Config.drops[this.data.drop];
+        // this.dropData = Config.drops[this.data.drop];
 
-        if (this.data.animation) {
-            this.animations.push(this.tileset.textures[this.data.id]);
-            this.data.animation.forEach((anim) => {
+        if (this.data.plant.animation) {
+            this.animations.push(this.tileset.textures[this.data.plant.id]);
+            this.data.plant.animation.forEach((anim) => {
                 this.animations.push(this.tileset.textures[anim]);
             });
         }
@@ -39,13 +39,13 @@ export class Plant extends Clickable {
         }
 
         this.plantTime = new Date().getTime();
-        this.mapData.plants.push(this);
+        this.mapData.plants.push({ time: this.plantTime, plant: this });
     }
 
     update = () => {
         if (!this.needUpdate) return;
         const time =
-            this.data.growTime - (new Date().getTime() - this.plantTime);
+            this.data.plant.growTime - (new Date().getTime() - this.plantTime);
 
         if (!this.isGrown) {
             if (time <= 0) {
@@ -55,7 +55,8 @@ export class Plant extends Clickable {
                 const textureId =
                     this.animations.length -
                     Math.floor(
-                        time / (this.data.growTime / this.animations.length)
+                        time /
+                            (this.data.plant.growTime / this.animations.length)
                     );
 
                 this.texture = this.animations[textureId - 1];
@@ -80,7 +81,7 @@ export class Plant extends Clickable {
     };
 
     harvest = () => {
-        const sprite = new Drop(this.dropData, this.mapData);
+        const sprite = new Drop(this.data, this.mapData);
 
         sprite.zIndex = 3;
         sprite.anchor = this.anchor;
@@ -117,7 +118,12 @@ export class Plant extends Clickable {
     };
 
     cleanUp = () => {
-        this.mapData.plants.splice(this.mapData.plants.indexOf(this) - 1, 1);
+        this.mapData.plants.forEach((ob, i) => {
+            if (ob.time === this.plantTime) {
+                this.mapData.plants.splice(i, 1);
+                console.log("removed");
+            }
+        });
         this.cell.removeChild(this);
         this.cell.Plant = undefined;
 

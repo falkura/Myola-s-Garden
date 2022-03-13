@@ -92,7 +92,7 @@ export class InventoryCell extends PIXI.Container {
         this.addChild(this.countText);
     };
 
-    setItem = (data: Drop) => {
+    setItem = (item: Drop) => {
         this.cleanUp();
 
         this.interactive = true;
@@ -100,10 +100,10 @@ export class InventoryCell extends PIXI.Container {
 
         this.count = 1;
         this.countText!.text = String(this.count);
-        this.id = data.data.id;
-        this.name = data.data.name;
+        this.id = item.data.drop.id;
+        this.name = item.data.name;
 
-        this.sprite = new PIXI.Sprite(data.texture);
+        this.sprite = new PIXI.Sprite(item.texture);
         this.sprite.width = (this.width / 3) * 2;
         this.sprite.height = (this.height / 3) * 2;
         this.sprite.anchor.set(0.5);
