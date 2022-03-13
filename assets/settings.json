@@ -1,0 +1,11 @@
+{
+    "editor.codeActionsOnSave": {
+        "source.fixAll.eslint": true
+    },
+    "eslint.validate": [
+        "typescript"
+    ],
+    "files.eol": "\n",
+    "cmake.configureOnOpen": false,
+    "typescript.tsdk": "node_modules\\typescript\\lib"
+}
