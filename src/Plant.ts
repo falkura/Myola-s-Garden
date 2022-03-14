@@ -4,6 +4,7 @@ import { Clickable } from "./TMCore/Clickable";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
+import TileSet from "./TMCore/TileSet";
 import { iPlantData } from "./TMCore/TMModel";
 import { formatTime } from "./Util";
 
@@ -13,6 +14,7 @@ export class Plant extends Clickable {
     plantTime: number;
     animations: PIXI.Texture[] = [];
     cell: Tile;
+    tileset!: TileSet;
 
     data: iPlantData;
 
@@ -68,7 +70,7 @@ export class Plant extends Clickable {
             const filter = new PIXI.filters.ColorMatrixFilter();
             filter.saturate(0.5, true);
             this.filters = [filter];
-            this.setOnClick(this.harvest);
+            this.addPress(this.harvest);
         }
 
         if (this.is_hovered) {

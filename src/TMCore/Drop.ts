@@ -19,7 +19,7 @@ export class Drop extends Clickable {
         this.mapData = mapData;
         this.mapData.drop.push(this);
 
-        this.setOnClick(this.collect);
+        this.addPress(this.collect);
     }
 
     collect = () => {

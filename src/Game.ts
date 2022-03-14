@@ -21,6 +21,7 @@ export class Game extends Subject {
         this.add_event_listeners();
 
         this.on_resize();
+        setTimeout(() => this.draw_map(), 200);
     }
 
     draw_game = () => {

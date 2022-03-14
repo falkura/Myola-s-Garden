@@ -55,7 +55,9 @@ export default class CharakterController {
                         document.dispatchEvent(new Event(EVENTS.Seed.On));
                     }
                     break;
-
+                case "KeyI":
+                    document.dispatchEvent(new Event("si"));
+                    break;
                 default:
                     console.log(e.code);
                     break;

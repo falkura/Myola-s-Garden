@@ -13,7 +13,6 @@ import {
 import { ASSETS } from "../Assets";
 import ObjectLayer from "./ObjectLayer";
 import Character from "./Character";
-import Item from "./Item";
 import Loader from "./Loader";
 import { Config } from "../Config";
 import { CollisionLayer } from "./CollisionLayer";
@@ -23,7 +22,6 @@ import { Drop } from "./Drop";
 export default class TiledMap extends PIXI.Container implements iTiledMap {
     layers: Array<TileLayer | ObjectLayer> = [];
     tilesets: TileSet[] = [];
-    items: Item[] = [];
     drop: Drop[] = [];
     charakters: Character[] = [];
     app: PIXI.Application;

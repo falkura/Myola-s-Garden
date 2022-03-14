@@ -15,7 +15,7 @@ export class MenuUI extends PIXI.Container {
         this.app = app;
         this.createInterface();
 
-        this.test();
+        // this.test();
         this.add_event_listeners();
         this.on_resize();
     }

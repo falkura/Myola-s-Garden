@@ -8,6 +8,7 @@ import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
+import { List } from "./UI/List";
 
 export class MapController {
     map?: TiledMap;
@@ -17,12 +18,20 @@ export class MapController {
     inventory?: InventoryController;
     se!: SeedOption;
 
+    list!: List;
+
     constructor(app: PIXI.Application) {
         this.app = app;
         this.container = new PIXI.Container();
 
         this.addEventListeners();
     }
+
+    test = () => {
+        this.list = new List(this.map!, 10, 6);
+
+        this.container.addChild(this.list);
+    };
 
     addEventListeners = () => {
         document.addEventListener("wheel", this.onWheel);
@@ -89,7 +98,8 @@ export class MapController {
 
                         if (
                             Math.abs(tile._x - char!._x) > dist ||
-                            Math.abs(tile._y - char!._y) > dist
+                            Math.abs(tile._y - char!._y) > dist ||
+                            !tile.getProperty("canPlant")
                         ) {
                         } else {
                             tile.debugGraphics.visible = true;
@@ -121,6 +131,8 @@ export class MapController {
         this.se = new SeedOption(this.map!);
         this.se.zIndex = 5;
         this.map.addChild(this.se);
+
+        this.test();
     };
 
     removeMap = () => {};

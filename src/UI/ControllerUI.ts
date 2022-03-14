@@ -6,6 +6,7 @@ export class ControllerUI extends PIXI.Container {
     app: PIXI.Application;
     main_menu?: MenuUI;
     game_menu?: InGameUI;
+    WAILA: WAILA;
 
     constructor(app: PIXI.Application) {
         super();
@@ -13,7 +14,9 @@ export class ControllerUI extends PIXI.Container {
 
         this.init();
         this.add_event_listeners();
-        this.addChild(new WAILA());
+
+        this.WAILA = new WAILA();
+        this.addChild(this.WAILA);
 
         this.on_resize();
     }

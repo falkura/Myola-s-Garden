@@ -111,6 +111,13 @@ export class InventoryCell extends PIXI.Container {
         this.sprite.height = (this.height / 3) * 2;
         this.sprite.defaultScale = this.sprite.scale.x;
         this.sprite.anchor.set(0.5);
+        // anime({
+        //     target: this.sprite.position,
+        //     x: [item.x, this.bg!.width / 2],
+        //     y: [item.y, this.bg!.height / 2],
+        //     duration: 3000,
+        //     easing: "linear",
+        // });
         this.sprite.x = this.bg!.width / 2;
         this.sprite.y = this.bg!.height / 2;
         this.sprite.additionalData = `Price: ${this.sprite.data.drop.price} (${

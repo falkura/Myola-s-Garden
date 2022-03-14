@@ -167,7 +167,7 @@ export const Config = {
             plant: {
                 tileset: "FarmingPlants",
                 id: 40,
-                growTime: 25000,
+                growTime: 1000, // 25000
                 animation: [41, 42, 43],
             },
             seed: {
@@ -309,7 +309,7 @@ export const Config = {
             plant: {
                 tileset: "FarmingPlants",
                 id: 70,
-                growTime: 25000,
+                growTime: 1000, //25000
                 animation: [71, 72, 73],
             },
             seed: {

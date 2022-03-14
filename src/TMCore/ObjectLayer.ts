@@ -2,7 +2,6 @@ import { Config } from "../Config";
 import Buildings from "./Buildings";
 import Character from "./Character";
 import { CollisionLayer } from "./CollisionLayer";
-import Item from "./Item";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
@@ -58,10 +57,6 @@ export default class ObjectLayer extends PIXI.Container {
                 break;
             case "buildings":
                 tile = new Buildings(tileData, tileSet, mapData);
-                break;
-            case "garden":
-                // console.log(tileData, tileSet);
-                tile = new Item(tileData, tileSet, mapData);
                 break;
 
             default:
