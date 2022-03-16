@@ -1,25 +1,21 @@
-import { Clickable } from "./Clickable";
 import TiledMap from "./TiledMap";
 import { iPlantData } from "./TMModel";
+import { Item } from "../UI/Item";
 
-export class Drop extends Clickable {
+export class Drop extends Item {
     mapData: TiledMap;
     data: iPlantData;
+    additionalData = "";
 
     constructor(data: iPlantData, mapData: TiledMap) {
-        super(
-            data,
-            data.drop.id,
-            mapData.getTileset(data.drop.tileset)!,
-            mapData
-        );
+        super(data, mapData, "drop", "drop", true);
 
         this.data = data;
         this.additionalData = `Collectable`;
         this.mapData = mapData;
         this.mapData.drop.push(this);
 
-        this.addPress(this.collect);
+        this.sprite.addPress(this.collect);
     }
 
     collect = () => {
@@ -29,8 +25,8 @@ export class Drop extends Clickable {
             })
         );
 
-        this.is_hovered = false;
-        this.unhoverEvent();
+        this.sprite.is_hovered = false;
+        this.sprite.unhoverEvent();
         console.log("some drop");
     };
 
@@ -38,6 +34,6 @@ export class Drop extends Clickable {
         const index = this.mapData.drop.indexOf(this);
         console.log(index);
         this.mapData.drop.splice(index, 1);
-        this.destroy();
+        this.sprite.destroy();
     };
 }

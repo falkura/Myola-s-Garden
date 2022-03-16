@@ -41,5 +41,6 @@ export class ControllerUI extends PIXI.Container {
     on_resize = () => {
         this.main_menu?.on_resize();
         this.game_menu?.on_resize();
+        this.WAILA.x = this.app.screen.width / 2 - this.WAILA.width / 2;
     };
 }

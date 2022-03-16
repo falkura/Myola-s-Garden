@@ -1,7 +1,7 @@
 import anime, { AnimeTimelineInstance } from "animejs";
 import { Config } from "../Config";
 import { TextStyles } from "../TextStyles";
-import { Clickable } from "../TMCore/Clickable";
+import { WAILAItem } from "../TMCore/WAILAItem";
 import { Drop } from "../TMCore/Drop";
 import ObjectTile from "../TMCore/ObjectTile";
 import TiledMap from "../TMCore/TiledMap";
@@ -16,7 +16,7 @@ export class InventoryCell extends PIXI.Container {
     tileset?: string;
 
     bg?: PIXI.Graphics;
-    sprite?: Clickable;
+    sprite?: WAILAItem;
     countText?: PIXI.Text;
     animation!: AnimeTimelineInstance;
     activeItem?: number;
@@ -100,7 +100,7 @@ export class InventoryCell extends PIXI.Container {
         this.name = item.data.name;
 
         const tileset = this.mapData.getTileset(item.data.drop.tileset)!;
-        this.sprite = new Clickable(
+        this.sprite = new WAILAItem(
             item.data,
             item.data.drop.id,
             tileset,

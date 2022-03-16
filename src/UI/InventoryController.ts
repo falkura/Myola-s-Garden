@@ -1,12 +1,14 @@
-import { Config } from "../Config";
-import { Drop } from "../TMCore/Drop";
 import TiledMap from "../TMCore/TiledMap";
+import { iPlantData } from "../TMCore/TMModel";
+import { Rarity } from "../TMCore/WAILA";
 import { InventoryCell } from "./InventoryCell";
+import { List } from "./List";
 
 export class InventoryController extends PIXI.Container {
     mapData: TiledMap;
     cellCount = 7;
     itemCells: InventoryCell[] = [];
+    list!: List;
 
     constructor(mapData: TiledMap) {
         super();
@@ -16,32 +18,59 @@ export class InventoryController extends PIXI.Container {
     }
 
     constructInventory = () => {
-        for (let i = 0; i < this.cellCount; i++) {
-            const cell = new InventoryCell(this.mapData);
-            this.itemCells.push(cell);
-            cell.position.x = cell.width * i - Config.inventoryCellBorder * i;
-            cell.position.y = Config.inventoryCellBorder / 2;
-            cell.addListener("click", () => {
-                this.choose(i);
+        //     cell.addListener("click", () => {
+        //         this.choose(i);
+        //     });
+        this.list = new List(this.mapData, 7, 1);
+        this.addChild(this.list);
+
+        setTimeout(() => {
+            this.insertItem({
+                plant: {
+                    tileset: "FarmingPlants",
+                    id: 55,
+                    growTime: 120000,
+                    animation: [56, 57, 58],
+                },
+                seed: {
+                    tileset: "Allitems",
+                    id: 88,
+                    price: 230,
+                    count: 1,
+                },
+                drop: {
+                    tileset: "Allitems",
+                    id: 89,
+                    price: 700,
+                    count: 14,
+                },
+                rarity: Rarity.Legendary,
+                name: "Carnation",
+                description:
+                    "A plant of any of numerous often cultivated and usually double-flowered varieties or subspecies of an Old World pink",
             });
-            this.addChild(cell);
-        }
+        }, 300);
     };
 
-    insertItem = (drop: Drop): boolean => {
-        for (const cell of this.itemCells) {
-            if (cell.id && cell.id === drop.data.drop.id) {
-                cell.addItem(drop.data.drop.count);
-                return true;
-            }
-        }
+    insertItem = (data: iPlantData): boolean => {
+        let done = false;
+        this.list.cellMatrix.forEach((column) => {
+            column.forEach((row) => {
+                if (!done)
+                    if (!row.item) {
+                        row.setItem(data, "drop");
+                        done = true;
+                    } else {
+                        if (row.item!.data.name === data.name) {
+                            row.count += data.drop.count;
+                            done = true;
+                        }
+                    }
+            });
+        });
+        console.log(done);
 
-        for (const cell of this.itemCells) {
-            if (!cell.id) {
-                cell.setItem(drop);
-                return true;
-            }
-        }
+        return done;
 
         console.log("not enough space");
         return false;

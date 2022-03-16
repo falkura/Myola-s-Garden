@@ -1,10 +1,11 @@
-import { ClickableNew } from "../ClickableNew";
+import { Clickable } from "../Clickable";
 import { EVENTS } from "../Events";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
 import { iPlantData } from "./TMModel";
+import { WAILAData } from "./WAILA";
 
-export class Clickable extends ClickableNew {
+export class WAILAItem extends Clickable {
     is_hovered = false;
     data: iPlantData;
     additionalData = "";
@@ -29,15 +30,12 @@ export class Clickable extends ClickableNew {
 
     additionalHover = () => {
         document.dispatchEvent(
-            new CustomEvent<{ data: iPlantData; time: string }>(
-                EVENTS.WAILA.Set,
-                {
-                    detail: {
-                        data: this.data,
-                        time: this.additionalData,
-                    },
-                }
-            )
+            new CustomEvent<WAILAData>(EVENTS.WAILA.Set, {
+                detail: {
+                    title: this.data.name,
+                    additionalData: this.additionalData,
+                },
+            })
         );
     };
 

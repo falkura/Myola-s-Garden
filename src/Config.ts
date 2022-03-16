@@ -20,7 +20,7 @@ export const Config = {
 
     inventoryCellBorder: 5, // WHY IS IT HERE
 
-    plants_: [
+    plants: [
         {
             plant: {
                 tileset: "FarmingPlants",

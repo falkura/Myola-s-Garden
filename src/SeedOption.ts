@@ -1,8 +1,10 @@
 import anime from "animejs";
 import { Config } from "./Config";
-import { Clickable } from "./TMCore/Clickable";
 import TiledMap from "./TMCore/TiledMap";
-import { calculateCoordinate, formatTime } from "./Util";
+import { calculateCoordinate } from "./Util";
+import { Clickable } from "./Clickable";
+import { Seed } from "./Seed";
+import { EVENTS } from "./Events";
 
 export class SeedOption extends PIXI.Sprite {
     mapData: TiledMap;
@@ -80,32 +82,25 @@ export class SeedOption extends PIXI.Sprite {
             document.addEventListener("mousedown", listener);
 
             const coords = calculateCoordinate(
-                Config.plants_.length,
+                Config.plants.length,
                 this.mapData.source.tilewidth * 1.5,
                 0,
                 0
             );
 
             for (let i = 0; i < coords.length; i++) {
-                const plant = Config.plants_[i];
-                const tileset = this.mapData.getTileset(plant.seed.tileset)!;
-                const item = new Clickable(
-                    plant,
-                    plant.seed.id,
-                    tileset,
-                    this.mapData
-                );
-                item.additionalData = `Grow Time: ${formatTime(
-                    plant.plant.growTime
-                )}`;
-                item.anchor.set(0.5, 0.5);
-                item.addListener("mousedown", () => {
+                const item = new Seed(Config.plants[i], this.mapData);
+
+                item.sprite.anchor.set(0.5, 0.5);
+                item.sprite.addListener("mousedown", () => {
                     resolve(i);
+                    item.sprite.is_hovered = false;
+                    document.dispatchEvent(new Event(EVENTS.WAILA.Clean));
                 });
 
-                item.position.set(coords[i].x, coords[i].y);
+                item.sprite.position.set(coords[i].x, coords[i].y);
 
-                this.sprites.push(item);
+                this.sprites.push(item.sprite);
             }
 
             this.addChild(...this.sprites);

@@ -30,7 +30,7 @@ export class MapController {
     test = () => {
         this.list = new List(this.map!, 10, 6);
 
-        this.container.addChild(this.list);
+        // this.container.addChild(this.list);
     };
 
     addEventListeners = () => {
@@ -73,9 +73,9 @@ export class MapController {
         const drop = (e as CustomEvent<Drop>).detail;
 
         const char: Character = this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
-        await char.setPosition(drop.x, drop.y);
+        await char.setPosition(drop.sprite.x, drop.sprite.y);
 
-        const result = this.inventory!.insertItem(drop);
+        const result = this.inventory!.insertItem(drop.data);
         if (result) drop.remove();
     };
 

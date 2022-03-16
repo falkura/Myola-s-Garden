@@ -1,12 +1,14 @@
 import anime from "animejs";
 import { Config } from "./Config";
-import { Clickable } from "./TMCore/Clickable";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import TileSet from "./TMCore/TileSet";
 import { iPlantData } from "./TMCore/TMModel";
 import { formatTime } from "./Util";
+import { EVENTS } from "./Events";
+import { Clickable } from "./Clickable";
+import { WAILAData } from "./TMCore/WAILA";
 
 export class Plant extends Clickable {
     isGrown = false;
@@ -16,18 +18,19 @@ export class Plant extends Clickable {
     cell: Tile;
     tileset!: TileSet;
 
+    is_hovered = false;
     data: iPlantData;
+    additionalData = "";
+    mapData: TiledMap;
 
     constructor(id: number, mapData: TiledMap, tile: Tile) {
         super(
-            Config.plants_[id],
-            Config.plants_[id].plant.id,
-            mapData.getTileset(Config.plants_[id].plant.tileset)!,
-            mapData
+            mapData.getTileset(Config.plants[id].plant.tileset)!.textures[id]
         );
-        this.data = Config.plants_[id];
-
+        this.data = Config.plants[id];
+        this.mapData = mapData;
         this.cell = tile;
+        this.tileset = mapData.getTileset(Config.plants[id].plant.tileset)!;
         // this.dropData = Config.drops[this.data.drop];
 
         if (this.data.plant.animation) {
@@ -43,6 +46,9 @@ export class Plant extends Clickable {
 
         this.plantTime = new Date().getTime();
         this.mapData.plants.push({ time: this.plantTime, plant: this });
+
+        this.addHover(this.additionalHover);
+        this.addUnhover(this.additionalUnhover);
     }
 
     update = () => {
@@ -82,38 +88,38 @@ export class Plant extends Clickable {
     harvest = () => {
         const sprite = new Drop(this.data, this.mapData);
 
-        sprite.zIndex = 3;
-        sprite.anchor = this.anchor;
-        sprite.x = this.parent.x;
+        sprite.sprite.zIndex = 3;
+        sprite.sprite.anchor = this.anchor;
+        sprite.sprite.x = this.parent.x;
 
         const targetY = this.parent.y;
 
         anime
             .timeline()
             .add({
-                targets: sprite.scale,
+                targets: sprite.sprite.scale,
                 x: [0.8, 1],
                 y: [0.8, 1],
                 easing: "linear",
                 duration: 100,
                 complete: () => {
-                    sprite.scale.set(1);
+                    sprite.sprite.scale.set(1);
                 },
             })
             .add({
-                targets: sprite.position,
+                targets: sprite.sprite.position,
                 y: [targetY - 6, targetY],
                 easing: "linear",
                 duration: 100,
                 complete: () => {
-                    sprite.y = targetY;
+                    sprite.sprite.y = targetY;
                 },
             });
 
         this.cleanUp();
         this.cell.Dirt!.visible = true;
 
-        this.mapData.addChild(sprite);
+        this.mapData.addChild(sprite.sprite);
     };
 
     cleanUp = () => {
@@ -127,5 +133,22 @@ export class Plant extends Clickable {
         this.cell.Plant = undefined;
 
         this.destroy();
+    };
+
+    additionalHover = () => {
+        document.dispatchEvent(
+            new CustomEvent<WAILAData>(EVENTS.WAILA.Set, {
+                detail: {
+                    title: this.data.name,
+                    description: this.data.description,
+                    additionalData: this.additionalData,
+                    rarity: this.data.rarity,
+                },
+            })
+        );
+    };
+
+    additionalUnhover = () => {
+        document.dispatchEvent(new Event(EVENTS.WAILA.Clean));
     };
 }

@@ -1,4 +1,4 @@
-export class ClickableNew extends PIXI.Sprite {
+export class Clickable extends PIXI.Sprite {
     is_hovered = false;
     pressEvents: Array<{ (): void }> = [];
     hoverEvents: Array<{ (): void }> = [];
@@ -8,8 +8,12 @@ export class ClickableNew extends PIXI.Sprite {
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;
 
-    constructor(texture: PIXI.Texture) {
+    constructor(texture: PIXI.Texture, disableHover = false) {
         super(texture);
+
+        if (disableHover) {
+            this.hoverScale = 1;
+        }
 
         this.deactivateFilter = new PIXI.filters.ColorMatrixFilter();
         this.deactivateFilter.desaturate();

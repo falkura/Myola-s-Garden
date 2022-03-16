@@ -8,7 +8,7 @@ export class List extends PIXI.Container {
     cellSize = 50;
     padding = 2;
     radius = 6;
-    cellMatrix!: PIXI.Graphics[][];
+    cellMatrix: ListCell[][] = [];
 
     constructor(mapData: TiledMap, columns: number, rows: number) {
         super();
@@ -38,7 +38,7 @@ export class List extends PIXI.Container {
 
         for (let column = 0; column < this.columns; column++) {
             for (let row = 0; row < this.rows; row++) {
-                const cell = new ListCell(this.cellSize);
+                const cell = new ListCell(this.cellSize, this.mapData);
                 cell.x =
                     this.radius +
                     column * (this.cellSize + this.padding) +
@@ -48,11 +48,17 @@ export class List extends PIXI.Container {
                     row * (this.cellSize + this.padding) +
                     this.cellSize / 2;
 
+                if (!this.cellMatrix[column]) {
+                    this.cellMatrix[column] = [];
+                }
+
+                this.cellMatrix[column][row] = cell;
+
                 outterBg.addChild(cell);
             }
         }
 
-        this.visible = false;
+        // this.visible = false;
         document.addEventListener("si", () => (this.visible = !this.visible));
     }
 
