@@ -16,6 +16,7 @@ export class MapController {
     app: PIXI.Application;
     charakterController?: CharakterController;
     inventory?: InventoryController;
+    shop!: List;
     se!: SeedOption;
 
     list!: List;
@@ -28,8 +29,7 @@ export class MapController {
     }
 
     test = () => {
-        this.list = new List(this.map!, 10, 6);
-
+        // this.list = new List(this.map!, 10, 6);
         // this.container.addChild(this.list);
     };
 
@@ -127,6 +127,10 @@ export class MapController {
         this.inventory = new InventoryController(this.map);
         this.inventory.position.set(Config.inventoryCellBorder / 2, 200);
         this.container.addChild(this.inventory);
+
+        this.shop = new List(this.map, 3, 3);
+        this.shop.position.set(700, 200);
+        this.container.addChild(this.shop);
 
         this.se = new SeedOption(this.map!);
         this.se.zIndex = 5;

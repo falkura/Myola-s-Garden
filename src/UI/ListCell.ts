@@ -1,27 +1,45 @@
-import { TextStyles } from "../TextStyles";
+import { InteractionEvent } from "pixi.js";
 import TiledMap from "../TMCore/TiledMap";
 import { iPlantData } from "../TMCore/TMModel";
-import { Item, ItemType } from "./Item";
+import { InventoryItem } from "./InventoryItem";
+import { ItemType } from "./Item";
 
 export class ListCell extends PIXI.Container {
     private _isActive = false;
-    private _count = 0;
     bg!: PIXI.Graphics;
-    item?: Item;
+    item?: InventoryItem;
     mapData: TiledMap;
     size: number;
-    countText!: PIXI.Text;
-    countLimit = 99;
+    isPotential = false;
 
-    constructor(size: number, mapData: TiledMap) {
+    id: number;
+    dragging = false;
+    startX = 0;
+    startY = 0;
+
+    constructor(size: number, mapData: TiledMap, id: number) {
         super();
+
         this.mapData = mapData;
         this.size = size;
+        this.id = id;
 
-        this.addListener("click", this.on_click);
+        // this.interactive = true;
+        // this.addListener("mousedown", this.on_click);
         this.createBg();
-        this.createText();
     }
+
+    hoverEvent = () => {
+        if (!this.item) {
+            this.isPotential = true;
+        }
+        this.bg.alpha = 2;
+    };
+
+    unhoverEvent = () => {
+        this.isPotential = false;
+        this.bg.alpha = 1;
+    };
 
     on_click = () => {
         this.isActive = true;
@@ -30,9 +48,9 @@ export class ListCell extends PIXI.Container {
     public set isActive(value: boolean) {
         this._isActive = value;
         if (value) {
-            this.zIndex = 10;
+            // this.zIndex = 10;
         } else {
-            this.zIndex = 1;
+            // this.zIndex = 1;
         }
 
         if (this.item) {
@@ -44,24 +62,6 @@ export class ListCell extends PIXI.Container {
         return this._isActive;
     }
 
-    public set count(value: number) {
-        this._count = value;
-
-        if (value <= 1) {
-            this.countText!.text = "";
-        } else if (value <= this.countLimit) {
-            this.countText!.text = String(this.count);
-        } else {
-            this.countText!.text = `${this.countLimit}+`;
-        }
-
-        this.update();
-    }
-
-    public get count(): number {
-        return this._count;
-    }
-
     createBg = () => {
         this.bg = new PIXI.Graphics()
             .beginFill(0x222222, 0.1)
@@ -69,48 +69,85 @@ export class ListCell extends PIXI.Container {
             .endFill();
 
         this.bg.pivot.set(this.size / 2);
+
+        this.bg.interactive = true;
+        // this.bg.zIndex = 1;
+        this.bg.addListener("mouseover", this.hoverEvent);
+        this.bg.addListener("mouseout", this.unhoverEvent);
+
         this.addChild(this.bg);
     };
 
-    createText = () => {
-        this.countText = new PIXI.Text("", TextStyles.itemCount);
-        this.countText.anchor.set(1, 0);
-        this.countText.zIndex = 5;
-        this.countText.position.set(this.size / 2, 8);
-        // this.countText.position.set(this.width - 15, this.height - 15);
-
-        this.addChild(this.countText);
-    };
-
     setItem = (item: iPlantData, type: ItemType, count?: number) => {
-        this.item = new Item(item, this.mapData, "inventory", type, false);
+        this.item = new InventoryItem(item, this.mapData, type, this.id);
 
-        this.count = count ? count : item[type].count;
+        this.item.setSize((this.width / 3) * 2, (this.height / 3) * 2);
+        if (count) {
+            this.item.count = count;
+        }
 
-        this.item.sprite.width = (this.width / 3) * 2;
-        this.item.sprite.height = (this.height / 3) * 2;
-        this.item.sprite.defaultScale = this.item.sprite.scale.x;
         this.item.sprite.anchor.set(0.5);
+        this.interactive = true;
 
-        this.addChild(this.item.sprite);
-        this.update();
+        this.setupInteractivity();
+
+        this.unhoverEvent();
+        this.addChild(this.item);
     };
 
-    update = () => {
-        if (this.item) {
-            const sum =
-                this.count > 1 ? ` (${this.item.getPrice() * this.count})` : "";
+    setupInteractivity = () => {
+        this.addListener("mousedown", this.pressEvent);
+        this.addListener("mousemove", this.moveEvent);
+        this.addListener("mouseup", this.upEvent);
+        this.addListener("mouseupoutside", this.upEvent);
 
-            this.item.additionalData = `Price: ${this.item.getPrice()}${sum})`;
+        this.bg.removeListener("mouseover", this.hoverEvent);
+        this.bg.removeListener("mouseout", this.unhoverEvent);
+    };
+
+    pressEvent = (e: InteractionEvent) => {
+        this.parent.zIndex = 2000;
+        this.zIndex = 100;
+        this.item!.interactiveChildren = false;
+
+        this.dragging = true;
+        this.startX = e.data.global.x - this.item!.x;
+        this.startY = e.data.global.y - this.item!.y;
+    };
+
+    moveEvent = (e: InteractionEvent) => {
+        if (this.dragging) {
+            this.item!.x = e.data.global.x - this.startX;
+            this.item!.y = e.data.global.y - this.startY;
         }
+    };
+
+    upEvent = () => {
+        this.zIndex = 0;
+
+        if (!this.item) return;
+
+        this.parent.zIndex = 100;
+        this.item!.interactiveChildren = true;
+        this.dragging = false;
+        this.startX = this.item!.x;
+        this.startY = this.item!.y;
+
+        document.dispatchEvent(
+            new CustomEvent<ListCell>("dropped", { detail: this })
+        );
     };
 
     cleanup = () => {
-        if (this.item) {
-            this.removeChild(this.item.sprite);
-            this.item.cleanup();
-            this.item = undefined;
-        }
-        this.count = 0;
+        // if (this.item) {
+        this.item!.sprite.removeAllListeners();
+
+        this.removeChild(this.item!.sprite);
+        this.item!.cleanup();
+        this.item = undefined;
+        // }
+
+        this.bg.addListener("mouseover", this.hoverEvent);
+        this.bg.addListener("mouseout", this.unhoverEvent);
     };
 }

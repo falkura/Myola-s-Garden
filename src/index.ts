@@ -6,10 +6,6 @@ import { App } from "./App";
 declare const __ENVIRONMENT__: string;
 
 function init() {
-    document.getElementById("root")!.onmousedown = () => {
-        return false;
-    };
-
     const game_name = "Myola`s Garden";
     const full_game_name = `${game_name} v${packageInfo.version} ${__ENVIRONMENT__}`;
 

@@ -58,6 +58,9 @@ export default class CharakterController {
                 case "KeyI":
                     document.dispatchEvent(new Event("si"));
                     break;
+                case "KeyP":
+                    document.dispatchEvent(new Event("pi"));
+                    break;
                 default:
                     console.log(e.code);
                     break;

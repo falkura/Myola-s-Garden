@@ -1,13 +1,11 @@
 import TiledMap from "../TMCore/TiledMap";
 import { iPlantData } from "../TMCore/TMModel";
 import { Rarity } from "../TMCore/WAILA";
-import { InventoryCell } from "./InventoryCell";
 import { List } from "./List";
 
 export class InventoryController extends PIXI.Container {
     mapData: TiledMap;
     cellCount = 7;
-    itemCells: InventoryCell[] = [];
     list!: List;
 
     constructor(mapData: TiledMap) {
@@ -15,13 +13,14 @@ export class InventoryController extends PIXI.Container {
 
         this.mapData = mapData;
         this.constructInventory();
+        this.zIndex = 1000;
     }
 
     constructInventory = () => {
         //     cell.addListener("click", () => {
         //         this.choose(i);
         //     });
-        this.list = new List(this.mapData, 7, 1);
+        this.list = new List(this.mapData, 7, 2);
         this.addChild(this.list);
 
         setTimeout(() => {
@@ -62,7 +61,7 @@ export class InventoryController extends PIXI.Container {
                         done = true;
                     } else {
                         if (row.item!.data.name === data.name) {
-                            row.count += data.drop.count;
+                            row.item.count += data.drop.count;
                             done = true;
                         }
                     }
@@ -74,11 +73,5 @@ export class InventoryController extends PIXI.Container {
 
         console.log("not enough space");
         return false;
-    };
-
-    choose = (i: number) => {
-        this.itemCells.forEach((cell, index) => {
-            cell.isActive = index === i;
-        });
     };
 }

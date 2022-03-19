@@ -7,7 +7,7 @@ import { WAILAData } from "../TMCore/WAILA";
 export type ItemState = "inventory" | "drop";
 export type ItemType = "drop" | "seed";
 
-export class Item {
+export class Item extends PIXI.Container {
     private _state!: ItemState;
     private _type!: ItemType;
 
@@ -24,6 +24,7 @@ export class Item {
         type: ItemType,
         waila: boolean
     ) {
+        super();
         this.mapData = mapData;
         this.data = data;
         this.type = type;
@@ -44,6 +45,7 @@ export class Item {
             this.sprite.texture = texture;
         } else {
             this.sprite = new Clickable(texture);
+            this.addChild(this.sprite);
         }
         this._type = t;
     }

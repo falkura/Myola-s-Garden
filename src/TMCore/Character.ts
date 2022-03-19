@@ -1,5 +1,6 @@
 import anime from "animejs";
 import { Config } from "../Config";
+import { RandomNumber } from "../Util";
 import { hitTestRectangle } from "./Bump";
 import { CollisionLayer } from "./CollisionLayer";
 import ObjectTile from "./ObjectTile";
@@ -17,10 +18,36 @@ export default class Character extends ObjectTile {
     nextY = 0;
     mapData: TiledMap;
 
+    filter: PIXI.filters.ColorMatrixFilter;
+
     constructor(tile: iDataObject, tileSet: TileSet, mapData: TiledMap) {
         super(tile, tileSet);
         this.mapData = mapData;
         this.mapData.charakters.push(this);
+
+        this.filter = new PIXI.filters.ColorMatrixFilter();
+        // const tint = 0x964b00;
+
+        // const r = (tint >> 16) & 0xff;
+        // const g = (tint >> 8) & 0xff;
+        // const b = tint & 0xff;
+
+        // color.matrix[0] = r / 255;
+        // color.matrix[6] = g / 255;
+        // color.matrix[12] = b / 255;
+
+        // console.log("rgb(%d, %d, %d)", r, g, b);
+
+        const start = 0;
+        const end = 15;
+        const count = RandomNumber(1, 3);
+
+        for (let i = 0; i < count; i++) {
+            this.filter.matrix[RandomNumber(start, end)] = Math.random();
+        }
+        console.log(this.filter.matrix);
+
+        this.filters = [this.filter];
 
         this.interactive = true;
         // @TODO
@@ -42,6 +69,26 @@ export default class Character extends ObjectTile {
 
         this.isActive = true;
         this.cameraMove();
+    };
+
+    setNewColor = () => {
+        // this.filter.matrix[6] = 0.3885401785373688;
+        // this.filter.matrix[7] = 0.3885401785373688;
+
+        // this.filter.matrix[4] = 0.721504807472229
+        // this.filter.matrix[12] = 0.03713098168373108
+
+        // this.filter.matrix[0] = 0.046515580266714096;
+        // this.filter.matrix[13] = 0.3200368881225586;
+
+        // this.filter.matrix[10] = 0.26166051626205444
+        // this.filter.matrix[12] = 0.4550018310546875
+
+        // this.filter.matrix[16] =0.546566367149353
+        // this.filter.matrix[17] = 0.8070115447044373
+        // this.filter.matrix[18] =  0.6011194586753845
+
+        this.filter.matrix[RandomNumber(0, 15)] = Math.random();
     };
 
     setCollisionLayer = () => {
