@@ -88,6 +88,15 @@ export default class Character extends ObjectTile {
         // this.filter.matrix[17] = 0.8070115447044373
         // this.filter.matrix[18] =  0.6011194586753845
 
+        // this.filter.matrix[2] =  0.04603690281510353
+        // this.filter.matrix[4] =  0.12762226164340973
+        // this.filter.matrix[11] =  0.7707859873771667
+
+        // this.filter.matrix[2] =  0.7962536215782166
+
+        // this.filter.matrix[4] =  0.7491387128829956
+        // this.filter.matrix[12] =  0.38632670044898987
+
         this.filter.matrix[RandomNumber(0, 15)] = Math.random();
     };
 

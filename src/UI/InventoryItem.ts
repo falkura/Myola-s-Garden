@@ -8,17 +8,17 @@ export class InventoryItem extends Item {
     countText!: PIXI.Text;
     countLimit = 99;
 
-    id: number;
+    name: string;
 
     constructor(
         item: iPlantData,
         mapData: TiledMap,
         type: ItemType,
-        id: number
+        name: string
     ) {
         super(item, mapData, "inventory", type, false);
 
-        this.id = id;
+        this.name = name;
         this.createText();
     }
 

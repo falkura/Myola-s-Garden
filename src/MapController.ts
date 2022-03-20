@@ -2,13 +2,16 @@
 import CharakterController from "./CharakterController";
 import { Config } from "./Config";
 import { EVENTS } from "./Events";
+import { LogicState } from "./logic_state";
+import { ObserverText } from "./Observer";
 import { SeedOption } from "./SeedOption";
+import { TextStyles } from "./TextStyles";
 import Character from "./TMCore/Character";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
-import { List } from "./UI/List";
+import { Shop } from "./UI/Shop";
 
 export class MapController {
     map?: TiledMap;
@@ -16,10 +19,9 @@ export class MapController {
     app: PIXI.Application;
     charakterController?: CharakterController;
     inventory?: InventoryController;
-    shop!: List;
+    shop!: Shop;
     se!: SeedOption;
-
-    list!: List;
+    balanceText!: ObserverText;
 
     constructor(app: PIXI.Application) {
         this.app = app;
@@ -128,15 +130,26 @@ export class MapController {
         this.inventory.position.set(Config.inventoryCellBorder / 2, 200);
         this.container.addChild(this.inventory);
 
-        this.shop = new List(this.map, 3, 3);
-        this.shop.position.set(700, 200);
+        this.shop = new Shop(this.map, "Meeky Milk`s shop");
+        this.shop.isActive = true;
+        this.shop.position.set(500, 200);
         this.container.addChild(this.shop);
 
         this.se = new SeedOption(this.map!);
         this.se.zIndex = 5;
         this.map.addChild(this.se);
 
-        this.test();
+        this.balanceText = new ObserverText(
+            "0",
+            TextStyles.WAILATitle,
+            LogicState
+        );
+
+        this.balanceText.on_state_update = () => {
+            this.balanceText.text = LogicState.balance.toString();
+        };
+        this.balanceText.position.set(50, 10);
+        this.container.addChild(this.balanceText);
     };
 
     removeMap = () => {};

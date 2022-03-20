@@ -12,6 +12,9 @@ export class LogicStateClass extends Subject {
     is_fullscreen = false;
 
     an: any;
+    isShift = false;
+    sellPrice = 0;
+    balance = 1000;
 
     constructor() {
         super();

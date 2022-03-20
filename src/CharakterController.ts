@@ -1,4 +1,5 @@
 import { EVENTS } from "./Events";
+import { LogicState } from "./logic_state";
 import Character from "./TMCore/Character";
 import TiledMap from "./TMCore/TiledMap";
 import { movePath } from "./TMCore/TMModel";
@@ -49,6 +50,7 @@ export default class CharakterController {
                 case "ShiftLeft":
                 case "ShiftRight":
                     if (!this.seedMode) {
+                        LogicState.isShift = true;
                         this.seedMode = true;
                         this.activeMoves = [];
 
@@ -80,6 +82,7 @@ export default class CharakterController {
             switch (e.code) {
                 case "ShiftLeft":
                 case "ShiftRight":
+                    LogicState.isShift = false;
                     this.seedMode = false;
                     document.dispatchEvent(new Event(EVENTS.Seed.Off));
                     break;

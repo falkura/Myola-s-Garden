@@ -45,4 +45,10 @@ export const TextStyles = {
         fill: 0xffffff,
         wordWrap: true,
     }),
+    ShopInfo: new PIXI.TextStyle({
+        fontFamily: "ARCADECLASSIC",
+        fontSize: 20,
+        fill: 0xffffff,
+        letterSpacing: 0.3,
+    }),
 };

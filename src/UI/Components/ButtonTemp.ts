@@ -15,7 +15,7 @@ export class ButtonTemp extends PIXI.Container implements Observer {
         this.interactive = true;
         this.on("pointerdown", this.press_event);
 
-        this.text = new PIXI.Text(text, TextStyles.button);
+        this.text = new PIXI.Text(text, TextStyles.ShopInfo);
         this.text.anchor.set(0.5);
         this.text.position.set(texture.width / 2, texture.height / 2);
 

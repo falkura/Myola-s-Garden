@@ -1,8 +1,10 @@
+import { LogicState } from "../logic_state";
 import TiledMap from "../TMCore/TiledMap";
 import { iPlantData } from "../TMCore/TMModel";
 import { ListCell } from "./ListCell";
 
 export class List extends PIXI.Container {
+    private _isActive = false;
     mapData: TiledMap;
     columns: number;
     rows: number;
@@ -11,25 +13,24 @@ export class List extends PIXI.Container {
     radius = 6;
     cellMatrix: ListCell[][] = [];
 
-    id: number;
+    name: string;
+    price = 0;
 
-    constructor(mapData: TiledMap, columns: number, rows: number) {
+    constructor(
+        mapData: TiledMap,
+        columns: number,
+        rows: number,
+        name: string
+    ) {
         super();
         this.zIndex = 100;
 
         this.rows = rows;
         this.columns = columns;
         this.mapData = mapData;
+        this.name = name;
 
         this.interactiveChildren = true;
-
-        this.id = Number(
-            (Math.random() * Math.random())
-                .toString()
-                .split("")
-                .splice(5, 14)
-                .join("")
-        );
 
         const width =
             this.radius * 2 + (this.cellSize + this.padding) * this.columns;
@@ -45,7 +46,11 @@ export class List extends PIXI.Container {
 
         for (let column = 0; column < this.columns; column++) {
             for (let row = 0; row < this.rows; row++) {
-                const cell = new ListCell(this.cellSize, this.mapData, this.id);
+                const cell = new ListCell(
+                    this.cellSize,
+                    this.mapData,
+                    this.name
+                );
                 cell.x =
                     this.radius +
                     column * (this.cellSize + this.padding) +
@@ -55,11 +60,11 @@ export class List extends PIXI.Container {
                     row * (this.cellSize + this.padding) +
                     this.cellSize / 2;
 
-                if (!this.cellMatrix[column]) {
-                    this.cellMatrix[column] = [];
+                if (!this.cellMatrix[row]) {
+                    this.cellMatrix[row] = [];
                 }
 
-                this.cellMatrix[column][row] = cell;
+                this.cellMatrix[row][column] = cell;
 
                 this.addChild(cell);
             }
@@ -67,7 +72,46 @@ export class List extends PIXI.Container {
 
         document.addEventListener("si", () => (this.visible = !this.visible));
         document.addEventListener("dropped", this.onDrop);
+        document.addEventListener("shifted", this.onShifted);
     }
+
+    onShifted = (e: Event) => {
+        const cell = (e as CustomEvent<ListCell>).detail;
+
+        if (cell.name !== this.name && this.isActive) {
+            let done = false;
+            this.cellMatrix.forEach((column) => {
+                column.forEach((row) => {
+                    if (!done)
+                        if (!row.item && cell.item) {
+                            row.setItem(cell.item!.data, cell.item!.type);
+                            row.item!.count = cell.item!.count;
+
+                            cell.cleanup();
+                            done = true;
+                        }
+                });
+            });
+        }
+
+        this.calculatePrice();
+    };
+
+    calculatePrice = () => {
+        let sum = 0;
+        this.cellMatrix.forEach((column) => {
+            column.forEach((row) => {
+                if (row.item) {
+                    sum += row.item.data[row.item.type].price * row.item.count;
+                }
+            });
+        });
+
+        this.price = sum;
+        LogicState.notify_all();
+
+        console.log(sum, this.name);
+    };
 
     onDrop = (e: Event) => {
         const cell = (e as CustomEvent<ListCell>).detail;
@@ -77,7 +121,7 @@ export class List extends PIXI.Container {
             column.forEach((row) => {
                 if (!done)
                     if (row.isPotential) {
-                        row.setItem(cell.item!.data, "drop");
+                        row.setItem(cell.item!.data, cell.item!.type);
                         row.item!.count = cell.item!.count;
 
                         cell.cleanup();
@@ -91,18 +135,7 @@ export class List extends PIXI.Container {
             cell.item!.y = 0;
         }
 
-        let sum = 0;
-        this.cellMatrix.forEach((column) => {
-            column.forEach((row) => {
-                if (row.item) {
-                    sum += row.item.data[row.item.type].price * row.item.count;
-                }
-            });
-        });
-
-        // if (sum) {
-        console.log(sum, this.id);
-        // }
+        this.calculatePrice();
     };
 
     insertItem = (data: iPlantData): boolean => {
@@ -111,7 +144,7 @@ export class List extends PIXI.Container {
             column.forEach((row) => {
                 if (!done)
                     if (!row.item) {
-                        row.setItem(data, "drop");
+                        row.setItem(data, "drop"); // @TODO
                         done = true;
                     } else {
                         if (row.item!.data.name === data.name) {
@@ -121,8 +154,31 @@ export class List extends PIXI.Container {
                     }
             });
         });
+
+        this.calculatePrice();
         return done;
     };
+
+    cleanup = () => {
+        this.cellMatrix.forEach((column) => {
+            column.forEach((row) => {
+                if (row.item) {
+                    row.cleanup();
+                }
+            });
+        });
+
+        this.calculatePrice();
+    };
+
+    public set isActive(value: boolean) {
+        this._isActive = value;
+        // this.interactiveChildren = value;
+    }
+
+    public get isActive(): boolean {
+        return this._isActive;
+    }
 
     addCell = () => {};
 }

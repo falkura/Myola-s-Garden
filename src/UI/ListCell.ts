@@ -1,4 +1,5 @@
 import { InteractionEvent } from "pixi.js";
+import { LogicState } from "../logic_state";
 import TiledMap from "../TMCore/TiledMap";
 import { iPlantData } from "../TMCore/TMModel";
 import { InventoryItem } from "./InventoryItem";
@@ -12,17 +13,17 @@ export class ListCell extends PIXI.Container {
     size: number;
     isPotential = false;
 
-    id: number;
+    name: string;
     dragging = false;
     startX = 0;
     startY = 0;
 
-    constructor(size: number, mapData: TiledMap, id: number) {
+    constructor(size: number, mapData: TiledMap, name: string) {
         super();
 
         this.mapData = mapData;
         this.size = size;
-        this.id = id;
+        this.name = name;
 
         // this.interactive = true;
         // this.addListener("mousedown", this.on_click);
@@ -30,6 +31,7 @@ export class ListCell extends PIXI.Container {
     }
 
     hoverEvent = () => {
+        if (this.name === "shopBuy") return;
         if (!this.item) {
             this.isPotential = true;
         }
@@ -79,7 +81,7 @@ export class ListCell extends PIXI.Container {
     };
 
     setItem = (item: iPlantData, type: ItemType, count?: number) => {
-        this.item = new InventoryItem(item, this.mapData, type, this.id);
+        this.item = new InventoryItem(item, this.mapData, type, this.name);
 
         this.item.setSize((this.width / 3) * 2, (this.height / 3) * 2);
         if (count) {
@@ -105,14 +107,29 @@ export class ListCell extends PIXI.Container {
         this.bg.removeListener("mouseout", this.unhoverEvent);
     };
 
-    pressEvent = (e: InteractionEvent) => {
-        this.parent.zIndex = 2000;
-        this.zIndex = 100;
-        this.item!.interactiveChildren = false;
+    removeInteractivity = () => {
+        this.removeListener("mousedown", this.pressEvent);
+        this.removeListener("mousemove", this.moveEvent);
+        this.removeListener("mouseup", this.upEvent);
+        this.removeListener("mouseupoutside", this.upEvent);
 
-        this.dragging = true;
-        this.startX = e.data.global.x - this.item!.x;
-        this.startY = e.data.global.y - this.item!.y;
+        this.bg.addListener("mouseover", this.hoverEvent);
+        this.bg.addListener("mouseout", this.unhoverEvent);
+    };
+
+    pressEvent = (e: InteractionEvent) => {
+        if (!LogicState.isShift) {
+            this.parent.zIndex = 2000;
+            this.zIndex = 100;
+            this.item!.interactiveChildren = false;
+            this.dragging = true;
+            this.startX = e.data.global.x - this.item!.x;
+            this.startY = e.data.global.y - this.item!.y;
+        } else {
+            document.dispatchEvent(
+                new CustomEvent<ListCell>("shifted", { detail: this })
+            );
+        }
     };
 
     moveEvent = (e: InteractionEvent) => {
@@ -139,15 +156,10 @@ export class ListCell extends PIXI.Container {
     };
 
     cleanup = () => {
-        // if (this.item) {
-        this.item!.sprite.removeAllListeners();
-
         this.removeChild(this.item!.sprite);
         this.item!.cleanup();
         this.item = undefined;
-        // }
 
-        this.bg.addListener("mouseover", this.hoverEvent);
-        this.bg.addListener("mouseout", this.unhoverEvent);
+        this.removeInteractivity();
     };
 }

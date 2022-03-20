@@ -20,7 +20,8 @@ export class InventoryController extends PIXI.Container {
         //     cell.addListener("click", () => {
         //         this.choose(i);
         //     });
-        this.list = new List(this.mapData, 7, 2);
+        this.list = new List(this.mapData, 7, 2, "inventory");
+        this.list.isActive = true;
         this.addChild(this.list);
 
         setTimeout(() => {
