@@ -9,7 +9,6 @@ export default class Buildings extends ObjectTile {
     constructor(tile: iDataObject, tileSet: TileSet, mapData: TiledMap) {
         super(tile, tileSet);
 
-        // this.setTileProperties();
         this.setCollisionTile(mapData);
     }
 

@@ -331,5 +331,10 @@ export const Config = {
         },
     ],
 
+    dirt: {
+        tileset: "Dirt",
+        base: 48,
+    },
+
     trees: {},
 };

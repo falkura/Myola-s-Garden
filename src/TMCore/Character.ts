@@ -1,7 +1,6 @@
 import anime from "animejs";
 import { Config } from "../Config";
-import { RandomNumber } from "../Util";
-import { hitTestRectangle } from "./Bump";
+import { hitTestRectangle, RandomNumber } from "../Util";
 import { CollisionLayer } from "./CollisionLayer";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";

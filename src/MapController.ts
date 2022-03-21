@@ -56,6 +56,9 @@ export class MapController {
 
         if (!tile.Dirt) {
             const texture = this.map?.getTileset("Dirt")?.textures[35];
+            // this.map?.getTileset(Config.dirt.tileset)?.textures[
+            //     Config.dirt.base
+            // ];
             tile.setDirt(texture!);
         } else if (!tile.Plant) {
             this.se.position.set(tile.x, tile.y);
@@ -131,9 +134,9 @@ export class MapController {
         this.container.addChild(this.inventory);
 
         this.shop = new Shop(this.map, "Meeky Milk`s shop");
-        this.shop.isActive = true;
+        // this.shop.isActive = true;
         this.shop.position.set(500, 200);
-        this.container.addChild(this.shop);
+        // this.container.addChild(this.shop);
 
         this.se = new SeedOption(this.map!);
         this.se.zIndex = 5;

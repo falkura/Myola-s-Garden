@@ -108,3 +108,44 @@ export function RandomNumber(min: number, max: number) {
         min
     );
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function hitTestRectangle(r1: any, r2: any): boolean {
+    let hit = false;
+
+    const xAnchorOffset = r1.anchor !== undefined ? r1.width * r1.anchor.x : 0;
+
+    const yAnchorOffset = r1.anchor !== undefined ? r1.height * r1.anchor.y : 0;
+
+    const xAnchorOffset_ = r2.anchor !== undefined ? r2.width * r2.anchor.x : 0;
+
+    const yAnchorOffset_ =
+        r2.anchor !== undefined ? r2.height * r2.anchor.y : 0;
+
+    const vx =
+        r1.x +
+        Math.abs(r1.width / 2) -
+        xAnchorOffset -
+        (r2.x + Math.abs(r2.width / 2) - xAnchorOffset_);
+    const vy =
+        r1.y +
+        Math.abs(r1.height / 2) -
+        yAnchorOffset -
+        (r2.y + Math.abs(r2.height / 2) - yAnchorOffset_);
+
+    const combinedHalfWidths = Math.abs(r1.width / 2) + Math.abs(r2.width / 2);
+    const combinedHalfHeights =
+        Math.abs(r1.height / 2) + Math.abs(r2.height / 2);
+
+    if (Math.abs(vx) < combinedHalfWidths) {
+        if (Math.abs(vy) < combinedHalfHeights) {
+            hit = true;
+        } else {
+            hit = false;
+        }
+    } else {
+        hit = false;
+    }
+
+    return hit;
+}
