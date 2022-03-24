@@ -1,7 +1,6 @@
 import { Config } from "../Config";
 import Buildings from "./Buildings";
-import Character from "./Character";
-import { CollisionLayer } from "./CollisionLayer";
+// import Character from "./Character";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
@@ -26,8 +25,8 @@ export default class ObjectLayer extends PIXI.Container {
     setLayerTiles(mapData: TiledMap) {
         // @TODO
         if (this.source.name === "buildings") {
-            mapData.collisionLayer = new CollisionLayer(mapData);
-            this.addChild(mapData.collisionLayer);
+            // mapData.collisionLayer = new CollisionLayer(mapData);
+            // this.addChild(mapData.collisionLayer);
         }
 
         for (const objectTile of this.source.objects) {
@@ -52,9 +51,9 @@ export default class ObjectLayer extends PIXI.Container {
     ): ObjectTile {
         let tile: ObjectTile;
         switch (this.source.name) {
-            case "hero":
-                tile = new Character(tileData, tileSet, mapData);
-                break;
+            // case "hero":
+            //     tile = new Character(tileData, tileSet, mapData);
+            //     break;
             case "buildings":
                 tile = new Buildings(tileData, tileSet, mapData);
                 break;

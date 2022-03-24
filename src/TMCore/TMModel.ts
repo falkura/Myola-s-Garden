@@ -184,12 +184,12 @@ export interface iRightClick {
 }
 
 export const movePath = {
-    KeyW: { x: 0, y: -1, animNum: 0 },
-    KeyS: { x: 0, y: 1, animNum: 4 },
-    KeyA: { x: -1, y: 0, animNum: 8 },
-    KeyD: { x: 1, y: 0, animNum: 12 },
-    ArrowUp: { x: 0, y: -1, animNum: 0 },
-    ArrowDown: { x: 0, y: 1, animNum: 4 },
-    ArrowLeft: { x: -1, y: 0, animNum: 8 },
-    ArrowRight: { x: 1, y: 0, animNum: 12 },
+    KeyW: { x: 0, y: -1, animNum: 1 },
+    KeyS: { x: 0, y: 1, animNum: 0 },
+    KeyA: { x: -1, y: 0, animNum: 2 },
+    KeyD: { x: 1, y: 0, animNum: 3 },
+    ArrowUp: { x: 0, y: -1, animNum: 1 },
+    ArrowDown: { x: 0, y: 1, animNum: 0 },
+    ArrowLeft: { x: -1, y: 0, animNum: 2 },
+    ArrowRight: { x: 1, y: 0, animNum: 3 },
 };

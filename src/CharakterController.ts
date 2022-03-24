@@ -1,6 +1,6 @@
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
-import Character from "./TMCore/Character";
+import { CharacterBase } from "./TMCore/CharacterBase";
 import TiledMap from "./TMCore/TiledMap";
 import { movePath } from "./TMCore/TMModel";
 
@@ -9,7 +9,7 @@ export default class CharakterController {
     minFPS = 10;
     maxFPS = 144;
     activeMoves: Array<{ x: number; y: number; animNum: number }> = [];
-    lastMove = 4;
+    lastMove = 0;
     animDuration = 300;
     elapsedTime = 0;
     c = false;
@@ -63,6 +63,9 @@ export default class CharakterController {
                 case "KeyP":
                     document.dispatchEvent(new Event("pi"));
                     break;
+                case "KeyC":
+                    document.dispatchEvent(new Event("newcolor"));
+                    break;
                 default:
                     console.log(e.code);
                     break;
@@ -77,6 +80,11 @@ export default class CharakterController {
 
             if (targetIndex > -1) {
                 this.activeMoves.splice(targetIndex, 1);
+            }
+            if (this.activeMoves.length === 0) {
+                const char = this.getActiveCharakter()!;
+                char.setType(0);
+                char.isRunning = false;
             }
         } else {
             switch (e.code) {
@@ -120,15 +128,26 @@ export default class CharakterController {
         });
 
         if (char) {
-            for (const mp of this.activeMoves) {
-                char.move(mp);
-                // char.gotoAndStop(mp.animNum);
-                // this.lastMove = mp.animNum;
-                // this.updatePosition();
-            }
+            if (this.activeMoves.length > 0) {
+                // char.setType(2);
 
-            if (this.elapsedTime >= this.animDuration / 18) {
-                this.updatePosition();
+                if (this.elapsedTime >= 20) {
+                    this.elapsedTime = 0;
+                    char.isRunning = true;
+                }
+
+                if (char.isRunning) {
+                    char.setType(2);
+                } else {
+                    char.setType(1);
+                }
+
+                for (const mp of this.activeMoves) {
+                    char.move(mp);
+                    // char.gotoAndStop(mp.animNum);
+                    // this.lastMove = mp.animNum;
+                    // this.updatePosition();
+                }
             }
         }
     };
@@ -139,18 +158,17 @@ export default class CharakterController {
         if (char) {
             if (this.activeMoves.length === 0) {
                 if (!this.c) {
-                    char.gotoAndStop(this.lastMove);
+                    char.setDirection(this.lastMove);
                 } else {
-                    char.gotoAndStop(this.lastMove + 1);
+                    char.setDirection(this.lastMove);
                 }
             } else {
                 if (!this.c) {
-                    char.gotoAndStop(this.lastMove + 2);
+                    char.setDirection(this.lastMove);
                 } else {
-                    char.gotoAndStop(this.lastMove + 3);
+                    char.setDirection(this.lastMove);
                 }
             }
-
             this.c = !this.c;
             this.elapsedTime = 0;
         }
@@ -158,7 +176,7 @@ export default class CharakterController {
 
     activateCharakter = () => {};
 
-    getActiveCharakter = (): Character | undefined => {
+    getActiveCharakter = (): CharacterBase | undefined => {
         for (const char of this.map!.charakters) {
             if (char.isActive) {
                 return char;

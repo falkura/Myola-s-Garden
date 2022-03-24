@@ -12,18 +12,19 @@ import {
 } from "./TMModel";
 import { ASSETS } from "../Assets";
 import ObjectLayer from "./ObjectLayer";
-import Character from "./Character";
+// import Character from "./Character";
 import Loader from "./Loader";
 import { Config } from "../Config";
 import { CollisionLayer } from "./CollisionLayer";
 import { Plant } from "../Plant";
 import { Drop } from "./Drop";
+import { CharacterBase } from "./CharacterBase";
 
 export default class TiledMap extends PIXI.Container implements iTiledMap {
     layers: Array<TileLayer | ObjectLayer> = [];
     tilesets: TileSet[] = [];
     drop: Drop[] = [];
-    charakters: Character[] = [];
+    charakters: CharacterBase[] = [];
     app: PIXI.Application;
     loader?: Loader;
     collisionLayer?: CollisionLayer;
@@ -40,6 +41,10 @@ export default class TiledMap extends PIXI.Container implements iTiledMap {
         this.app = app;
 
         this.loadResources().then(() => {
+            this.collisionLayer = new CollisionLayer(this);
+            this.collisionLayer.zIndex = 10000;
+            this.addChild(this.collisionLayer);
+
             this.setDataTileSets();
             this.setDataLayers();
 

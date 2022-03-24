@@ -336,5 +336,9 @@ export const Config = {
         base: 48,
     },
 
+    characterAnim: {
+        idle: [0, 8, 16, 24],
+    },
+
     trees: {},
 };

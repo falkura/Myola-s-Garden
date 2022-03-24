@@ -6,7 +6,7 @@ import { LogicState } from "./logic_state";
 import { ObserverText } from "./Observer";
 import { SeedOption } from "./SeedOption";
 import { TextStyles } from "./TextStyles";
-import Character from "./TMCore/Character";
+import { CharacterBase } from "./TMCore/CharacterBase";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
@@ -22,6 +22,7 @@ export class MapController {
     shop!: Shop;
     se!: SeedOption;
     balanceText!: ObserverText;
+    chb!: CharacterBase;
 
     constructor(app: PIXI.Application) {
         this.app = app;
@@ -48,7 +49,8 @@ export class MapController {
 
     tileChoose = async (e: Event) => {
         const tile: Tile = (e as CustomEvent<Tile>).detail;
-        const char: Character = this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
+        const char: CharacterBase =
+            this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
 
         await char.setPosition(tile.x, tile.y);
         this.offSeed();
@@ -77,7 +79,8 @@ export class MapController {
     collect = async (e: Event) => {
         const drop = (e as CustomEvent<Drop>).detail;
 
-        const char: Character = this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
+        const char: CharacterBase =
+            this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
         await char.setPosition(drop.sprite.x, drop.sprite.y);
 
         const result = this.inventory!.insertItem(drop.data);
@@ -97,7 +100,7 @@ export class MapController {
             if (walkableLayers[i].source.id === al) {
                 for (const tile of walkableLayers[i].tiles) {
                     if (tile) {
-                        const char: Character =
+                        const char: CharacterBase =
                             this.charakterController!.getActiveCharakter()!;
                         const dist = 2;
 
@@ -153,6 +156,13 @@ export class MapController {
         };
         this.balanceText.position.set(50, 10);
         this.container.addChild(this.balanceText);
+
+        setTimeout(() => {
+            this.chb = new CharacterBase(this.map!);
+            this.chb.position.set(310, 300);
+            this.chb.zIndex = 10000;
+            this.map!.addChild(this.chb);
+        }, 300);
     };
 
     removeMap = () => {};

@@ -82,6 +82,10 @@ export default class TileLayer extends PIXI.Container {
         tile._x = tileData.x;
         tile._y = tileData.y;
 
+        if (tile.props && tile.props.objectgroup) {
+            mapData.collisionLayer!.addInvertedCollisionTile(tile);
+        }
+
         if (tile.textures.length > 1 && tile.props.animation) {
             // @TODO
             tile.animationSpeed = 1000 / 60 / tile.props.animation[0].duration;

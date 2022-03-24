@@ -45,7 +45,7 @@ export default class ObjectTile extends PIXI.AnimatedSprite {
     tileSet: TileSet;
     _x!: number;
     _y!: number;
-    textures: PIXI.Texture[];
+    // textures: PIXI.Texture[];
     properties?: iProperties[];
 
     tiles!: Tile[];
