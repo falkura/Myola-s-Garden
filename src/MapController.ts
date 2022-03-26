@@ -7,6 +7,7 @@ import { ObserverText } from "./Observer";
 import { SeedOption } from "./SeedOption";
 import { TextStyles } from "./TextStyles";
 import { CharacterBase } from "./TMCore/CharacterBase";
+import { Chest } from "./TMCore/Chest";
 import { Drop } from "./TMCore/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
@@ -23,6 +24,7 @@ export class MapController {
     se!: SeedOption;
     balanceText!: ObserverText;
     chb!: CharacterBase;
+    chest!: Chest;
 
     constructor(app: PIXI.Application) {
         this.app = app;
@@ -159,9 +161,14 @@ export class MapController {
 
         setTimeout(() => {
             this.chb = new CharacterBase(this.map!);
-            this.chb.position.set(310, 300);
+            this.chb.position.set(130, 250);
             this.chb.zIndex = 10000;
             this.map!.addChild(this.chb);
+
+            this.chest = new Chest(this.map!);
+            this.chest.position.set(120, 170);
+            this.chest.zIndex = 10000;
+            this.map!.addChild(this.chest);
         }, 300);
     };
 

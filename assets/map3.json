@@ -74,7 +74,7 @@
                  "value":true
                 }],
          "type":"tilelayer",
-         "visible":false,
+         "visible":true,
          "width":30,
          "x":0,
          "y":0
@@ -112,24 +112,6 @@
                  "width":16,
                  "x":256,
                  "y":256
-                }, 
-                {
-                 "gid":66,
-                 "height":31.8894,
-                 "id":11,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"isWall",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":36.164,
-                 "type":"",
-                 "visible":false,
-                 "width":21.2687,
-                 "x":143.698983333333,
-                 "y":256.721966666667
                 }, 
                 {
                  "gid":69,
@@ -250,35 +232,6 @@
                  "width":16,
                  "x":256,
                  "y":240
-                }],
-         "opacity":1,
-         "type":"objectgroup",
-         "visible":true,
-         "x":0,
-         "y":0
-        }, 
-        {
-         "draworder":"topdown",
-         "id":4,
-         "name":"hero",
-         "objects":[
-                {
-                 "gid":83,
-                 "height":16,
-                 "id":12,
-                 "name":"",
-                 "properties":[
-                        {
-                         "name":"isHero",
-                         "type":"bool",
-                         "value":true
-                        }],
-                 "rotation":0,
-                 "type":"",
-                 "visible":true,
-                 "width":16,
-                 "x":198,
-                 "y":182.5
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -452,7 +405,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -478,7 +430,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -513,7 +464,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1125,7 +1075,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1151,7 +1100,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1177,7 +1125,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1203,7 +1150,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1229,7 +1175,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1266,7 +1211,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1292,7 +1236,6 @@
                  "objectgroup":
                     {
                      "draworder":"index",
-                     "id":2,
                      "name":"",
                      "objects":[
                             {
@@ -1424,6 +1367,19 @@
          "name":"char",
          "spacing":0,
          "tilecount":192,
+         "tileheight":48,
+         "tilewidth":48
+        }, 
+        {
+         "columns":5,
+         "firstgid":2426,
+         "image":"TileSets\/Buildings\/Chest.png",
+         "imageheight":96,
+         "imagewidth":240,
+         "margin":0,
+         "name":"Chest",
+         "spacing":0,
+         "tilecount":10,
          "tileheight":48,
          "tilewidth":48
         }],

@@ -22,7 +22,6 @@ export enum AnimationDirectoins {
 export class CharacterBase extends PIXI.Sprite {
     mapData: TiledMap;
     animations: PIXI.AnimatedSprite[][] = [];
-    static: PIXI.AnimatedSprite[] = [];
     animSpeed = 5000;
     animKeys = 8;
     direction: AnimationDirectoins = AnimationDirectoins.Down;
