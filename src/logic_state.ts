@@ -1,5 +1,5 @@
-import { AppState } from "./Model";
 import { Subject } from "./Observer";
+import { AppState } from "./Model";
 
 export class LogicStateClass extends Subject {
     is_music_on = true;

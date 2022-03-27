@@ -1,6 +1,10 @@
-import { SessionConfig, SessionConfigType, Languages } from "./SessionConfig";
 import FontFaceObserver from "fontfaceobserver";
 import { FONTS } from "./Assets";
+import {
+    Languages,
+    SessionConfig,
+    SessionConfigType,
+} from "./Config/SessionConfig";
 
 export class PrePreloader {
     readonly container: PIXI.Container;

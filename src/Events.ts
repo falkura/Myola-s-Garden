@@ -30,12 +30,6 @@ export const EVENTS = {
         Off: "SeedOff",
     },
 
-    Debug: {
-        DandD: "DebugDandD",
-        SetItem: "DebugSetItem",
-        RemoveItem: "DebugRemoveItem",
-    },
-
     Action: {
         Tile: {
             Choose: "ActionTileChoose",

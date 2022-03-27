@@ -1,8 +1,8 @@
 import * as PIXI from "pixi.js";
 import { EVENTS } from "../Events";
-import { Plant } from "../Plant";
+import { Plant } from "../GameObjects/Plant";
 import TiledMap from "./TiledMap";
-import { iTiles } from "./TMModel";
+import { iTiles } from "../Model";
 
 export default class Tile extends PIXI.AnimatedSprite {
     _x!: number;

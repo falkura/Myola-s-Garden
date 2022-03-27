@@ -1,8 +1,8 @@
-import { Clickable } from "../Clickable";
+import { Clickable } from "./Clickable";
 import { EVENTS } from "../Events";
 import TiledMap from "../TMCore/TiledMap";
-import { iPlantData } from "../TMCore/TMModel";
-import { WAILAData } from "../TMCore/WAILA";
+import { iPlantData } from "../Model";
+import { WAILAData } from "../WAILA";
 
 export type ItemState = "inventory" | "drop";
 export type ItemType = "drop" | "seed";
@@ -56,9 +56,6 @@ export class Item extends PIXI.Container {
 
     public set state(s: ItemState) {
         this._state = s;
-
-        // this.sprite.hoverEvents = [];
-        // this.sprite.unhoverEvents = [];
     }
 
     public get state(): ItemState {

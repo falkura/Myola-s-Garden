@@ -1,5 +1,4 @@
-import { Config } from "./Config";
-// import { EVENTS } from "./Events";
+import { Common } from "./Config/Common";
 
 export class Background {
     app: PIXI.Application;
@@ -15,8 +14,8 @@ export class Background {
         );
         this.bg.anchor.set(0.5);
         this.bg.position.set(
-            Config.app_width - (this.bg.width / 2) * 4,
-            Config.app_height / 2
+            Common.app_width - (this.bg.width / 2) * 4,
+            Common.app_height / 2
         );
         // this.bg.interactive = true;
         // this.bg.cursor = "pointer";
@@ -29,6 +28,6 @@ export class Background {
     }
 
     resize = () => {
-        this.bg.position.x = Config.game_width - this.bg.width / 2;
+        this.bg.position.x = Common.game_width - this.bg.width / 2;
     };
 }

@@ -1,4 +1,4 @@
-import { WAILA } from "../TMCore/WAILA";
+import { WAILA } from "../WAILA";
 import { InGameUI } from "./InGameUI";
 import { MenuUI } from "./MenuUI";
 

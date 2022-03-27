@@ -1,12 +1,11 @@
 import { ASSETS } from "../Assets";
 import { EVENTS } from "../Events";
-import { SessionConfig } from "../SessionConfig";
-import { iMapData } from "./TMModel";
+import { SessionConfig } from "../Config/SessionConfig";
+import { iMapData } from "../Model";
 
 export default class Loader {
     mapData: iMapData;
     container: PIXI.Container;
-    instance = PIXI.Loader;
 
     constructor(mapData: iMapData) {
         this.mapData = mapData;
@@ -16,7 +15,7 @@ export default class Loader {
     load = (): Promise<void> => {
         document.dispatchEvent(new Event(EVENTS.Load.Start));
 
-        const loader = this.instance.shared;
+        const loader = PIXI.Loader.shared;
         for (const tileset of this.mapData.tilesets) {
             loader.add(
                 tileset.name,

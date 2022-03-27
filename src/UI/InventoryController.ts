@@ -1,7 +1,7 @@
 import TiledMap from "../TMCore/TiledMap";
-import { iPlantData } from "../TMCore/TMModel";
-import { Rarity } from "../TMCore/WAILA";
-import { List } from "./List";
+import { iPlantData } from "../Model";
+import { Rarity } from "../WAILA";
+import { List } from "../GameObjects/List/List";
 
 export class InventoryController extends PIXI.Container {
     mapData: TiledMap;
@@ -68,11 +68,7 @@ export class InventoryController extends PIXI.Container {
                     }
             });
         });
-        console.log(done);
 
         return done;
-
-        console.log("not enough space");
-        return false;
     };
 }

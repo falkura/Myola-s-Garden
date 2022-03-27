@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { Observer } from "../../Observer";
-import { TextStyles } from "../../TextStyles";
+import { TextStyles } from "../../Config/TextStyles";
 
 export class ButtonTemp extends PIXI.Container implements Observer {
     event?: Event | CustomEvent;

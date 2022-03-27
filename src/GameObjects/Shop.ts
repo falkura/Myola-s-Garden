@@ -1,9 +1,9 @@
 import { LogicState } from "../logic_state";
 import { ObserverText } from "../Observer";
-import { TextStyles } from "../TextStyles";
+import { TextStyles } from "../Config/TextStyles";
 import TiledMap from "../TMCore/TiledMap";
-import { ButtonTemp } from "./Components/ButtonTemp";
-import { List } from "./List";
+import { ButtonTemp } from "../UI/Components/ButtonTemp";
+import { List } from "./List/List";
 
 export class Shop extends PIXI.Container {
     buyList!: List;

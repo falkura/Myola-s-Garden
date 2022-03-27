@@ -3,6 +3,7 @@ import { EVENTS } from "./Events";
 import { Subject } from "./Observer";
 import { MapController } from "./MapController";
 import { ControllerUI } from "./UI/ControllerUI";
+import { Keyboard } from "./Keyboard";
 
 export class Game extends Subject {
     readonly container: PIXI.Container;
@@ -49,6 +50,8 @@ export class Game extends Subject {
         this.mapController?.createMap("map3");
         this.controller_ui!.main_menu!.visible = false;
         this.controller_ui!.game_menu!.visible = true;
+
+        new Keyboard();
     };
 
     remove_map = () => {};

@@ -1,6 +1,9 @@
-import TiledMap from "./TiledMap";
+import TiledMap from "../TMCore/TiledMap";
 
-export class MapObject extends PIXI.Sprite {
+export class GameObject extends PIXI.Sprite {
+    private __x?: number;
+    private __y?: number;
+
     mapData: TiledMap;
     isCharacter: boolean;
     collisionLayer: PIXI.Graphics[] = [];
@@ -37,4 +40,20 @@ export class MapObject extends PIXI.Sprite {
             this.mapData.collisionLayer!.collisionsMap.push(this);
         }
     };
+
+    public get _x(): number {
+        return this.__x ? this.__x : this.x / this.mapData.source.tilewidth;
+    }
+
+    public set _x(v: number) {
+        this.__x = v;
+    }
+
+    public get _y(): number {
+        return this.__y ? this.__y : this.y / this.mapData.source.tileheight;
+    }
+
+    public set _y(v: number) {
+        this.__y = v;
+    }
 }

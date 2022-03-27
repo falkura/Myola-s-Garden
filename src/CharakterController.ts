@@ -1,13 +1,13 @@
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import TiledMap from "./TMCore/TiledMap";
-import { movePath } from "./TMCore/TMModel";
+import { iMovePath } from "./Model";
 
 export default class CharakterController {
     map: TiledMap;
     minFPS = 10;
     maxFPS = 144;
-    activeMoves: Array<{ x: number; y: number; animNum: number }> = [];
+    activeMoves: iMovePath[] = [];
     lastMove = 0;
     animDuration = 300;
     elapsedTime = 0;
@@ -21,84 +21,57 @@ export default class CharakterController {
 
         this.addTicker();
         this.map.app.ticker.maxFPS = this.maxFPS;
-
-        // PIXI.Ticker.shared.add(this.update);
-        // PIXI.Ticker.shared.speed = 1;
-        // PIXI.Ticker.shared.add(this.update1);
     }
 
     addEventListeners = () => {
-        document.addEventListener("keydown", this.processKeyDown);
-        document.addEventListener("keyup", this.processKeyUp);
+        document.addEventListener("keyMoveOn", this.keyMoveOn);
+        document.addEventListener("keyMoveOff", this.keyMoveOff);
+        document.addEventListener("shiftOn", this.shiftOn);
+        document.addEventListener("shiftOff", this.shiftOff);
     };
 
-    processKeyDown = (e: KeyboardEvent) => {
-        if (movePath.hasOwnProperty(e.code)) {
-            if (this.seedMode) return;
+    keyMoveOn = (e: Event) => {
+        if (this.seedMode) return;
 
-            const targetPath = movePath[e.code as keyof typeof movePath];
-            const pathExist = this.activeMoves.includes(targetPath);
-            this.lastMove = targetPath.animNum;
-            this.updatePosition();
+        const targetPath = (e as CustomEvent<iMovePath>).detail;
+        const pathExist = this.activeMoves.includes(targetPath);
 
-            if (!pathExist) {
-                this.activeMoves.push(targetPath);
-            }
-        } else {
-            switch (e.code) {
-                case "ShiftLeft":
-                case "ShiftRight":
-                    if (!this.seedMode) {
-                        LogicState.isShift = true;
-                        this.seedMode = true;
-                        this.activeMoves = [];
+        this.lastMove = targetPath.animNum;
+        this.updatePosition();
 
-                        document.dispatchEvent(new Event(EVENTS.Seed.On));
-                    }
-                    break;
-                case "KeyI":
-                    document.dispatchEvent(new Event("si"));
-                    break;
-                case "KeyP":
-                    document.dispatchEvent(new Event("pi"));
-                    break;
-                case "KeyC":
-                    document.dispatchEvent(new Event("newcolor"));
-                    break;
-                default:
-                    console.log(e.code);
-                    break;
-            }
+        if (!pathExist) {
+            this.activeMoves.push(targetPath);
         }
     };
 
-    processKeyUp = (e: KeyboardEvent) => {
-        if (movePath.hasOwnProperty(e.code)) {
-            const targetPath = movePath[e.code as keyof typeof movePath];
-            const targetIndex = this.activeMoves.indexOf(targetPath);
+    keyMoveOff = (e: Event) => {
+        const targetPath = (e as CustomEvent<iMovePath>).detail;
+        const targetIndex = this.activeMoves.indexOf(targetPath);
 
-            if (targetIndex > -1) {
-                this.activeMoves.splice(targetIndex, 1);
-            }
-            if (this.activeMoves.length === 0) {
-                const char = this.map.charakter;
-                char.setType(0);
-                char.isRunning = false;
-            }
-        } else {
-            switch (e.code) {
-                case "ShiftLeft":
-                case "ShiftRight":
-                    LogicState.isShift = false;
-                    this.seedMode = false;
-                    document.dispatchEvent(new Event(EVENTS.Seed.Off));
-                    break;
-
-                default:
-                    // console.log(e.code);
-                    break;
-            }
+        if (targetIndex > -1) {
+            this.activeMoves.splice(targetIndex, 1);
         }
+
+        if (this.activeMoves.length === 0) {
+            this.map.charakter.setType(0);
+            this.map.charakter.isRunning = false;
+        }
+    };
+
+    shiftOn = () => {
+        if (!this.seedMode) {
+            LogicState.isShift = true;
+            this.seedMode = true;
+            this.activeMoves = [];
+
+            document.dispatchEvent(new Event(EVENTS.Seed.On));
+        }
+    };
+
+    shiftOff = () => {
+        LogicState.isShift = false;
+        this.seedMode = false;
+        document.dispatchEvent(new Event(EVENTS.Seed.Off));
     };
 
     addTicker = () => {

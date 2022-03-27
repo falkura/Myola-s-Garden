@@ -1,9 +1,9 @@
 import { InteractionEvent } from "pixi.js";
-import { LogicState } from "../logic_state";
-import TiledMap from "../TMCore/TiledMap";
-import { iPlantData } from "../TMCore/TMModel";
-import { InventoryItem } from "./InventoryItem";
-import { ItemType } from "./Item";
+import { LogicState } from "../../logic_state";
+import { iPlantData } from "../../Model";
+import TiledMap from "../../TMCore/TiledMap";
+import { InventoryItem } from "../InventoryItem";
+import { ItemType } from "../Item";
 
 export class ListCell extends PIXI.Container {
     private _isActive = false;
@@ -25,8 +25,6 @@ export class ListCell extends PIXI.Container {
         this.size = size;
         this.name = name;
 
-        // this.interactive = true;
-        // this.addListener("mousedown", this.on_click);
         this.createBg();
     }
 

@@ -1,6 +1,6 @@
 import anime from "animejs";
 import { EVENTS } from "../Events";
-import { TextStyles } from "../TextStyles";
+import { TextStyles } from "../Config/TextStyles";
 import { ButtonTemp } from "./Components/ButtonTemp";
 import { Settings } from "./Settings";
 

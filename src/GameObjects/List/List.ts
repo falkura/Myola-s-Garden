@@ -1,6 +1,6 @@
-import { LogicState } from "../logic_state";
-import TiledMap from "../TMCore/TiledMap";
-import { iPlantData } from "../TMCore/TMModel";
+import { LogicState } from "../../logic_state";
+import TiledMap from "../../TMCore/TiledMap";
+import { iPlantData } from "../../Model";
 import { ListCell } from "./ListCell";
 
 export class List extends PIXI.Container {
@@ -70,7 +70,10 @@ export class List extends PIXI.Container {
             }
         }
 
-        document.addEventListener("si", () => (this.visible = !this.visible));
+        document.addEventListener(
+            "inventoryVisible",
+            () => (this.visible = !this.visible)
+        );
         document.addEventListener("dropped", this.onDrop);
         document.addEventListener("shifted", this.onShifted);
     }

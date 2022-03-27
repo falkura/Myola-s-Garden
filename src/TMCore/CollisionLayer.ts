@@ -1,12 +1,12 @@
-import { MapObject } from "./MapObject";
+import { GameObject } from "../GameObjects/GameObject";
 import ObjectTile from "./ObjectTile";
 import Tile from "./Tile";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
 
 export class CollisionLayer extends PIXI.Container {
-    collisionsMap: Array<Tile | ObjectTile | MapObject> = [];
-    objectsMap: MapObject[] = [];
+    collisionsMap: Array<Tile | ObjectTile | GameObject> = [];
+    objectsMap: GameObject[] = [];
     mapData: TiledMap;
 
     constructor(mapData: TiledMap) {

@@ -1,10 +1,10 @@
 import anime from "animejs";
-import { Config } from "./Config";
-import TiledMap from "./TMCore/TiledMap";
-import { calculateCoordinate } from "./Util";
+import TiledMap from "../TMCore/TiledMap";
+import { calculateCoordinate } from "../Util";
 import { Clickable } from "./Clickable";
 import { Seed } from "./Seed";
-import { EVENTS } from "./Events";
+import { EVENTS } from "../Events";
+import { Plants } from "../Config/Plants";
 
 export class SeedOption extends PIXI.Sprite {
     mapData: TiledMap;
@@ -82,14 +82,14 @@ export class SeedOption extends PIXI.Sprite {
             document.addEventListener("mousedown", listener);
 
             const coords = calculateCoordinate(
-                Config.plants.length,
+                Plants.plants.length,
                 this.mapData.source.tilewidth * 1.5,
                 0,
                 0
             );
 
             for (let i = 0; i < coords.length; i++) {
-                const item = new Seed(Config.plants[i], this.mapData);
+                const item = new Seed(Plants.plants[i], this.mapData);
 
                 item.sprite.anchor.set(0.5, 0.5);
                 item.sprite.addListener("mousedown", () => {

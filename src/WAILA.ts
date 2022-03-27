@@ -15,8 +15,8 @@ export interface WAILAData {
     code?: string;
 }
 
-import { EVENTS } from "../Events";
-import { TextStyles } from "../TextStyles";
+import { EVENTS } from "./Events";
+import { TextStyles } from "./Config/TextStyles";
 
 export class WAILA extends PIXI.Container {
     title: PIXI.Text;

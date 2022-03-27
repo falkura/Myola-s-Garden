@@ -1,15 +1,7 @@
 import * as PIXI from "pixi.js";
 import Tile from "./Tile";
 import TileSet from "./TileSet";
-import { iAnimation, iDataObject, iProperties } from "./TMModel";
-
-function setTextures(tile: iDataObject, tileSet: TileSet) {
-    const textures: PIXI.Texture[] = [];
-
-    textures.push(tileSet.textures[tile.gid - tileSet.source.firstgid]);
-
-    return textures;
-}
+import { iAnimation, iDataObject, iProperties } from "../Model";
 
 export default class ObjectTile extends PIXI.AnimatedSprite {
     id!: number;
@@ -17,7 +9,6 @@ export default class ObjectTile extends PIXI.AnimatedSprite {
     tileSet: TileSet;
     _x!: number;
     _y!: number;
-    // textures: PIXI.Texture[];
     properties?: iProperties[];
 
     tiles!: Tile[];
@@ -27,11 +18,8 @@ export default class ObjectTile extends PIXI.AnimatedSprite {
     collisionLayer: PIXI.Graphics[] = [];
 
     constructor(tileData: iDataObject, tileSet: TileSet) {
-        // const { textures, animations } =
-        super(setTextures(tileData, tileSet));
+        super([tileSet.textures[tileData.gid - tileSet.source.firstgid]]);
 
-        // this.textures = textures;
-        // this.animations = animations;
         this.tileSet = tileSet;
 
         this.source = tileData;

@@ -9,22 +9,21 @@ import {
     iTileset,
     LayerType,
     iTiledMap,
-} from "./TMModel";
+} from "../Model";
 import { ASSETS } from "../Assets";
 import ObjectLayer from "./ObjectLayer";
-// import Character from "./Character";
 import Loader from "./Loader";
-import { Config } from "../Config";
 import { CollisionLayer } from "./CollisionLayer";
-import { Plant } from "../Plant";
-import { Drop } from "./Drop";
-import { CharacterBase } from "./CharacterBase";
+import { Plant } from "../GameObjects/Plant";
+import { Drop } from "../GameObjects/Drop";
+import { Character } from "../GameObjects/Character";
+import { Common } from "../Config/Common";
 
 export default class TiledMap extends PIXI.Container implements iTiledMap {
     layers: Array<TileLayer | ObjectLayer> = [];
     tilesets: TileSet[] = [];
     drop: Drop[] = [];
-    charakter!: CharacterBase;
+    charakter!: Character;
     app: PIXI.Application;
     loader?: Loader;
     collisionLayer?: CollisionLayer;
@@ -37,7 +36,7 @@ export default class TiledMap extends PIXI.Container implements iTiledMap {
 
         this.source = ASSETS[resourceId].data as iMapData;
 
-        this.scale.set(Config.map_scale);
+        this.scale.set(Common.map_scale);
         this.app = app;
 
         this.loadResources().then(() => {
@@ -48,8 +47,8 @@ export default class TiledMap extends PIXI.Container implements iTiledMap {
             this.setDataTileSets();
             this.setDataLayers();
 
-            Config.map_static_width = this.width;
-            Config.map_static_height = this.height;
+            Common.map_static_width = this.width;
+            Common.map_static_height = this.height;
 
             document.dispatchEvent(new Event("map_created"));
         });

@@ -1,9 +1,8 @@
-import { Config } from "../Config";
-// import Character from "./Character";
+import { Common } from "../Config/Common";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
-import { iDataObject, iObjectLayer } from "./TMModel";
+import { iDataObject, iObjectLayer } from "../Model";
 
 export default class ObjectLayer extends PIXI.Container {
     objects!: iDataObject[];
@@ -16,18 +15,12 @@ export default class ObjectLayer extends PIXI.Container {
         super();
         this.source = layer;
 
-        this.scale.set(Config.map_scale);
+        this.scale.set(Common.map_scale);
 
         this.setLayerTiles(mapData);
     }
 
     setLayerTiles(mapData: TiledMap) {
-        // @TODO
-        if (this.source.name === "buildings") {
-            // mapData.collisionLayer = new CollisionLayer(mapData);
-            // this.addChild(mapData.collisionLayer);
-        }
-
         for (const objectTile of this.source.objects) {
             if (this.tileExists_(objectTile)) {
                 const tileSet = mapData.findTileSet(objectTile.gid);
@@ -64,19 +57,14 @@ export default class ObjectLayer extends PIXI.Container {
             mapData.collisionLayer!.addCollision(tile, tileSet);
         }
 
-        // if (tile.textures.length > 1 && tile.props.animations) {
-        //     tile.animationSpeed = 1000 / 60 / tile.props.animations[0].duration;
-        //     tile.gotoAndPlay(0);
-        // }
-
         return tile as ObjectTile;
     }
 
-    tileExists_(layer: iDataObject) {
+    tileExists_(layer: iDataObject): boolean {
         return !!layer.gid;
     }
 
-    tileExists(i: number) {
+    tileExists(i: number): boolean {
         for (const tile of this.tiles) {
             if (tile._x + tile._y * 16 === i) return true;
         }

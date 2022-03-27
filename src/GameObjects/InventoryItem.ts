@@ -1,6 +1,6 @@
-import { TextStyles } from "../TextStyles";
+import { TextStyles } from "../Config/TextStyles";
 import TiledMap from "../TMCore/TiledMap";
-import { iPlantData } from "../TMCore/TMModel";
+import { iPlantData } from "../Model";
 import { Item, ItemType } from "./Item";
 
 export class InventoryItem extends Item {

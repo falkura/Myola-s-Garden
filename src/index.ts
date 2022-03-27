@@ -1,5 +1,4 @@
 import "pixi-spine";
-// import { TiledMap } from "./TMCore/TiledMap";
 import packageInfo from "../package.json";
 import { App } from "./App";
 

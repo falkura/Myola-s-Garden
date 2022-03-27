@@ -4,7 +4,7 @@ import { LogicState, LogicStateClass, change_app_state } from "./logic_state";
 import { PrePreloader } from "./PrePreloader";
 import { Preloader } from "./Preloader";
 import { Game } from "./Game";
-import { Config } from "./Config";
+import { Common } from "./Config/Common";
 
 declare const window: any;
 
@@ -44,8 +44,8 @@ export class App {
         // PIXI.settings.PRECISION_FRAGMENT = PIXI.PRECISION.HIGH;
 
         return new PIXI.Application({
-            width: Config.app_width,
-            height: Config.app_height,
+            width: Common.app_width,
+            height: Common.app_height,
             view: this.canvas,
             sharedLoader: true,
             sharedTicker: true,
@@ -55,8 +55,8 @@ export class App {
     };
 
     on_resize = () => {
-        Config.game_width = this.app.screen.width;
-        Config.game_height = this.app.screen.height;
+        Common.game_width = this.app.screen.width;
+        Common.game_height = this.app.screen.height;
         if (this.game) {
             this.game.on_resize();
         }

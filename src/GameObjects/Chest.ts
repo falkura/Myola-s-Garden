@@ -1,18 +1,13 @@
 import anime from "animejs";
-import { List } from "../UI/List";
-import { MapObject } from "./MapObject";
-import TiledMap from "./TiledMap";
+import { List } from "./List/List";
+import { GameObject } from "./GameObject";
+import TiledMap from "../TMCore/TiledMap";
 
-export class Chest extends MapObject {
-    // mapData: TiledMap;
-    // collisionLayer!: PIXI.Graphics;
+export class Chest extends GameObject {
     animation!: PIXI.AnimatedSprite;
     animSpeed = 5000;
     animKeys = 5;
     _isOpen = false;
-
-    _x!: number;
-    _y!: number;
 
     list!: List;
 

@@ -1,7 +1,7 @@
-import TiledMap from "./TMCore/TiledMap";
-import { iPlantData } from "./TMCore/TMModel";
-import { Item } from "./UI/Item";
-import { formatTime } from "./Util";
+import TiledMap from "../TMCore/TiledMap";
+import { iPlantData } from "../Model";
+import { Item } from "./Item";
+import { formatTime } from "../Util";
 
 export class Seed extends Item {
     mapData: TiledMap;

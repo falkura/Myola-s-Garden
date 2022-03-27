@@ -1,6 +1,6 @@
-import TiledMap from "./TiledMap";
-import { iPlantData } from "./TMModel";
-import { Item } from "../UI/Item";
+import TiledMap from "../TMCore/TiledMap";
+import { iPlantData } from "../Model";
+import { Item } from "./Item";
 
 export class Drop extends Item {
     mapData: TiledMap;
@@ -27,12 +27,10 @@ export class Drop extends Item {
 
         this.sprite.is_hovered = false;
         this.sprite.unhoverEvent();
-        console.log("some drop");
     };
 
     remove = () => {
         const index = this.mapData.drop.indexOf(this);
-        console.log(index);
         this.mapData.drop.splice(index, 1);
         this.sprite.destroy();
     };

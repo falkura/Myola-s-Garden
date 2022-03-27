@@ -1,18 +1,17 @@
-// import { Tile } from "./TMCore/Tile";
 import CharakterController from "./CharakterController";
-import { Config } from "./Config";
+import { Common } from "./Config/Common";
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { ObserverText } from "./Observer";
-import { SeedOption } from "./SeedOption";
-import { TextStyles } from "./TextStyles";
-import { CharacterBase } from "./TMCore/CharacterBase";
-import { Chest } from "./TMCore/Chest";
-import { Drop } from "./TMCore/Drop";
+import { SeedOption } from "./GameObjects/SeedOption";
+import { TextStyles } from "./Config/TextStyles";
+import { Character } from "./GameObjects/Character";
+import { Chest } from "./GameObjects/Chest";
+import { Drop } from "./GameObjects/Drop";
 import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
-import { Shop } from "./UI/Shop";
+import { Shop } from "./GameObjects/Shop";
 
 export class MapController {
     map?: TiledMap;
@@ -23,7 +22,7 @@ export class MapController {
     shop!: Shop;
     se!: SeedOption;
     balanceText!: ObserverText;
-    chb!: CharacterBase;
+    chb!: Character;
     chest!: Chest;
 
     constructor(app: PIXI.Application) {
@@ -44,7 +43,6 @@ export class MapController {
         document.addEventListener(EVENTS.Seed.On, this.onSeed);
         document.addEventListener(EVENTS.Seed.Off, this.offSeed);
         // document.addEventListener(EVENTS.Debug.SetItem, this.setItem);
-        document.addEventListener(EVENTS.Debug.RemoveItem, this.removeItem);
         document.addEventListener(EVENTS.Action.Tile.Choose, this.tileChoose);
         document.addEventListener("collect_item", this.collect);
     };
@@ -134,7 +132,7 @@ export class MapController {
         this.charakterController = new CharakterController(this.map);
         this.container.addChild(this.map);
         this.inventory = new InventoryController(this.map);
-        this.inventory.position.set(Config.inventoryCellBorder / 2, 200);
+        this.inventory.position.set(Common.inventoryCellBorder / 2, 200);
         this.container.addChild(this.inventory);
 
         this.shop = new Shop(this.map, "Meeky Milk`s shop");
@@ -159,7 +157,7 @@ export class MapController {
         this.container.addChild(this.balanceText);
 
         setTimeout(() => {
-            this.chb = new CharacterBase(this.map!);
+            this.chb = new Character(this.map!);
             this.chb.position.set(130, 250);
             this.chb.zIndex = 10000;
             this.map!.addChild(this.chb);
@@ -177,22 +175,22 @@ export class MapController {
         const step = 0.2;
 
         if (e.deltaY > 0) {
-            if (Config.map_scale >= Config.min_scale) {
-                if (this.map!.scale.x - step <= Config.min_scale) {
-                    this.map!.scale.x = this.map!.scale.y = Config.min_scale;
+            if (Common.map_scale >= Common.min_scale) {
+                if (this.map!.scale.x - step <= Common.min_scale) {
+                    this.map!.scale.x = this.map!.scale.y = Common.min_scale;
                 } else {
                     this.map!.scale.x = this.map!.scale.y -= step;
                 }
-                Config.map_scale = this.map!.scale.x;
+                Common.map_scale = this.map!.scale.x;
             }
         } else {
-            if (Config.map_scale <= Config.max_scale) {
-                if (this.map!.scale.x + step >= Config.max_scale) {
-                    this.map!.scale.x = this.map!.scale.y = Config.max_scale;
+            if (Common.map_scale <= Common.max_scale) {
+                if (this.map!.scale.x + step >= Common.max_scale) {
+                    this.map!.scale.x = this.map!.scale.y = Common.max_scale;
                 } else {
                     this.map!.scale.x = this.map!.scale.y += step;
                 }
-                Config.map_scale = this.map!.scale.x;
+                Common.map_scale = this.map!.scale.x;
             }
         }
 
@@ -201,18 +199,18 @@ export class MapController {
 
     resize = () => {
         if (this.map) {
-            if (Config.game_width / Config.game_height >= 1) {
-                Config.map_scale = Config.game_width / Config.map_static_width;
+            if (Common.game_width / Common.game_height >= 1) {
+                Common.map_scale = Common.game_width / Common.map_static_width;
             } else {
-                Config.map_scale =
-                    Config.game_height / Config.map_static_height;
+                Common.map_scale =
+                    Common.game_height / Common.map_static_height;
             }
 
-            Config.min_scale = Config.map_scale;
-            this.map.scale.set(Config.map_scale);
+            Common.min_scale = Common.map_scale;
+            this.map.scale.set(Common.map_scale);
 
-            this.map.x = (this.map.source.tilewidth / 2) * Config.map_scale;
-            this.map.y = (this.map.source.tileheight / 2) * Config.map_scale;
+            this.map.x = (this.map.source.tilewidth / 2) * Common.map_scale;
+            this.map.y = (this.map.source.tileheight / 2) * Common.map_scale;
 
             if (this.map!.charakter) {
                 this.map!.charakter.cameraMove();
@@ -220,8 +218,8 @@ export class MapController {
         }
 
         if (this.inventory) {
-            this.inventory.x = Config.game_width / 2 - this.inventory.width / 2;
-            this.inventory.y = Config.game_height - this.inventory.height;
+            this.inventory.x = Common.game_width / 2 - this.inventory.width / 2;
+            this.inventory.y = Common.game_height - this.inventory.height;
         }
     };
 }

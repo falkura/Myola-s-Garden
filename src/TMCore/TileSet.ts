@@ -1,6 +1,6 @@
 import * as PIXI from "pixi.js";
 import { ASSETS } from "../Assets";
-import { iTileset } from "./TMModel";
+import { iTileset } from "../Model";
 
 export default class TileSet {
     textures!: PIXI.Texture[];

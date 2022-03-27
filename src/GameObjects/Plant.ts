@@ -1,14 +1,14 @@
 import anime from "animejs";
-import { Config } from "./Config";
-import { Drop } from "./TMCore/Drop";
-import Tile from "./TMCore/Tile";
-import TiledMap from "./TMCore/TiledMap";
-import TileSet from "./TMCore/TileSet";
-import { iPlantData } from "./TMCore/TMModel";
-import { formatTime } from "./Util";
-import { EVENTS } from "./Events";
+import { Drop } from "./Drop";
+import Tile from "../TMCore/Tile";
+import TiledMap from "../TMCore/TiledMap";
+import TileSet from "../TMCore/TileSet";
+import { iPlantData } from "../Model";
+import { formatTime } from "../Util";
+import { EVENTS } from "../Events";
 import { Clickable } from "./Clickable";
-import { WAILAData } from "./TMCore/WAILA";
+import { WAILAData } from "../WAILA";
+import { Plants } from "../Config/Plants";
 
 export class Plant extends Clickable {
     isGrown = false;
@@ -25,12 +25,12 @@ export class Plant extends Clickable {
 
     constructor(id: number, mapData: TiledMap, tile: Tile) {
         super(
-            mapData.getTileset(Config.plants[id].plant.tileset)!.textures[id]
+            mapData.getTileset(Plants.plants[id].plant.tileset)!.textures[id]
         );
-        this.data = Config.plants[id];
+        this.data = Plants.plants[id];
         this.mapData = mapData;
         this.cell = tile;
-        this.tileset = mapData.getTileset(Config.plants[id].plant.tileset)!;
+        this.tileset = mapData.getTileset(Plants.plants[id].plant.tileset)!;
         // this.dropData = Config.drops[this.data.drop];
 
         if (this.data.plant.animation) {

@@ -1,9 +1,9 @@
 import * as PIXI from "pixi.js";
-import { Config } from "../Config";
+import { Common } from "../Config/Common";
 import Tile from "./Tile";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
-import { iProperties, iTileData, iTileLayer, iTiles } from "./TMModel";
+import { iProperties, iTileData, iTileLayer, iTiles } from "../Model";
 
 export default class TileLayer extends PIXI.Container {
     properties?: iProperties[];
@@ -17,7 +17,7 @@ export default class TileLayer extends PIXI.Container {
         super();
 
         this.source = layer;
-        this.scale.set(Config.map_scale);
+        this.scale.set(Common.map_scale);
 
         this.setLayerTiles(mapData);
 

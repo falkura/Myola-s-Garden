@@ -1,4 +1,4 @@
-import { SessionConfig } from "./SessionConfig";
+import { SessionConfig } from "./Config/SessionConfig";
 import { ATLASES, ASSETS, ANIMATIONS, JPG, PNG } from "./Assets";
 import "./AudioManager";
 

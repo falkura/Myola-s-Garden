@@ -1,10 +1,10 @@
 import anime from "animejs";
-import { Config } from "../Config";
 import { hitTestRectangle } from "../Util";
-import { MapObject } from "./MapObject";
-import { Skins } from "./Skins";
-import Tile from "./Tile";
-import TiledMap from "./TiledMap";
+import { GameObject } from "./GameObject";
+import { Skins } from "../Config/Skins";
+import Tile from "../TMCore/Tile";
+import TiledMap from "../TMCore/TiledMap";
+import { Common } from "../Config/Common";
 
 export enum AnimationTypes {
     Idle = 0,
@@ -22,7 +22,7 @@ export enum AnimationDirectoins {
     Right = 3,
 }
 
-export class CharacterBase extends MapObject {
+export class Character extends GameObject {
     animations: PIXI.AnimatedSprite[][] = [];
     animSpeed = 5000;
     animKeys = 8;
@@ -30,10 +30,8 @@ export class CharacterBase extends MapObject {
     type: AnimationTypes = AnimationTypes.Idle;
 
     activeLayer = 2;
-    filter: PIXI.filters.ColorMatrixFilter;
+    filter!: PIXI.filters.ColorMatrixFilter;
     color = 0;
-    _x!: number;
-    _y!: number;
 
     isRunning = false;
     toRun = 0;
@@ -44,9 +42,7 @@ export class CharacterBase extends MapObject {
 
         this.addAnimations();
         this.setDirection(0);
-
-        this.filter = new PIXI.filters.ColorMatrixFilter();
-        this.filters = [this.filter];
+        this.addFilter();
 
         this.collisionLayer[0].interactive = true;
         this.collisionLayer[0].cursor = "pointer";
@@ -101,6 +97,11 @@ export class CharacterBase extends MapObject {
                 this.animations[animType].push(sprite);
             }
         }
+    };
+
+    addFilter = () => {
+        this.filter = new PIXI.filters.ColorMatrixFilter();
+        this.filters = [this.filter];
     };
 
     setDirection = (dir: AnimationDirectoins) => {
@@ -249,18 +250,18 @@ export class CharacterBase extends MapObject {
     };
 
     cameraMove = () => {
-        const border = 400 / Config.map_scale;
+        const border = 400 / Common.map_scale;
 
-        const minX = Config.game_width - this.mapData.width;
-        const minY = Config.game_height - this.mapData.height;
+        const minX = Common.game_width - this.mapData.width;
+        const minY = Common.game_height - this.mapData.height;
 
-        const corX = (this.mapData.source.tilewidth / 2) * Config.map_scale;
-        const corY = (this.mapData.source.tileheight / 2) * Config.map_scale;
+        const corX = (this.mapData.source.tilewidth / 2) * Common.map_scale;
+        const corY = (this.mapData.source.tileheight / 2) * Common.map_scale;
 
-        let nextX = Config.game_width / 2 - this.getBounds().x + this.mapData.x;
+        let nextX = Common.game_width / 2 - this.getBounds().x + this.mapData.x;
 
         let nextY =
-            Config.game_height / 2 - this.getBounds().y + this.mapData.y;
+            Common.game_height / 2 - this.getBounds().y + this.mapData.y;
 
         nextX = +nextX.toFixed(0);
         nextY = +nextY.toFixed(0);
