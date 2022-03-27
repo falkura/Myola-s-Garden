@@ -2,6 +2,7 @@ import { LogicState } from "../../logic_state";
 import TiledMap from "../../TMCore/TiledMap";
 import { iPlantData } from "../../Model";
 import { ListCell } from "./ListCell";
+import { LocalStorage } from "../../LocalStorage";
 
 export class List extends PIXI.Container {
     private _isActive = false;
@@ -15,6 +16,8 @@ export class List extends PIXI.Container {
 
     name: string;
     price = 0;
+
+    changeCallback?: () => void;
 
     constructor(
         mapData: TiledMap,
@@ -113,7 +116,9 @@ export class List extends PIXI.Container {
         this.price = sum;
         LogicState.notify_all();
 
-        console.log(sum, this.name);
+        if (this.changeCallback) {
+            this.changeCallback();
+        }
     };
 
     onDrop = (e: Event) => {
@@ -182,6 +187,36 @@ export class List extends PIXI.Container {
     public get isActive(): boolean {
         return this._isActive;
     }
+
+    getStorageData = () => {
+        const data: any = [];
+
+        this.cellMatrix.forEach((column, i) => {
+            column.forEach((row, j) => {
+                if (row.item) {
+                    data.push({
+                        column: i,
+                        row: j,
+                        item: row.item.data,
+                        type: row.item.type,
+                        count: row.item.count,
+                    });
+                }
+            });
+        });
+
+        return data;
+    };
+
+    restore = (id: number | string) => {
+        for (const data of LocalStorage.getDataById(id).data) {
+            this.cellMatrix[data.column][data.row].setItem(
+                data.item,
+                data.type,
+                data.count
+            );
+        }
+    };
 
     addCell = () => {};
 }

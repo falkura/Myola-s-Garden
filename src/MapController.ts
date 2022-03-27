@@ -12,6 +12,7 @@ import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
 import { Shop } from "./GameObjects/Shop";
+import { LocalStorage } from "./LocalStorage";
 
 export class MapController {
     map?: TiledMap;
@@ -157,14 +158,38 @@ export class MapController {
         this.container.addChild(this.balanceText);
 
         setTimeout(() => {
-            this.chb = new Character(this.map!);
-            this.chb.position.set(130, 250);
+            const data = LocalStorage.data;
+
+            for (const id of Object.keys(data)) {
+                switch (data[id].name) {
+                    case "character":
+                        this.chb = new Character(this.map!);
+                        this.chb.restore(id);
+                        break;
+                    case "chest":
+                        this.chest = new Chest(this.map!);
+                        this.chest.restore(id);
+                        break;
+                    default:
+                        console.log(data[id]);
+                        break;
+                }
+            }
+
+            if (!this.chb) {
+                this.chb = new Character(this.map!);
+                this.chb.position.set(130, 250);
+            }
+
             this.chb.zIndex = 10000;
             this.map!.addChild(this.chb);
 
-            this.chest = new Chest(this.map!);
-            this.chest.position.set(120, 170);
-            this.chest.zIndex = 10000;
+            if (!this.chest) {
+                this.chest = new Chest(this.map!);
+                this.chest.position.set(120, 170);
+            }
+
+            this.chest.zIndex = 9000;
             this.map!.addChild(this.chest);
         }, 300);
     };

@@ -2,6 +2,7 @@ import anime from "animejs";
 import { List } from "./List/List";
 import { GameObject } from "./GameObject";
 import TiledMap from "../TMCore/TiledMap";
+import { LocalStorage } from "../LocalStorage";
 
 export class Chest extends GameObject {
     animation!: PIXI.AnimatedSprite;
@@ -12,7 +13,7 @@ export class Chest extends GameObject {
     list!: List;
 
     constructor(mapData: TiledMap) {
-        super(mapData);
+        super(mapData, "chest");
 
         this.collisionLayer[0].interactive = true;
         this.collisionLayer[0].cursor = "pointer";
@@ -31,6 +32,8 @@ export class Chest extends GameObject {
             this.list.width,
             this.list.height * 2 + (this.animation.height / 2) * 1.2
         );
+
+        this.list.changeCallback = this.onChange;
 
         this.addChild(this.list);
     };
@@ -118,5 +121,26 @@ export class Chest extends GameObject {
             // easing: "linear",
             duration: 600,
         });
+    };
+
+    onChange = () => {
+        LocalStorage.data = { id: this.id, detail: this.getStorageData() };
+    };
+
+    restore = (id: number | string) => {
+        Object.assign(this, LocalStorage.getDataById(id));
+        this.list.restore(id);
+    };
+
+    getStorageData = () => {
+        const data = {
+            id: this.id,
+            x: this.x,
+            y: this.y,
+            data: this.list.getStorageData(),
+            name: this.name,
+        };
+
+        return data;
     };
 }

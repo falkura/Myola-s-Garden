@@ -10,17 +10,24 @@ export default class Tile extends PIXI.AnimatedSprite {
     props: iTiles;
     mapData: TiledMap;
     debugGraphics!: PIXI.Sprite;
+    layerId: number;
 
     Plant?: Plant;
     Dirt?: PIXI.Sprite;
 
     collisionLayer: PIXI.Graphics[] = [];
 
-    constructor(textures: PIXI.Texture[], props: iTiles, mapData: TiledMap) {
+    constructor(
+        textures: PIXI.Texture[],
+        props: iTiles,
+        mapData: TiledMap,
+        layerId: number
+    ) {
         super(textures);
 
         this.mapData = mapData;
         this.textures = textures;
+        this.layerId = layerId;
         this.props = props;
         this.anchor.set(0.5);
 
@@ -43,6 +50,7 @@ export default class Tile extends PIXI.AnimatedSprite {
         this.Dirt = sprite;
 
         this.addChild(sprite);
+        this.save();
     };
 
     setPlant = (id: number) => {
@@ -54,6 +62,15 @@ export default class Tile extends PIXI.AnimatedSprite {
         this.Dirt!.visible = false;
 
         this.addChild(sprite);
+        console.log(sprite);
+        this.save();
+    };
+
+    save = () => {
+        // LocalStorage.data = {
+        //     id: char.id,
+        //     detail: char.getStorageData(),
+        // };
     };
 
     createMask = () => {

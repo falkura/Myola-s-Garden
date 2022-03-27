@@ -2,6 +2,7 @@ import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import TiledMap from "./TMCore/TiledMap";
 import { iMovePath } from "./Model";
+import { LocalStorage } from "./LocalStorage";
 
 export default class CharakterController {
     map: TiledMap;
@@ -47,15 +48,21 @@ export default class CharakterController {
     keyMoveOff = (e: Event) => {
         const targetPath = (e as CustomEvent<iMovePath>).detail;
         const targetIndex = this.activeMoves.indexOf(targetPath);
+        const char = this.map.charakter;
 
         if (targetIndex > -1) {
             this.activeMoves.splice(targetIndex, 1);
         }
 
         if (this.activeMoves.length === 0) {
-            this.map.charakter.setType(0);
-            this.map.charakter.isRunning = false;
+            char.setType(0);
+            char.isRunning = false;
         }
+
+        LocalStorage.data = {
+            id: char.id,
+            detail: char.getStorageData(),
+        };
     };
 
     shiftOn = () => {
@@ -121,20 +128,7 @@ export default class CharakterController {
         const char = this.map.charakter;
 
         if (char) {
-            if (this.activeMoves.length === 0) {
-                if (!this.c) {
-                    char.setDirection(this.lastMove);
-                } else {
-                    char.setDirection(this.lastMove);
-                }
-            } else {
-                if (!this.c) {
-                    char.setDirection(this.lastMove);
-                } else {
-                    char.setDirection(this.lastMove);
-                }
-            }
-            this.c = !this.c;
+            char.direction = this.lastMove;
             this.elapsedTime = 0;
         }
     };

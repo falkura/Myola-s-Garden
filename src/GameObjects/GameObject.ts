@@ -1,16 +1,24 @@
+import { LocalStorage } from "../LocalStorage";
 import TiledMap from "../TMCore/TiledMap";
 
 export class GameObject extends PIXI.Sprite {
     private __x?: number;
     private __y?: number;
 
+    name: string;
+    id!: string;
+
     mapData: TiledMap;
     isCharacter: boolean;
     collisionLayer: PIXI.Graphics[] = [];
 
-    constructor(mapData: TiledMap, isCharacter = false) {
+    constructor(mapData: TiledMap, name: string, isCharacter = false) {
         super();
+
         this.mapData = mapData;
+        this.name = name;
+
+        this.id = LocalStorage.getId();
         this.isCharacter = isCharacter;
         this.anchor.set(0.5);
         this.setHitArea();

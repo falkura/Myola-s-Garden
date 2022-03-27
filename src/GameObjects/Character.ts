@@ -5,6 +5,8 @@ import { Skins } from "../Config/Skins";
 import Tile from "../TMCore/Tile";
 import TiledMap from "../TMCore/TiledMap";
 import { Common } from "../Config/Common";
+import { LocalStorage } from "../LocalStorage";
+import { LogicState } from "../logic_state";
 
 export enum AnimationTypes {
     Idle = 0,
@@ -23,10 +25,11 @@ export enum AnimationDirectoins {
 }
 
 export class Character extends GameObject {
+    private _direction: AnimationDirectoins = AnimationDirectoins.Down;
+
     animations: PIXI.AnimatedSprite[][] = [];
     animSpeed = 5000;
     animKeys = 8;
-    direction: AnimationDirectoins = AnimationDirectoins.Down;
     type: AnimationTypes = AnimationTypes.Idle;
 
     activeLayer = 2;
@@ -37,11 +40,11 @@ export class Character extends GameObject {
     toRun = 0;
 
     constructor(mapData: TiledMap) {
-        super(mapData, true);
+        super(mapData, "character", true);
         this.mapData.charakter = this;
 
         this.addAnimations();
-        this.setDirection(0);
+        this.direction = 0;
         this.addFilter();
 
         this.collisionLayer[0].interactive = true;
@@ -104,19 +107,23 @@ export class Character extends GameObject {
         this.filters = [this.filter];
     };
 
-    setDirection = (dir: AnimationDirectoins) => {
-        const activeAnim = this.animations[this.type][this.direction];
+    public set direction(dir: AnimationDirectoins) {
+        const activeAnim = this.animations[this.type][this._direction];
 
         this.removeChild(activeAnim);
 
         const newAnim = this.animations[this.type][dir];
-        this.direction = dir;
+        this._direction = dir;
 
         if (!newAnim.playing) {
             newAnim.gotoAndPlay(0);
         }
         this.addChild(newAnim);
-    };
+    }
+
+    public get direction() {
+        return this._direction;
+    }
 
     setType = (type: AnimationTypes) => {
         const activeAnim = this.animations[this.type][this.direction];
@@ -345,5 +352,26 @@ export class Character extends GameObject {
         }
 
         return tiles.reverse();
+    };
+
+    restore = (id: number | string) => {
+        const charData = LocalStorage.getDataById(id);
+        Object.assign(this, charData);
+        LogicState.balance = charData.balance;
+        LogicState.notify_all();
+    };
+
+    getStorageData = () => {
+        const data = {
+            name: this.name,
+            x: this.x,
+            y: this.y,
+            id: this.id,
+            activeLayer: this.activeLayer,
+            direction: this.direction,
+            balance: LogicState.balance,
+        };
+
+        return data;
     };
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import anime from "animejs";
 
 export function stop_spine_animation(
@@ -109,7 +110,6 @@ export function RandomNumber(min: number, max: number) {
     );
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function hitTestRectangle(r1: any, r2: any): boolean {
     let hit = false;
 
@@ -148,4 +148,44 @@ export function hitTestRectangle(r1: any, r2: any): boolean {
     }
 
     return hit;
+}
+
+export function compress(c: string) {
+    const x = "charCodeAt";
+    const e: any = {};
+    const f = c.split("");
+    const d = [];
+    let a = f[0];
+    let g = 256;
+
+    for (let b = 1; b < f.length; b++)
+        (c = f[b]),
+            null != e[a + c]
+                ? (a += c)
+                : (d.push(1 < a.length ? e[a] : a[x](0)),
+                  (e[a + c] = g),
+                  g++,
+                  (a = c));
+    d.push(1 < a.length ? e[a] : a[x](0));
+    for (let b = 0; b < d.length; b++) d[b] = String.fromCharCode(d[b]);
+    return d.join("");
+}
+
+export function decompress(b: string) {
+    let a;
+    const e: any = {};
+    const d = b.split("");
+    let f = d[0];
+    let c = f;
+    const g = [c];
+    let o = 256;
+    for (let b = 1; b < d.length; b++)
+        (a = d[b].charCodeAt(0)),
+            (a = 256 > a ? d[b] : e[a] ? e[a] : f + c),
+            g.push(a),
+            (c = a.charAt(0)),
+            (e[o] = f + c),
+            o++,
+            (f = a);
+    return g.join("");
 }

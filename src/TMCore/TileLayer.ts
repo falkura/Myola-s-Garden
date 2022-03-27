@@ -74,7 +74,7 @@ export default class TileLayer extends PIXI.Container {
             tileSet
         );
 
-        const tile = new Tile(textures, props, mapData);
+        const tile = new Tile(textures, props, mapData, this.source.id);
 
         tile.x = tileData.x * tileSet.source.tilewidth;
         tile.y = tileData.y * tileSet.source.tileheight;
