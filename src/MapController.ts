@@ -51,8 +51,7 @@ export class MapController {
 
     tileChoose = async (e: Event) => {
         const tile: Tile = (e as CustomEvent<Tile>).detail;
-        const char: CharacterBase =
-            this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
+        const char = this.map!.charakter; // @TODO hardcoded
 
         await char.setPosition(tile.x, tile.y);
         this.offSeed();
@@ -81,8 +80,8 @@ export class MapController {
     collect = async (e: Event) => {
         const drop = (e as CustomEvent<Drop>).detail;
 
-        const char: CharacterBase =
-            this.charakterController!.getActiveCharakter()!; // @TODO hardcoded
+        const char = this.map!.charakter; // @TODO hardcoded
+
         await char.setPosition(drop.sprite.x, drop.sprite.y);
 
         const result = this.inventory!.insertItem(drop.data);
@@ -94,7 +93,7 @@ export class MapController {
     };
 
     onSeed = () => {
-        const al = this.charakterController?.getActiveCharakter()?.activeLayer;
+        const al = this.map!.charakter.activeLayer;
 
         const walkableLayers = this.map!.getWalkableLayers();
 
@@ -102,8 +101,8 @@ export class MapController {
             if (walkableLayers[i].source.id === al) {
                 for (const tile of walkableLayers[i].tiles) {
                     if (tile) {
-                        const char: CharacterBase =
-                            this.charakterController!.getActiveCharakter()!;
+                        const char = this.map!.charakter; // @TODO hardcoded
+
                         const dist = 2;
 
                         if (
@@ -197,7 +196,7 @@ export class MapController {
             }
         }
 
-        this.charakterController?.getActiveCharakter()?.cameraMove();
+        this.map!.charakter.cameraMove();
     };
 
     resize = () => {
@@ -215,7 +214,9 @@ export class MapController {
             this.map.x = (this.map.source.tilewidth / 2) * Config.map_scale;
             this.map.y = (this.map.source.tileheight / 2) * Config.map_scale;
 
-            this.charakterController?.getActiveCharakter()?.cameraMove();
+            if (this.map!.charakter) {
+                this.map!.charakter.cameraMove();
+            }
         }
 
         if (this.inventory) {

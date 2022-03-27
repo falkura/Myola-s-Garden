@@ -83,7 +83,7 @@ export default class TileLayer extends PIXI.Container {
         tile._y = tileData.y;
 
         if (tile.props && tile.props.objectgroup) {
-            mapData.collisionLayer!.addInvertedCollisionTile(tile);
+            mapData.collisionLayer!.addCollision(tile);
         }
 
         if (tile.textures.length > 1 && tile.props.animation) {

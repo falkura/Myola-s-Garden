@@ -14,6 +14,8 @@ export default class Tile extends PIXI.AnimatedSprite {
     Plant?: Plant;
     Dirt?: PIXI.Sprite;
 
+    collisionLayer: PIXI.Graphics[] = [];
+
     constructor(textures: PIXI.Texture[], props: iTiles, mapData: TiledMap) {
         super(textures);
 

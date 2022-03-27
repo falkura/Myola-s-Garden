@@ -109,6 +109,7 @@ export class App {
         this.logic_state = LogicState;
         LogicState.is_mobile = this.get_platform();
         this.canvas = document.getElementById("root") as HTMLCanvasElement;
+        this.canvas.focus();
 
         document
             .querySelector("body")!

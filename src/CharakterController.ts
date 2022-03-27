@@ -1,6 +1,5 @@
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
-import { CharacterBase } from "./TMCore/CharacterBase";
 import TiledMap from "./TMCore/TiledMap";
 import { movePath } from "./TMCore/TMModel";
 
@@ -82,7 +81,7 @@ export default class CharakterController {
                 this.activeMoves.splice(targetIndex, 1);
             }
             if (this.activeMoves.length === 0) {
-                const char = this.getActiveCharakter()!;
+                const char = this.map.charakter;
                 char.setType(0);
                 char.isRunning = false;
             }
@@ -120,40 +119,33 @@ export default class CharakterController {
     };
 
     update = (delta: number) => {
-        const char = this.getActiveCharakter();
+        const char = this.map.charakter;
         this.elapsedTime += delta;
 
         this.map.plants.forEach((plant) => {
             plant.plant.update();
         });
 
-        if (char) {
-            if (this.activeMoves.length > 0) {
-                // char.setType(2);
+        if (this.activeMoves.length > 0) {
+            if (this.elapsedTime >= 20) {
+                this.elapsedTime = 0;
+                char.isRunning = true;
+            }
 
-                if (this.elapsedTime >= 20) {
-                    this.elapsedTime = 0;
-                    char.isRunning = true;
-                }
+            if (char.isRunning) {
+                char.setType(2);
+            } else {
+                char.setType(1);
+            }
 
-                if (char.isRunning) {
-                    char.setType(2);
-                } else {
-                    char.setType(1);
-                }
-
-                for (const mp of this.activeMoves) {
-                    char.move(mp);
-                    // char.gotoAndStop(mp.animNum);
-                    // this.lastMove = mp.animNum;
-                    // this.updatePosition();
-                }
+            for (const mp of this.activeMoves) {
+                char.move(mp);
             }
         }
     };
 
     updatePosition = () => {
-        const char = this.getActiveCharakter()!;
+        const char = this.map.charakter;
 
         if (char) {
             if (this.activeMoves.length === 0) {
@@ -173,18 +165,4 @@ export default class CharakterController {
             this.elapsedTime = 0;
         }
     };
-
-    activateCharakter = () => {};
-
-    getActiveCharakter = (): CharacterBase | undefined => {
-        for (const char of this.map!.charakters) {
-            if (char.isActive) {
-                return char;
-            }
-        }
-
-        return undefined;
-    };
-
-    moveCharakter = () => {};
 }

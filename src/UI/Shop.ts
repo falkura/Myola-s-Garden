@@ -71,8 +71,6 @@ export class Shop extends PIXI.Container {
             "shopSell"
         );
         this.addChild(this.sellList);
-        // this.buyList.y = this.sellList.y = this.header.height + this.padding;
-        // this.sellList.position.x = this.buyList.width + this.padding * 2;
     };
 
     createFooter = () => {

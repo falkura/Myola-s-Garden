@@ -24,7 +24,7 @@ export default class TiledMap extends PIXI.Container implements iTiledMap {
     layers: Array<TileLayer | ObjectLayer> = [];
     tilesets: TileSet[] = [];
     drop: Drop[] = [];
-    charakters: CharacterBase[] = [];
+    charakter!: CharacterBase;
     app: PIXI.Application;
     loader?: Loader;
     collisionLayer?: CollisionLayer;

@@ -1,5 +1,4 @@
 import { Config } from "../Config";
-import Buildings from "./Buildings";
 // import Character from "./Character";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";
@@ -49,26 +48,21 @@ export default class ObjectLayer extends PIXI.Container {
         tileSet: TileSet,
         mapData: TiledMap
     ): ObjectTile {
-        let tile: ObjectTile;
-        switch (this.source.name) {
-            // case "hero":
-            //     tile = new Character(tileData, tileSet, mapData);
-            //     break;
-            case "buildings":
-                tile = new Buildings(tileData, tileSet, mapData);
-                break;
-
-            default:
-                console.log("error");
-                tile = new ObjectTile(tileData, tileSet);
-                break;
-        }
+        const tile = new ObjectTile(tileData, tileSet);
 
         tile.x = tileData.x;
         tile.y = tileData.y - tile.height; //@TODO why?
 
         tile._x = tile.x / mapData.source.tilewidth;
         tile._y = tile.y / mapData.source.tileheight;
+
+        if (
+            tileSet.source.tiles![tile.source.gid - tileSet.source.firstgid] &&
+            tileSet.source.tiles![tile.source.gid - tileSet.source.firstgid]
+                .objectgroup
+        ) {
+            mapData.collisionLayer!.addCollision(tile, tileSet);
+        }
 
         // if (tile.textures.length > 1 && tile.props.animations) {
         //     tile.animationSpeed = 1000 / 60 / tile.props.animations[0].duration;

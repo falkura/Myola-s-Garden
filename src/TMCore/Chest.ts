@@ -1,11 +1,12 @@
 import anime from "animejs";
 import { List } from "../UI/List";
+import { MapObject } from "./MapObject";
 import TiledMap from "./TiledMap";
 
-export class Chest extends PIXI.Sprite {
-    mapData: TiledMap;
-    collisionLayer!: PIXI.Graphics;
-    animations!: PIXI.AnimatedSprite;
+export class Chest extends MapObject {
+    // mapData: TiledMap;
+    // collisionLayer!: PIXI.Graphics;
+    animation!: PIXI.AnimatedSprite;
     animSpeed = 5000;
     animKeys = 5;
     _isOpen = false;
@@ -16,33 +17,30 @@ export class Chest extends PIXI.Sprite {
     list!: List;
 
     constructor(mapData: TiledMap) {
-        super();
-        this.mapData = mapData;
+        super(mapData);
 
-        this.init();
-        this.anchor.set(0.5);
+        this.collisionLayer[0].interactive = true;
+        this.collisionLayer[0].cursor = "pointer";
+        this.collisionLayer[0].addListener("mousedown", this.onClick);
 
-        // this.interactive = true;
-        // this.cursor = "pointer";
-        // this.addListener("click", this.onClick);
+        this.addAnimations();
+        this.addList();
+    }
 
-        this.setHitArea();
-
+    addList = () => {
         this.list = new List(this.mapData, 4, 3, "chest");
         this.list.alpha = 0;
         this.list.scale.set(0.5);
 
         this.list.pivot.set(
             this.list.width,
-            this.list.height * 2 + (this.animations.height / 2) * 1.2
+            this.list.height * 2 + (this.animation.height / 2) * 1.2
         );
-        // this.list.x = -this.list.width / 2;
-        // this.list.y = -this.list.height - this.animations.height / 2;
 
         this.addChild(this.list);
-    }
+    };
 
-    init = () => {
+    addAnimations = () => {
         const tileset = this.mapData.getTileset("Chest")!;
         const textures = [];
 
@@ -50,18 +48,18 @@ export class Chest extends PIXI.Sprite {
             textures.push(tileset.textures[i]);
         }
 
-        this.animations = new PIXI.AnimatedSprite(textures);
-        this.animations.animationSpeed = 1000 / this.animSpeed;
-        this.animations.loop = false;
-        this.animations.onComplete = () => {
+        this.animation = new PIXI.AnimatedSprite(textures);
+        this.animation.animationSpeed = 1000 / this.animSpeed;
+        this.animation.loop = false;
+        this.animation.onComplete = () => {
             if (!this.isOpen) {
-                this.animations.textures.reverse();
-                this.animations.gotoAndStop(0);
+                this.animation.textures.reverse();
+                this.animation.gotoAndStop(0);
             }
         };
 
-        this.animations.anchor.set(0.5, 0.5);
-        this.addChild(this.animations);
+        this.animation.anchor.set(0.5, 0.5);
+        this.addChild(this.animation);
     };
 
     onClick = () => {
@@ -70,6 +68,9 @@ export class Chest extends PIXI.Sprite {
     };
 
     public set isOpen(value: boolean) {
+        if (this.animation.playing) {
+            return;
+        }
         this._isOpen = value;
 
         if (value) {
@@ -85,11 +86,11 @@ export class Chest extends PIXI.Sprite {
 
     open = () => {
         this.list.isActive = true;
-        this.animations.play();
+        this.animation.play();
 
         anime({
             targets: this.list,
-            alpha: 1,
+            alpha: [0, 1],
             duration: 1000,
         });
 
@@ -105,9 +106,9 @@ export class Chest extends PIXI.Sprite {
     close = () => {
         this.list.isActive = false;
 
-        this.animations.textures.reverse();
-        this.animations.gotoAndStop(0);
-        this.animations.play();
+        this.animation.textures.reverse();
+        this.animation.gotoAndStop(0);
+        this.animation.play();
 
         anime({
             targets: this.list,
@@ -122,29 +123,5 @@ export class Chest extends PIXI.Sprite {
             // easing: "linear",
             duration: 600,
         });
-    };
-
-    setHitArea = () => {
-        const graphics = new PIXI.Graphics();
-        graphics.beginFill(0xff0000, 0.00001);
-
-        graphics.drawRect(
-            -this.anchor.x * this.mapData.source.tilewidth,
-            -this.anchor.y * this.mapData.source.tileheight,
-            this.mapData.source.tilewidth,
-            this.mapData.source.tileheight
-        );
-        graphics.endFill();
-
-        graphics.zIndex = 1000;
-        this.collisionLayer = graphics;
-
-        this.collisionLayer.interactive = true;
-        this.collisionLayer.cursor = "pointer";
-        this.collisionLayer.addListener("click", this.onClick);
-
-        this.addChild(this.collisionLayer);
-
-        this.mapData.collisionLayer!.collisionsMap.push(graphics);
     };
 }

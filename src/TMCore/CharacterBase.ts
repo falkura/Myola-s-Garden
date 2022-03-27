@@ -1,6 +1,9 @@
 import anime from "animejs";
 import { Config } from "../Config";
 import { hitTestRectangle } from "../Util";
+import { MapObject } from "./MapObject";
+import { Skins } from "./Skins";
+import Tile from "./Tile";
 import TiledMap from "./TiledMap";
 
 export enum AnimationTypes {
@@ -19,16 +22,13 @@ export enum AnimationDirectoins {
     Right = 3,
 }
 
-export class CharacterBase extends PIXI.Sprite {
-    mapData: TiledMap;
+export class CharacterBase extends MapObject {
     animations: PIXI.AnimatedSprite[][] = [];
     animSpeed = 5000;
     animKeys = 8;
     direction: AnimationDirectoins = AnimationDirectoins.Down;
     type: AnimationTypes = AnimationTypes.Idle;
 
-    isActive = false;
-    collisionLayer!: PIXI.Graphics;
     activeLayer = 2;
     filter: PIXI.filters.ColorMatrixFilter;
     color = 0;
@@ -39,24 +39,23 @@ export class CharacterBase extends PIXI.Sprite {
     toRun = 0;
 
     constructor(mapData: TiledMap) {
-        super();
-        this.mapData = mapData;
+        super(mapData, true);
+        this.mapData.charakter = this;
 
-        this.init();
+        this.addAnimations();
+        this.setDirection(0);
 
-        this.mapData.charakters.push(this);
         this.filter = new PIXI.filters.ColorMatrixFilter();
         this.filters = [this.filter];
-        this.interactive = true;
-        this.cursor = "pointer";
-        this.addListener("click", this.onCharClick);
-        this.anchor.set(0.5);
-        this.setHitArea();
+
+        this.collisionLayer[0].interactive = true;
+        this.collisionLayer[0].cursor = "pointer";
+        this.collisionLayer[0].addListener("click", this.onCharClick);
 
         document.addEventListener("newcolor", this.setNewColor);
     }
 
-    init = () => {
+    addAnimations = () => {
         const tileset = this.mapData.getTileset("char")!;
 
         for (
@@ -71,7 +70,7 @@ export class CharacterBase extends PIXI.Sprite {
             ) {
                 const textures = [];
 
-                // @TODO
+                // @TODO kostyl because of broken resources
                 let buf = animDir;
                 if (
                     animType === AnimationTypes.Move ||
@@ -102,8 +101,6 @@ export class CharacterBase extends PIXI.Sprite {
                 this.animations[animType].push(sprite);
             }
         }
-
-        this.setDirection(0);
     };
 
     setDirection = (dir: AnimationDirectoins) => {
@@ -134,113 +131,51 @@ export class CharacterBase extends PIXI.Sprite {
     };
 
     onCharClick = () => {
-        for (const char of this.mapData.charakters) {
-            char.isActive = false;
-        }
-
-        this.isActive = true;
         this.cameraMove();
     };
 
     setNewColor = () => {
-        const colorsArray = [
-            [
-                { index: 4, color: 0.721504807472229 },
-                { index: 12, color: 0.03713098168373108 },
-            ],
-            [
-                { index: 0, color: 0.046515580266714096 },
-                { index: 13, color: 0.3200368881225586 },
-            ],
-            [
-                { index: 10, color: 0.26166051626205444 },
-                { index: 12, color: 0.4550018310546875 },
-            ],
-            [
-                { index: 16, color: 0.546566367149353 },
-                { index: 17, color: 0.8070115447044373 },
-                { index: 18, color: 0.6011194586753845 },
-            ],
-            [
-                { index: 2, color: 0.04603690281510353 },
-                { index: 4, color: 0.12762226164340973 },
-                { index: 11, color: 0.7707859873771667 },
-            ],
-            [{ index: 2, color: 0.7962536215782166 }],
-            [
-                { index: 4, color: 0.7491387128829956 },
-                { index: 12, color: 0.38632670044898987 },
-            ],
-            [
-                { index: 1, color: 0.33144813776016235 },
-                { index: 12, color: 0.4202705919742584 },
-            ],
-            [{ index: 5, color: 0.4460449814796448 }],
-            [{ index: 1, color: 0.4219434857368469 }],
-        ];
-
-        const normalMatrix = [
-            1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0,
-        ];
-
-        this.filter.matrix = normalMatrix;
+        this.filter.matrix = [...Skins.normalMatrix];
         this.color++;
-        if (this.color >= colorsArray.length) {
+
+        if (this.color >= Skins.characterSkin.length) {
             this.color = 0;
+            return;
         }
-        for (const skin of colorsArray[this.color]) {
-            this.filter.matrix[skin.index] = skin.color;
+
+        for (const skinProp of Skins.characterSkin[this.color]) {
+            this.filter.matrix[skinProp.index] = skinProp.color;
         }
-    };
-
-    setHitArea = () => {
-        const graphics = new PIXI.Graphics();
-        graphics.beginFill(0xff0000, 0);
-
-        graphics.drawRect(
-            -this.anchor.x * this.mapData.source.tilewidth,
-            -this.anchor.y * this.mapData.source.tileheight,
-            this.mapData.source.tilewidth,
-            this.mapData.source.tileheight
-        );
-        graphics.endFill();
-
-        // this.collisionLayer.addChild(graphics);
-        this.collisionLayer = graphics;
-        graphics.zIndex = 5000;
-        this.addChild(this.collisionLayer);
     };
 
     move = (movePath: { x: number; y: number }) => {
         let hit = false;
 
         for (const tile of this.mapData.collisionLayer!.collisionsMap) {
-            hit = hitTestRectangle(
-                {
-                    x: this.x + movePath.x,
-                    y: this.y + movePath.y,
-                    width: this.collisionLayer.width,
-                    height: this.collisionLayer.height,
-                    anchor: this.anchor,
-                },
-                {
-                    x: tile.getLocalBounds().x,
-                    y: tile.getLocalBounds().y,
-                    width: tile.width,
-                    height: tile.height,
+            for (const collisionArea of tile.collisionLayer) {
+                if (!hit) {
+                    hit = hitTestRectangle(
+                        {
+                            x: this.x + movePath.x,
+                            y: this.y + movePath.y,
+                            width: this.collisionLayer[0].width,
+                            height: this.collisionLayer[0].height,
+                            anchor: this.anchor,
+                        },
+                        {
+                            x: tile.x + collisionArea.x,
+                            y: tile.y + collisionArea.y,
+                            width: collisionArea.width,
+                            height: collisionArea.height,
+                        }
+                    );
                 }
-            );
 
-            if (hit) {
-                break;
+                if (hit) break;
             }
         }
 
         if (!hit) {
-            // for (const tile of (this.mapData.layers[1] as TileLayer).tiles) {
-            //     if (tile) tile.visible = true;
-            // }
-
             const floor = this.getTiles(movePath.x, movePath.y);
 
             for (const element of floor) {
@@ -350,7 +285,8 @@ export class CharacterBase extends PIXI.Sprite {
     };
 
     getTiles = (x: number, y: number) => {
-        const tiles: any[] = [];
+        const tiles: Array<{ tile?: Tile; id: number; x: number; y: number }> =
+            [];
         const cor = 0.1;
 
         let notX = 0;
@@ -359,10 +295,10 @@ export class CharacterBase extends PIXI.Sprite {
         let notY_ = 0;
 
         const tileX =
-            (this.x + x + this.collisionLayer.width * this.anchor.x) /
+            (this.x + x + this.collisionLayer[0].width * this.anchor.x) /
             this.mapData.source.tilewidth;
         const tileY =
-            (this.y + y + this.collisionLayer.height * this.anchor.y) /
+            (this.y + y + this.collisionLayer[0].height * this.anchor.y) /
             this.mapData.source.tileheight;
 
         if ((tileX % 1) - 0.5 >= 0 && (tileX % 1) - 0.5 <= cor) {
