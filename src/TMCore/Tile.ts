@@ -53,6 +53,11 @@ export default class Tile extends PIXI.AnimatedSprite {
         this.save();
     };
 
+    removeDirt = () => {
+        this.removeChild(this.Dirt!);
+        this.Dirt = undefined;
+    };
+
     setPlant = (id: number) => {
         const sprite = new Plant(id, this.mapData, this);
         sprite.zIndex = 2;

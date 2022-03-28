@@ -12,14 +12,14 @@ export class GameObject extends PIXI.Sprite {
     isCharacter: boolean;
     collisionLayer: PIXI.Graphics[] = [];
 
-    constructor(mapData: TiledMap, name: string, isCharacter = false) {
+    constructor(mapData: TiledMap, name: string) {
         super();
 
         this.mapData = mapData;
         this.name = name;
 
         this.id = LocalStorage.getId();
-        this.isCharacter = isCharacter;
+        this.isCharacter = name === "character";
         this.anchor.set(0.5);
         this.setHitArea();
     }

@@ -13,6 +13,9 @@ import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
 import { Shop } from "./GameObjects/Shop";
 import { LocalStorage } from "./LocalStorage";
+import anime from "animejs";
+import { AnimationTypes } from "./GameObjects/CharacterBase";
+import { Trader } from "./GameObjects/Trader";
 
 export class MapController {
     map?: TiledMap;
@@ -24,6 +27,7 @@ export class MapController {
     se!: SeedOption;
     balanceText!: ObserverText;
     chb!: Character;
+    trader!: Trader;
     chest!: Chest;
 
     constructor(app: PIXI.Application) {
@@ -43,7 +47,9 @@ export class MapController {
         document.addEventListener("map_created", this.resize, { once: true });
         document.addEventListener(EVENTS.Seed.On, this.onSeed);
         document.addEventListener(EVENTS.Seed.Off, this.offSeed);
-        // document.addEventListener(EVENTS.Debug.SetItem, this.setItem);
+        document.addEventListener("shop_", () => {
+            this.shop.isActive = !this.shop.isActive;
+        });
         document.addEventListener(EVENTS.Action.Tile.Choose, this.tileChoose);
         document.addEventListener("collect_item", this.collect);
     };
@@ -61,7 +67,24 @@ export class MapController {
             // this.map?.getTileset(Config.dirt.tileset)?.textures[
             //     Config.dirt.base
             // ];
+            char.setType(AnimationTypes.Hoe);
             tile.setDirt(texture!);
+            // tile.Dirt!.scale.set(0);
+            await new Promise<void>((resolve) => {
+                anime({
+                    targets: tile.Dirt!.scale,
+                    x: [0, 1],
+                    y: [0, 1],
+                    easing: "linear",
+                    duration: 2400,
+                    endDelay: 200,
+                    complete: () => {
+                        resolve();
+                    },
+                });
+            });
+            // await sleep(1000);
+            char.setType(AnimationTypes.Idle);
         } else if (!tile.Plant) {
             this.se.position.set(tile.x, tile.y);
             const plant = await this.se.drawOptions();
@@ -139,7 +162,7 @@ export class MapController {
         this.shop = new Shop(this.map, "Meeky Milk`s shop");
         // this.shop.isActive = true;
         this.shop.position.set(500, 200);
-        // this.container.addChild(this.shop);
+        this.container.addChild(this.shop);
 
         this.se = new SeedOption(this.map!);
         this.se.zIndex = 5;
@@ -191,6 +214,12 @@ export class MapController {
 
             this.chest.zIndex = 9000;
             this.map!.addChild(this.chest);
+
+            this.trader = new Trader(this.map!);
+            this.trader.position.set(90, 200);
+
+            this.trader.zIndex = 10000;
+            this.map!.addChild(this.trader);
         }, 300);
     };
 

@@ -1,159 +1,25 @@
 import anime from "animejs";
 import { hitTestRectangle } from "../Util";
-import { GameObject } from "./GameObject";
-import { Skins } from "../Config/Skins";
 import Tile from "../TMCore/Tile";
 import TiledMap from "../TMCore/TiledMap";
 import { Common } from "../Config/Common";
 import { LocalStorage } from "../LocalStorage";
 import { LogicState } from "../logic_state";
+import { AnimationDirectoins, CharacterBase } from "./CharacterBase";
 
-export enum AnimationTypes {
-    Idle = 0,
-    Move = 1,
-    Run = 2,
-    Bailer = 3,
-    Axe = 4,
-    Hoe = 5,
-}
-
-export enum AnimationDirectoins {
-    Down = 0,
-    Up = 1,
-    Left = 2,
-    Right = 3,
-}
-
-export class Character extends GameObject {
-    private _direction: AnimationDirectoins = AnimationDirectoins.Down;
-
-    animations: PIXI.AnimatedSprite[][] = [];
-    animSpeed = 5000;
-    animKeys = 8;
-    type: AnimationTypes = AnimationTypes.Idle;
-
-    activeLayer = 2;
-    filter!: PIXI.filters.ColorMatrixFilter;
-    color = 0;
-
+export class Character extends CharacterBase {
     isRunning = false;
     toRun = 0;
 
     constructor(mapData: TiledMap) {
-        super(mapData, "character", true);
+        super(mapData, "character");
         this.mapData.charakter = this;
-
-        this.addAnimations();
-        this.direction = 0;
-        this.addFilter();
-
-        this.collisionLayer[0].interactive = true;
-        this.collisionLayer[0].cursor = "pointer";
-        this.collisionLayer[0].addListener("click", this.onCharClick);
-
-        document.addEventListener("newcolor", this.setNewColor);
+        this.onClick = this.onCharClick;
     }
-
-    addAnimations = () => {
-        const tileset = this.mapData.getTileset("char")!;
-
-        for (
-            let animType = 0;
-            animType < Object.keys(AnimationTypes).length / 2;
-            animType++
-        ) {
-            for (
-                let animDir = 0;
-                animDir < Object.keys(AnimationDirectoins).length / 2;
-                animDir++
-            ) {
-                const textures = [];
-
-                // @TODO kostyl because of broken resources
-                let buf = animDir;
-                if (
-                    animType === AnimationTypes.Move ||
-                    animType === AnimationTypes.Run
-                ) {
-                    if (animDir === AnimationDirectoins.Right) {
-                        buf = 2;
-                    }
-                    if (animDir === AnimationDirectoins.Left) {
-                        buf = 3;
-                    }
-                }
-
-                for (let i = 0; i < this.animKeys; i++) {
-                    textures.push(
-                        tileset.textures[animType * 32 + buf * 8 + i]
-                    );
-                }
-
-                const sprite = new PIXI.AnimatedSprite(textures);
-                sprite.anchor.set(0.5, 0.5);
-                sprite.animationSpeed = 1000 / this.animSpeed;
-
-                if (!this.animations[animType]) {
-                    this.animations[animType] = [];
-                }
-
-                this.animations[animType].push(sprite);
-            }
-        }
-    };
-
-    addFilter = () => {
-        this.filter = new PIXI.filters.ColorMatrixFilter();
-        this.filters = [this.filter];
-    };
-
-    public set direction(dir: AnimationDirectoins) {
-        const activeAnim = this.animations[this.type][this._direction];
-
-        this.removeChild(activeAnim);
-
-        const newAnim = this.animations[this.type][dir];
-        this._direction = dir;
-
-        if (!newAnim.playing) {
-            newAnim.gotoAndPlay(0);
-        }
-        this.addChild(newAnim);
-    }
-
-    public get direction() {
-        return this._direction;
-    }
-
-    setType = (type: AnimationTypes) => {
-        const activeAnim = this.animations[this.type][this.direction];
-
-        this.removeChild(activeAnim);
-
-        const newAnim = this.animations[type][this.direction];
-        this.type = type;
-        if (!newAnim.playing) {
-            newAnim.gotoAndPlay(0);
-        }
-        this.addChild(newAnim);
-    };
 
     onCharClick = () => {
+        console.log("it's me");
         this.cameraMove();
-    };
-
-    setNewColor = () => {
-        this.filter.matrix = [...Skins.normalMatrix];
-        this.color++;
-
-        if (this.color >= Skins.characterSkin.length) {
-            this.color = 0;
-            return;
-        }
-
-        for (const skinProp of Skins.characterSkin[this.color]) {
-            this.filter.matrix[skinProp.index] = skinProp.color;
-        }
     };
 
     move = (movePath: { x: number; y: number }) => {
@@ -236,6 +102,18 @@ export class Character extends GameObject {
                 corX === 0
                     ? Math.abs(this.y - y) / th
                     : Math.abs(this.x - x) / tw;
+
+            if (corX !== 0) {
+                this.direction =
+                    corX > 0
+                        ? AnimationDirectoins.Right
+                        : AnimationDirectoins.Left;
+            } else {
+                this.direction =
+                    corY > 0
+                        ? AnimationDirectoins.Down
+                        : AnimationDirectoins.Up;
+            }
 
             anime({
                 duration: 80 * timeCor,

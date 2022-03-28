@@ -36,6 +36,8 @@ export class Shop extends PIXI.Container {
         this.createLists();
         this.createFooter();
         this.createBg();
+
+        this.visible = false;
     }
 
     createHeader = () => {
@@ -95,6 +97,7 @@ export class Shop extends PIXI.Container {
         );
         this.balance.on_state_update = () => {
             this.balance.text = LogicState.balance.toString();
+            document.dispatchEvent(new Event("save_character"));
         };
         this.balance.anchor.set(0, 0.5);
         this.footer.zIndex = 1;
@@ -189,6 +192,7 @@ export class Shop extends PIXI.Container {
     };
 
     public set isActive(value: boolean) {
+        this.visible = value;
         this.sellList.isActive = value;
     }
 

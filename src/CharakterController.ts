@@ -29,10 +29,11 @@ export default class CharakterController {
         document.addEventListener("keyMoveOff", this.keyMoveOff);
         document.addEventListener("shiftOn", this.shiftOn);
         document.addEventListener("shiftOff", this.shiftOff);
+        document.addEventListener("save_character", this.saveCharacter);
     };
 
     keyMoveOn = (e: Event) => {
-        if (this.seedMode) return;
+        if (this.seedMode || this.map.charakter.inAction) return;
 
         const targetPath = (e as CustomEvent<iMovePath>).detail;
         const pathExist = this.activeMoves.includes(targetPath);
@@ -46,6 +47,8 @@ export default class CharakterController {
     };
 
     keyMoveOff = (e: Event) => {
+        if (this.map.charakter.inAction) return;
+
         const targetPath = (e as CustomEvent<iMovePath>).detail;
         const targetIndex = this.activeMoves.indexOf(targetPath);
         const char = this.map.charakter;
@@ -59,9 +62,13 @@ export default class CharakterController {
             char.isRunning = false;
         }
 
+        document.dispatchEvent(new Event("save_character"));
+    };
+
+    saveCharacter = () => {
         LocalStorage.data = {
-            id: char.id,
-            detail: char.getStorageData(),
+            id: this.map.charakter.id,
+            detail: this.map.charakter.getStorageData(),
         };
     };
 
