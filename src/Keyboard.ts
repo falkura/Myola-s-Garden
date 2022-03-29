@@ -1,9 +1,17 @@
 import { iMovePath, movePath } from "./Model";
 
 export class Keyboard {
-    constructor() {
+    escapeCallbacks: Array<() => void> = [];
+    defaultEscape?: () => void;
+
+    constructor(defaultEscape?: () => void) {
+        if (defaultEscape) {
+            this.defaultEscape = defaultEscape;
+        }
         document.addEventListener("keydown", this.processKeyDown);
         document.addEventListener("keyup", this.processKeyUp);
+        document.addEventListener("setEscape", this.setEscape);
+        document.addEventListener("removeEscape", this.removeEscape);
     }
 
     processKeyDown = (e: KeyboardEvent) => {
@@ -24,6 +32,9 @@ export class Keyboard {
                 case "KeyC":
                     document.dispatchEvent(new Event("newcolor"));
                     break;
+                case "Escape":
+                    this.onEscape();
+                    break;
                 default:
                     console.log(e.code);
                     break;
@@ -43,6 +54,32 @@ export class Keyboard {
                 default:
                     // console.log(e.code);
                     break;
+            }
+        }
+    };
+
+    setEscape = (e: Event) => {
+        const callback = (e as CustomEvent<() => void>).detail;
+        this.escapeCallbacks.push(callback);
+    };
+
+    removeEscape = (e: Event) => {
+        const callback = (e as CustomEvent<() => void>).detail;
+        this.escapeCallbacks.splice(this.escapeCallbacks.indexOf(callback), 1);
+    };
+
+    onEscape = () => {
+        if (this.escapeCallbacks.length > 0) {
+            const callback = this.escapeCallbacks.pop();
+
+            if (callback) {
+                callback();
+            }
+        } else {
+            if (this.defaultEscape) {
+                this.defaultEscape();
+            } else {
+                console.log("empty escape");
             }
         }
     };

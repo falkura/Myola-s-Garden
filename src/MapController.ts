@@ -1,6 +1,5 @@
 import CharakterController from "./CharakterController";
 import { Common } from "./Config/Common";
-import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { ObserverText } from "./Observer";
 import { SeedOption } from "./GameObjects/SeedOption";
@@ -8,17 +7,14 @@ import { TextStyles } from "./Config/TextStyles";
 import { Character } from "./GameObjects/Character";
 import { Chest } from "./GameObjects/Chest";
 import { Drop } from "./GameObjects/Drop";
-import Tile from "./TMCore/Tile";
 import TiledMap from "./TMCore/TiledMap";
 import { InventoryController } from "./UI/InventoryController";
 import { Shop } from "./GameObjects/Shop";
 import { LocalStorage } from "./LocalStorage";
-import anime from "animejs";
-import { AnimationTypes } from "./GameObjects/CharacterBase";
 import { Trader } from "./GameObjects/Trader";
 
 export class MapController {
-    map?: TiledMap;
+    map!: TiledMap;
     container: PIXI.Container;
     app: PIXI.Application;
     charakterController?: CharakterController;
@@ -29,6 +25,7 @@ export class MapController {
     chb!: Character;
     trader!: Trader;
     chest!: Chest;
+    mapCreated = false;
 
     constructor(app: PIXI.Application) {
         this.app = app;
@@ -44,59 +41,12 @@ export class MapController {
 
     addEventListeners = () => {
         document.addEventListener("wheel", this.onWheel);
-        document.addEventListener("map_created", this.resize, { once: true });
-        document.addEventListener(EVENTS.Seed.On, this.onSeed);
-        document.addEventListener(EVENTS.Seed.Off, this.offSeed);
+        // document.addEventListener("map_created", this.resize, { once: true });
+
         document.addEventListener("shop_", () => {
             this.shop.isActive = !this.shop.isActive;
         });
-        document.addEventListener(EVENTS.Action.Tile.Choose, this.tileChoose);
         document.addEventListener("collect_item", this.collect);
-    };
-
-    tileChoose = async (e: Event) => {
-        const tile: Tile = (e as CustomEvent<Tile>).detail;
-        const char = this.map!.charakter; // @TODO hardcoded
-
-        await char.setPosition(tile.x, tile.y);
-        this.offSeed();
-        this.onSeed();
-
-        if (!tile.Dirt) {
-            const texture = this.map?.getTileset("Dirt")?.textures[35];
-            // this.map?.getTileset(Config.dirt.tileset)?.textures[
-            //     Config.dirt.base
-            // ];
-            char.setType(AnimationTypes.Hoe);
-            tile.setDirt(texture!);
-            // tile.Dirt!.scale.set(0);
-            await new Promise<void>((resolve) => {
-                anime({
-                    targets: tile.Dirt!.scale,
-                    x: [0, 1],
-                    y: [0, 1],
-                    easing: "linear",
-                    duration: 2400,
-                    endDelay: 200,
-                    complete: () => {
-                        resolve();
-                    },
-                });
-            });
-            // await sleep(1000);
-            char.setType(AnimationTypes.Idle);
-        } else if (!tile.Plant) {
-            this.se.position.set(tile.x, tile.y);
-            const plant = await this.se.drawOptions();
-
-            if (isNaN(plant)) {
-                console.log("rejected");
-            } else {
-                tile.setPlant(plant);
-            }
-        } else {
-            console.log("dirt and plant exist");
-        }
     };
 
     collect = async (e: Event) => {
@@ -114,46 +64,9 @@ export class MapController {
         // this.itemCell?.removeItem();
     };
 
-    onSeed = () => {
-        const al = this.map!.charakter.activeLayer;
-
-        const walkableLayers = this.map!.getWalkableLayers();
-
-        for (let i = 0; i < walkableLayers.length; i++) {
-            if (walkableLayers[i].source.id === al) {
-                for (const tile of walkableLayers[i].tiles) {
-                    if (tile) {
-                        const char = this.map!.charakter; // @TODO hardcoded
-
-                        const dist = 2;
-
-                        if (
-                            Math.abs(tile._x - char!._x) > dist ||
-                            Math.abs(tile._y - char!._y) > dist ||
-                            !tile.getProperty("canPlant")
-                        ) {
-                        } else {
-                            tile.debugGraphics.visible = true;
-                        }
-                    }
-                }
-            }
-        }
-    };
-
-    offSeed = () => {
-        const walkableLayers = this.map!.getWalkableLayers();
-
-        for (const layer of walkableLayers) {
-            for (const tile of layer.tiles) {
-                if (tile) tile.debugGraphics.visible = false;
-            }
-        }
-    };
-
-    createMap = (mapName: string) => {
-        this.map = new TiledMap(mapName, this.app);
-        this.charakterController = new CharakterController(this.map);
+    createMap = () => {
+        // this.map = new TiledMap(mapName, this.app);
+        this.charakterController = new CharakterController(this);
         this.container.addChild(this.map);
         this.inventory = new InventoryController(this.map);
         this.inventory.position.set(Common.inventoryCellBorder / 2, 200);
@@ -180,47 +93,48 @@ export class MapController {
         this.balanceText.position.set(50, 10);
         this.container.addChild(this.balanceText);
 
-        setTimeout(() => {
-            const data = LocalStorage.data;
+        const data = LocalStorage.data;
 
-            for (const id of Object.keys(data)) {
-                switch (data[id].name) {
-                    case "character":
-                        this.chb = new Character(this.map!);
-                        this.chb.restore(id);
-                        break;
-                    case "chest":
-                        this.chest = new Chest(this.map!);
-                        this.chest.restore(id);
-                        break;
-                    default:
-                        console.log(data[id]);
-                        break;
-                }
+        for (const id of Object.keys(data)) {
+            switch (data[id].name) {
+                case "character":
+                    // this.chb = new Character(this.map!);
+                    // this.chb.restore(id);
+                    break;
+                case "chest":
+                    // this.chest = new Chest(this.map!);
+                    // this.chest.restore(id);
+                    break;
+                default:
+                    console.log(data[id]);
+                    break;
             }
+        }
 
-            if (!this.chb) {
-                this.chb = new Character(this.map!);
-                this.chb.position.set(130, 250);
-            }
+        // if (!this.chb) {
+        //     this.chb = new Character(this.map!);
+        //     this.chb.position.set(130, 250);
+        // }
 
-            this.chb.zIndex = 10000;
-            this.map!.addChild(this.chb);
+        // this.chb.zIndex = 10000;
+        // this.map!.addChild(this.chb);
 
-            if (!this.chest) {
-                this.chest = new Chest(this.map!);
-                this.chest.position.set(120, 170);
-            }
+        if (!this.chest) {
+            this.chest = new Chest(this.map!);
+            this.chest.position.set(120, 170);
+        }
 
-            this.chest.zIndex = 9000;
-            this.map!.addChild(this.chest);
+        this.chest.zIndex = 9000;
+        this.map!.addChild(this.chest);
 
-            this.trader = new Trader(this.map!);
-            this.trader.position.set(90, 200);
+        this.trader = new Trader(this.map!);
+        this.trader.position.set(90, 200);
 
-            this.trader.zIndex = 10000;
-            this.map!.addChild(this.trader);
-        }, 300);
+        this.trader.zIndex = 10000;
+        this.map!.addChild(this.trader);
+
+        this.mapCreated = true;
+        this.resize();
     };
 
     removeMap = () => {};

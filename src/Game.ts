@@ -4,6 +4,7 @@ import { Subject } from "./Observer";
 import { MapController } from "./MapController";
 import { ControllerUI } from "./UI/ControllerUI";
 import { Keyboard } from "./Keyboard";
+import TiledMap from "./TMCore/TiledMap";
 
 export class Game extends Subject {
     readonly container: PIXI.Container;
@@ -22,7 +23,7 @@ export class Game extends Subject {
         this.add_event_listeners();
 
         this.on_resize();
-        setTimeout(() => this.draw_map(), 200);
+        this.draw_map();
     }
 
     draw_game = () => {
@@ -44,14 +45,20 @@ export class Game extends Subject {
         document.addEventListener(EVENTS.Load.Start, () => {
             console.log("load start");
         });
+        document.addEventListener(EVENTS.Load.Complete, () => {
+            console.log("load complete");
+        });
+        document.addEventListener("map_created", () => {
+            this.mapController?.createMap();
+            this.controller_ui!.main_menu!.visible = false;
+            this.controller_ui!.game_menu!.visible = true;
+
+            new Keyboard();
+        });
     };
 
     draw_map = () => {
-        this.mapController?.createMap("map3");
-        this.controller_ui!.main_menu!.visible = false;
-        this.controller_ui!.game_menu!.visible = true;
-
-        new Keyboard();
+        this.mapController!.map = new TiledMap("map3", this.app);
     };
 
     remove_map = () => {};
@@ -61,8 +68,10 @@ export class Game extends Subject {
     };
 
     on_resize = () => {
-        this.mapController!.resize();
-        this.bg!.resize();
-        this.controller_ui?.on_resize();
+        if (this.mapController?.mapCreated) {
+            this.mapController!.resize();
+            this.bg!.resize();
+            this.controller_ui?.on_resize();
+        }
     };
 }

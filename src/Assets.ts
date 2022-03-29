@@ -9,3 +9,5 @@ export const JPG = [];
 export const ANIMATIONS = ["logo_anim"];
 
 export const FONTS = ["ARCADECLASSIC"];
+
+export const MAPS = ["map3"];

@@ -1,11 +1,14 @@
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
-import TiledMap from "./TMCore/TiledMap";
 import { iMovePath } from "./Model";
 import { LocalStorage } from "./LocalStorage";
+import { AnimationTypes } from "./GameObjects/CharacterBase";
+import Tile from "./TMCore/Tile";
+import { MapController } from "./MapController";
+import { Character } from "./GameObjects/Character";
 
 export default class CharakterController {
-    map: TiledMap;
+    mapController: MapController;
     minFPS = 10;
     maxFPS = 144;
     activeMoves: iMovePath[] = [];
@@ -14,15 +17,25 @@ export default class CharakterController {
     elapsedTime = 0;
     c = false;
     seedMode = false;
+    character!: Character;
 
-    constructor(map: TiledMap) {
-        this.map = map;
+    constructor(mapController: MapController) {
+        this.mapController = mapController;
 
         this.addEventListeners();
 
         this.addTicker();
-        this.map.app.ticker.maxFPS = this.maxFPS;
+        this.mapController.map!.app.ticker.maxFPS = this.maxFPS;
+
+        this.setCharacter();
     }
+
+    setCharacter = () => {
+        this.character = new Character(this.mapController.map!);
+        this.character.position.set(130, 250);
+        this.character.zIndex = 10000;
+        this.mapController.map!.addChild(this.character);
+    };
 
     addEventListeners = () => {
         document.addEventListener("keyMoveOn", this.keyMoveOn);
@@ -30,10 +43,83 @@ export default class CharakterController {
         document.addEventListener("shiftOn", this.shiftOn);
         document.addEventListener("shiftOff", this.shiftOff);
         document.addEventListener("save_character", this.saveCharacter);
+        document.addEventListener(EVENTS.Action.Tile.Choose, this.tileChoose);
+        document.addEventListener(EVENTS.Seed.On, this.onSeed);
+        document.addEventListener(EVENTS.Seed.Off, this.offSeed);
+    };
+
+    tileChoose = async (e: Event) => {
+        if (this.character.inAction) return;
+
+        const tile: Tile = (e as CustomEvent<Tile>).detail;
+
+        await this.character.setPosition(tile.x, tile.y);
+        this.offSeed();
+        this.onSeed();
+
+        if (!tile.Dirt) {
+            const texture =
+                this.mapController.map!.getTileset("Dirt")?.textures[35];
+            // this.map?.getTileset(Config.dirt.tileset)?.textures[
+            //     Config.dirt.base
+            // ];
+            this.character.setType(AnimationTypes.Hoe);
+            tile.setDirt(texture!);
+            // tile.Dirt!.scale.set(0);
+            // const promise = new Promise((resolve, reject) => {
+            // this.character.setAction("set_dirt", tile);
+            await this.character.setAction("set_dirt", tile);
+            // });
+
+            // await sleep(1000);
+            this.character.setType(AnimationTypes.Idle);
+        } else if (!tile.Plant) {
+            this.mapController.se.position.set(tile.x, tile.y);
+            const plant = await this.mapController.se.drawOptions();
+
+            if (isNaN(plant)) {
+                console.log("rejected");
+            } else {
+                tile.setPlant(plant);
+            }
+        } else {
+            console.log("dirt and plant exist");
+        }
+    };
+
+    onSeed = () => {
+        const walkableLayers = this.mapController.map!.getWalkableLayers();
+
+        for (let i = 0; i < walkableLayers.length; i++) {
+            if (walkableLayers[i].source.id === this.character.activeLayer) {
+                for (const tile of walkableLayers[i].tiles) {
+                    if (tile) {
+                        const dist = 2;
+
+                        if (
+                            Math.abs(tile._x - this.character!._x) > dist ||
+                            Math.abs(tile._y - this.character!._y) > dist ||
+                            !tile.getProperty("canPlant")
+                        ) {
+                        } else {
+                            tile.debugGraphics.visible = true;
+                        }
+                    }
+                }
+            }
+        }
+    };
+
+    offSeed = () => {
+        for (const layer of this.mapController.map!.getWalkableLayers()) {
+            for (const tile of layer.tiles) {
+                if (tile) tile.debugGraphics.visible = false;
+            }
+        }
     };
 
     keyMoveOn = (e: Event) => {
-        if (this.seedMode || this.map.charakter.inAction) return;
+        if (this.seedMode || this.character.inAction) return;
 
         const targetPath = (e as CustomEvent<iMovePath>).detail;
         const pathExist = this.activeMoves.includes(targetPath);
@@ -47,19 +133,18 @@ export default class CharakterController {
     };
 
     keyMoveOff = (e: Event) => {
-        if (this.map.charakter.inAction) return;
+        if (this.character.inAction) return;
 
         const targetPath = (e as CustomEvent<iMovePath>).detail;
         const targetIndex = this.activeMoves.indexOf(targetPath);
-        const char = this.map.charakter;
 
         if (targetIndex > -1) {
             this.activeMoves.splice(targetIndex, 1);
         }
 
         if (this.activeMoves.length === 0) {
-            char.setType(0);
-            char.isRunning = false;
+            this.character.setType(0);
+            this.character.isRunning = false;
         }
 
         document.dispatchEvent(new Event("save_character"));
@@ -67,8 +152,8 @@ export default class CharakterController {
 
     saveCharacter = () => {
         LocalStorage.data = {
-            id: this.map.charakter.id,
-            detail: this.map.charakter.getStorageData(),
+            id: this.character.id,
+            detail: this.character.getStorageData(),
         };
     };
 
@@ -91,7 +176,7 @@ export default class CharakterController {
     addTicker = () => {
         const destroy = false;
         let elapsedTime = 0;
-        this.map.app.ticker.add((delta) => {
+        this.mapController.map!.app.ticker.add((delta) => {
             if (!destroy) {
                 elapsedTime += delta;
 
@@ -106,36 +191,33 @@ export default class CharakterController {
     };
 
     update = (delta: number) => {
-        const char = this.map.charakter;
         this.elapsedTime += delta;
 
-        this.map.plants.forEach((plant) => {
+        this.mapController.map!.plants.forEach((plant) => {
             plant.plant.update();
         });
 
         if (this.activeMoves.length > 0) {
             if (this.elapsedTime >= 20) {
                 this.elapsedTime = 0;
-                char.isRunning = true;
+                this.character.isRunning = true;
             }
 
-            if (char.isRunning) {
-                char.setType(2);
+            if (this.character.isRunning) {
+                this.character.setType(2);
             } else {
-                char.setType(1);
+                this.character.setType(1);
             }
 
             for (const mp of this.activeMoves) {
-                char.move(mp);
+                this.character.move(mp);
             }
         }
     };
 
     updatePosition = () => {
-        const char = this.map.charakter;
-
-        if (char) {
-            char.direction = this.lastMove;
+        if (this.character) {
+            this.character.direction = this.lastMove;
             this.elapsedTime = 0;
         }
     };

@@ -1,5 +1,5 @@
 import { SessionConfig } from "./Config/SessionConfig";
-import { ATLASES, ASSETS, ANIMATIONS, JPG, PNG } from "./Assets";
+import { ATLASES, ASSETS, ANIMATIONS, JPG, PNG, MAPS } from "./Assets";
 import "./AudioManager";
 
 export class Preloader {
@@ -98,9 +98,15 @@ export class Preloader {
             );
         }
 
+        for (const res of MAPS) {
+            result.add(res, `${SessionConfig.ASSETS_ADDRESS}${res}.json`);
+        }
+
         result.onProgress.add(() => {
             this.update_mask(result.progress / 100);
         });
+
+        // result.add("map3", `${SessionConfig.ASSETS_ADDRESS}map3.json`);
 
         result.load(() => {
             for (const atlas of ATLASES) {
@@ -111,10 +117,9 @@ export class Preloader {
                         PIXI.Loader.shared.resources[atlas].textures![texture];
                 }
             }
-            PIXI.Loader.shared
-                .add("map3", `${SessionConfig.ASSETS_ADDRESS}map3.json`)
-                .load();
+
             ASSETS["map3"] = PIXI.Loader.shared.resources["map3"];
+
             document.dispatchEvent(this.on_game_loaded_event);
         });
     };

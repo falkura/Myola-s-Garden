@@ -1,4 +1,4 @@
-import anime from "animejs";
+import anime, { AnimeInstance } from "animejs";
 import { hitTestRectangle } from "../Util";
 import Tile from "../TMCore/Tile";
 import TiledMap from "../TMCore/TiledMap";
@@ -7,9 +7,11 @@ import { LocalStorage } from "../LocalStorage";
 import { LogicState } from "../logic_state";
 import { AnimationDirectoins, CharacterBase } from "./CharacterBase";
 
+export type CharActions = "set_dirt" | "water_plant";
 export class Character extends CharacterBase {
     isRunning = false;
     toRun = 0;
+    currentAnim?: AnimeInstance;
 
     constructor(mapData: TiledMap) {
         super(mapData, "character");
@@ -20,6 +22,52 @@ export class Character extends CharacterBase {
     onCharClick = () => {
         console.log("it's me");
         this.cameraMove();
+    };
+
+    setAction = (action: CharActions, target: Tile) => {
+        return new Promise<(() => void) | void>((resolve) => {
+            let anim: AnimeInstance;
+            let esc: () => void;
+
+            switch (action) {
+                case "set_dirt":
+                    anim = anime({
+                        targets: target.Dirt!.scale,
+                        x: [0, 1],
+                        y: [0, 1],
+                        easing: "linear",
+                        duration: 2400,
+                        endDelay: 200,
+                        complete: () => {
+                            resolve(esc);
+                        },
+                    });
+
+                    esc = () => {
+                        anim.pause();
+                        target.removeDirt();
+                        resolve();
+                    };
+                    break;
+
+                default:
+                    anim = anime({});
+                    esc = () => {};
+                    break;
+            }
+
+            document.dispatchEvent(
+                new CustomEvent<() => void>("setEscape", { detail: esc })
+            );
+        }).then((esc: (() => void) | void) => {
+            if (esc) {
+                document.dispatchEvent(
+                    new CustomEvent<() => void>("removeEscape", {
+                        detail: esc,
+                    })
+                );
+            }
+        });
     };
 
     move = (movePath: { x: number; y: number }) => {

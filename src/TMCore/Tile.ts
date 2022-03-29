@@ -49,7 +49,7 @@ export default class Tile extends PIXI.AnimatedSprite {
 
         this.Dirt = sprite;
 
-        this.addChild(sprite);
+        this.addChild(this.Dirt);
         this.save();
     };
 
