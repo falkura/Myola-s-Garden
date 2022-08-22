@@ -112,6 +112,13 @@ export class App {
 
 		LogicState.app_state = "idle";
 		LogicState.notify_all();
+
+		Object.assign(window as any, {
+			Game: this.game,
+			ls: LogicState,
+			app: this,
+			Common: Common,
+		});
 	};
 
 	setup_events = () => {
