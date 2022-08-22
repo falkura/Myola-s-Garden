@@ -1,5 +1,6 @@
 import { Subject } from "./Observer";
 import { AppState } from "./Model";
+import { Common } from "./Config/Common";
 
 export class LogicStateClass extends Subject {
     is_music_on = true;
@@ -15,6 +16,9 @@ export class LogicStateClass extends Subject {
     isShift = false;
     sellPrice = 0;
     balance = 1000;
+
+    app_width = Common.game_width;
+    app_height = Common.game_height;
 
     constructor() {
         super();
