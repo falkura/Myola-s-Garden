@@ -1,0 +1,23 @@
+{
+	"tabWidth": 4,
+	"semi": true,
+	"useTabs": true,
+	"printWidth": 140,
+	"endOfLine": "crlf",
+	"trailingComma": "all",
+	"arrowParens": "avoid",
+	"overrides": [
+		{
+			"files": "webpack.config.js",
+			"options": {
+				"printWidth": 100
+			}
+		},
+		{
+			"files": "*.ts",
+			"options": {
+				"parser": "typescript"
+			}
+		}
+	]
+}

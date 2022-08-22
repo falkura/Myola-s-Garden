@@ -1,13 +1,25 @@
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const ASSETS: any = {};
-export const ATLASES = ["UI"];
+import { Resource, Resources } from "./ResourceLoader";
 
-export const PNG = ["map3p", "cursor_normal", "cursor_pointer"];
+/** Should be in assets/spine/ */
+export const ANIMATIONS: Resources = {
+	main: [],
+};
 
-export const JPG = [];
+/** Should be in assets/images/ */
+export const IMAGES: Resources = {
+	main: [
+		{
+			key: "project_bg",
+			path: "images/project_bg.jpg",
+		},
+	],
+	preload: [],
+};
 
-export const ANIMATIONS = ["logo_anim"];
+/** Should be in assets/atlases/ */
+export const ATLASES: Resources = {
+	main: [],
+};
 
-export const FONTS = ["ARCADECLASSIC"];
-
-export const MAPS = ["map3"];
+/** Should be in assets/fonts/ */
+export const FONTS: Resource[] = [];

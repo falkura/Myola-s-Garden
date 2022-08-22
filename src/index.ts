@@ -5,16 +5,22 @@ import { App } from "./App";
 declare const __ENVIRONMENT__: string;
 
 function init() {
-    const game_name = "Myola`s Garden";
-    const full_game_name = `${game_name} v${packageInfo.version} ${__ENVIRONMENT__}`;
+	document.getElementById("root")!.onmousedown = () => {
+		return false;
+	};
 
-    document.title = full_game_name;
+	const project_name = "Myola`s Garden";
+	const full_project_name = `${project_name} v${packageInfo.version} ${__ENVIRONMENT__}`;
 
-    new App();
+	console.log(full_project_name);
+
+	document.title = full_project_name;
+
+	new App();
 }
 
 if (document.readyState !== "loading") {
-    init();
+	init();
 } else {
-    document.addEventListener("DOMContentLoaded", init);
+	document.addEventListener("DOMContentLoaded", init);
 }
