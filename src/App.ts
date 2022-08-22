@@ -114,10 +114,9 @@ export class App {
 		LogicState.notify_all();
 
 		Object.assign(window as any, {
-			Game: this.game,
+			main: this.main,
 			ls: LogicState,
 			app: this,
-			Common: Common,
 		});
 	};
 
