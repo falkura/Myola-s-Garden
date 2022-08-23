@@ -80,5 +80,5 @@
 			}
 		}
 	],
-	"ignorePatterns": ["dist"]
+	"ignorePatterns": ["dist", "assets"]
 }

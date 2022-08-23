@@ -5,7 +5,7 @@ export interface IMapData {
 	height: number;
 	tilewidth: number;
 	tileheight: number;
-	tilesets: iTileset[];
+	tilesets: ITileset[];
 	// layers: Array<iTileLayer | iObjectLayer>;
 	/** Not implemented! */
 	compressionlevel: number;
@@ -27,7 +27,7 @@ export interface IMapData {
 	version: string;
 }
 
-export interface iTileset {
+export interface ITileset {
 	firstgid: number;
 	image: string;
 	imageheight: number;
