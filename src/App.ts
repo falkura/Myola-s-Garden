@@ -2,7 +2,7 @@ import * as PIXI from "pixi.js";
 import { LogicState } from "./logic_state";
 import { PrePreloader } from "./PrePreloader";
 import { Preloader } from "./Preloader";
-import { Main } from "./Main";
+import { Game } from "./Game";
 import { Config } from "./Config";
 import { EVENTS } from "./Events";
 import { get_platform } from "./Util";
@@ -14,7 +14,7 @@ export class App {
 	readonly is_landscape: boolean = true;
 	pre_preloader?: PrePreloader;
 	preloader?: Preloader;
-	main?: Main;
+	game?: Game;
 
 	constructor() {
 		LogicState.is_mobile = get_platform();
@@ -70,8 +70,8 @@ export class App {
 
 		LogicState.notify_all();
 
-		if (this.main) {
-			this.main.resize();
+		if (this.game) {
+			this.game.resize();
 		} else if (this.preloader) {
 			this.preloader.resize();
 		} else if (this.pre_preloader) {
@@ -98,23 +98,24 @@ export class App {
 	on_project_loaded = () => {
 		this.app.stage.removeChild(this.preloader!.container);
 
-		this.main = new Main(this.app);
+		this.game = new Game(this.app);
 
 		Object.assign(globalThis, {
-			main: this.main,
+			main: this.game,
 			ls: LogicState,
 			app: this,
 			rc: ResourceController,
 			config: Config,
 		});
 
-		this.app.stage.addChildAt(this.main.container, 0);
+		this.app.stage.addChildAt(this.game.container, 0);
 
 		LogicState.app_state = "idle";
 		LogicState.notify_all();
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		Object.assign(window as any, {
-			main: this.main,
+			game: this.game,
 			ls: LogicState,
 			app: this,
 		});

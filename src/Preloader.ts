@@ -17,6 +17,7 @@ export class Preloader {
 
 	load_assets = () => {
 		ResourceController.addResources("main");
+		ResourceController.addMaps();
 
 		ResourceController.loader.onProgress.add(() => {});
 

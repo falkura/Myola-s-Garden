@@ -1,5 +1,5 @@
 import { IResourceDictionary } from "pixi.js";
-import { ANIMATIONS, ATLASES, FONTS, IMAGES } from "./Assets";
+import { ANIMATIONS, ATLASES, FONTS, IMAGES, MAPS } from "./Assets";
 import { LogicState } from "./logic_state";
 import { SessionConfig } from "./Config";
 
@@ -25,7 +25,7 @@ class Loader {
 		return this.loader.resources;
 	}
 
-	getResource = (key: string): PIXI.LoaderResource | PIXI.Texture => {
+	getResource = (key: string): PIXI.LoaderResource => {
 		const resource = this.resources[key];
 
 		if (!resource) throw new Error(`There is no resource with name - {${key}}`);
@@ -101,6 +101,12 @@ class Loader {
 					this.loader.add(asset.key, `${SessionConfig.ASSETS_ADDRESS}${asset.path}`);
 				});
 			}
+		});
+	};
+
+	addMaps = () => {
+		MAPS.forEach(mapData => {
+			this.loader.add(mapData.key, `${SessionConfig.ASSETS_ADDRESS}${mapData.path}`);
 		});
 	};
 

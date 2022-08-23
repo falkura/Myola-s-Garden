@@ -23,3 +23,10 @@ export const ATLASES: Resources = {
 
 /** Should be in assets/fonts/ */
 export const FONTS: Resource[] = [];
+
+export const MAPS: Resource[] = [
+	{
+		key: "map3",
+		path: "map3.json",
+	},
+];
