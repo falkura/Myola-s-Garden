@@ -27,6 +27,10 @@ const common = {
 	resolve: {
 		extensions: [".ts", ".js"],
 	},
+
+	externals: {
+		"pixi.js": "PIXI",
+	},
 };
 
 const local = {
