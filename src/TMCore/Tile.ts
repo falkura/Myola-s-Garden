@@ -4,9 +4,10 @@ import TileSet from "./TileSet";
 export default class Tile {
 	_x!: number;
 	_y!: number;
-	props?: ITile;
-	layerData: ITileLayerData;
 	sprite!: PIXI.AnimatedSprite;
+
+	layerData: ITileLayerData;
+	props?: ITile;
 
 	constructor(tileSet: TileSet, tileConfig: ITileConfig, layerData: ITileLayerData) {
 		this.layerData = layerData;
