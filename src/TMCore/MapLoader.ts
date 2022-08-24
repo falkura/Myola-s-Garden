@@ -1,13 +1,13 @@
 import { SessionConfig } from "../Config";
-import { IMapData } from "../Models";
 import { ResourceController } from "../ResourceLoader";
+import TiledMap from "./TiledMap";
 
 export default class MapLoader {
-	source: IMapData;
+	map: TiledMap;
 	container: PIXI.Container;
 
-	constructor(mapData: IMapData) {
-		this.source = mapData;
+	constructor(map: TiledMap) {
+		this.map = map;
 		this.container = new PIXI.Container();
 
 		this.drawLoader();
@@ -18,18 +18,17 @@ export default class MapLoader {
 	load = (): Promise<void> => {
 		const loader = ResourceController.loader;
 
-		for (const tileset of this.source.tilesets) {
-			if (!loader.resources[tileset.name]) {
-				loader.add(tileset.name, `${SessionConfig.ASSETS_ADDRESS}${tileset.image}`);
-			}
+		for (const tileset of this.map.source.tilesets) {
+			loader.add(tileset.name, `${SessionConfig.ASSETS_ADDRESS}${tileset.image}`);
 		}
 
-		loader.onProgress.add(() => {
-			console.log(loader.progress);
+		const onProgress = loader.onProgress.add(() => {
+			console.log("Map " + loader.progress);
 		});
 
 		const promise = new Promise<void>(resolve => {
 			loader.load(() => {
+				loader.onProgress.detach(onProgress);
 				resolve();
 			});
 		});
@@ -38,11 +37,15 @@ export default class MapLoader {
 	};
 
 	destroy = () => {
-		// const loader = ResourceController.loader;
-		// for (const tileset of this.source.tilesets) {
-		// 	delete loader.resources[tileset.name];
-		// }
-		// loader.progress = 0;
-		// loader.loading = false;
+		const loader = ResourceController.loader;
+
+		for (const tileset of this.map.tilesets) {
+			tileset.baseTexture.destroy();
+			ResourceController.getTexture(tileset.source.name).destroy();
+			delete loader.resources[tileset.source.name];
+		}
+
+		loader.progress = 0;
+		loader.loading = false;
 	};
 }

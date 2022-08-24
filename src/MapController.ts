@@ -15,7 +15,11 @@ export class MapController {
 	};
 
 	destroy = () => {
-		this.map?.destroy();
+		if (this.map) {
+			this.map.parent.removeChild(this.map);
+			this.map.destroy();
+			this.map = undefined;
+		}
 	};
 
 	resize = () => {

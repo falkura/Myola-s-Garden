@@ -19,7 +19,9 @@ export class Preloader {
 		ResourceController.addResources("main");
 		ResourceController.addMaps();
 
-		ResourceController.loader.onProgress.add(() => {});
+		ResourceController.onProgress = () => {
+			console.log("Main " + ResourceController.loader.progress);
+		};
 
 		ResourceController.loadResources(() => {
 			for (const atlas of ATLASES["main"]) {

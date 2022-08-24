@@ -19,6 +19,7 @@ export interface Resource {
 }
 
 class Loader {
+	private onProgressCb: (() => void) | undefined;
 	loader = PIXI.Loader.shared;
 
 	public get resources(): IResourceDictionary {
@@ -111,8 +112,22 @@ class Loader {
 	};
 
 	loadResources = (onLoad: () => void) => {
-		this.loader.load(onLoad);
+		this.loader.load(() => {
+			onLoad();
+			if (this.onProgressCb) {
+				this.loader.onProgress.detach(this.onProgressCb);
+				this.onProgressCb = undefined;
+			}
+		});
 	};
+
+	public set onProgress(cb: () => void) {
+		if (!this.onProgressCb) {
+			this.onProgressCb = this.loader.onProgress.add(cb);
+		} else {
+			console.error("An onProgress function already added!");
+		}
+	}
 
 	loadFonts = () => {
 		const newStyle = document.createElement("style");

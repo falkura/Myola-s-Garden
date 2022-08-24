@@ -34,7 +34,7 @@ export default class TiledMap extends PIXI.Container {
 	}
 
 	loadResources = () => {
-		this.loader = new MapLoader(this.source);
+		this.loader = new MapLoader(this);
 		this.addChild(this.loader.container); // @TODO loader screen
 
 		return this.loader.load();
