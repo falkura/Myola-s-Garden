@@ -1,6 +1,7 @@
 import { ILayersData, IMapData, ITileset, LayerType } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
+import ObjectLayer from "./ObjectLayer";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
 
@@ -8,7 +9,7 @@ export default class TiledMap extends PIXI.Container {
 	source: IMapData;
 	loader!: MapLoader;
 	tilesets: TileSet[] = [];
-	layers: TileLayer[] = [];
+	layers: Array<TileLayer | ObjectLayer> = [];
 	mapName: string;
 
 	constructor(resourceId: string) {
@@ -43,27 +44,23 @@ export default class TiledMap extends PIXI.Container {
 			switch (layerData.type) {
 				case LayerType.TileLayer:
 					tileLayer = new TileLayer(layerData, this);
-					tileLayer.index = index;
-					this.layers.push(tileLayer);
-					this.addLayer(tileLayer);
 					break;
 
-				// case LayerType.ObjectGroup:
-				// 	tileLayer = new ObjectLayer(layerData, this);
-				// 	break;
+				case LayerType.ObjectGroup:
+					tileLayer = new ObjectLayer(layerData, this);
+					break;
 
 				default:
-					return;
-				// throw new Error("Incorrect layer type!");
+					throw new Error("Incorrect layer type!");
 			}
 
-			// tileLayer.index = index;
-			// this.layers.push(tileLayer);
-			// this.addLayer(tileLayer);
+			tileLayer.index = index;
+			this.layers.push(tileLayer);
+			this.addLayer(tileLayer);
 		});
 	};
 
-	addLayer = (layer: TileLayer) => {
+	addLayer = (layer: TileLayer | ObjectLayer) => {
 		this.addChild(layer);
 	};
 }

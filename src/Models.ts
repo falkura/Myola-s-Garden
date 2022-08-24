@@ -45,20 +45,20 @@ export interface ITileset {
 }
 
 export interface ITileLayerData extends ILayer {
-	data: number[];
-	height: number;
-	width: number;
 	type: LayerType.TileLayer;
+	data: number[];
+	width: number;
+	height: number;
 	// properties?: iProperties[];
 	// tiles: Tile[];
 }
 
 export interface IObjectLayerData extends ILayer {
+	type: LayerType.ObjectGroup;
+	objects: IObjectData[];
+	// tiles: ObjectTile[];
 	/** Not implemented! */
 	draworder: string;
-	type: LayerType.ObjectGroup;
-	// objects: iDataObject[];
-	// tiles: ObjectTile[];
 }
 
 export interface ILayer {
@@ -110,7 +110,7 @@ export const enum ITilePropTypes {
 
 export interface ITileObjectGroup {
 	id: string;
-	objects: ITileObjectProperty[];
+	objects: IDefaultTileProperty[];
 	x: string;
 	y: string;
 	/** Not implemented! */
@@ -125,28 +125,32 @@ export interface ITileObjectGroup {
 	visible: boolean;
 }
 
-export interface ITileObjectProperty {
-	id: string;
-	width: number;
-	height: number;
-	x: number;
-	y: number;
-	rotation: number;
-	/** Not implemented! */
-	name: string;
-	/** Not implemented! */
-	type: string;
-	/** Not implemented! */
-	visible: boolean;
-}
-
 export interface ITileConfig {
 	index: number;
 	x: number;
 	y: number;
 }
 
-export interface ITileData extends ITileConfig {
+export interface ITileConstructInfo extends ITileConfig {
 	textures: PIXI.Texture[];
 	props?: ITile;
+}
+
+export interface IObjectData extends IDefaultTileProperty {
+	gid: number;
+}
+
+export interface IDefaultTileProperty {
+	id: string;
+	rotation: number;
+	width: number;
+	height: number;
+	x: number;
+	y: number;
+	/** Not implemented! */
+	name: string;
+	/** Not implemented! */
+	type: string;
+	/** Not implemented! */
+	visible: boolean;
 }
