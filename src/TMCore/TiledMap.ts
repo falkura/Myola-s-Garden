@@ -12,6 +12,9 @@ export default class TiledMap extends PIXI.Container {
 	layers: Array<TileLayer | ObjectLayer> = [];
 	mapName: string;
 
+	_width!: number;
+	_height!: number;
+
 	constructor(resourceId: string) {
 		super();
 		this.mapName = resourceId;
@@ -20,6 +23,11 @@ export default class TiledMap extends PIXI.Container {
 		this.loadResources().then(() => {
 			this.setTileSets();
 			this.setLayers();
+
+			this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
+
+			this._width = this.width;
+			this._height = this.height;
 
 			document.dispatchEvent(new Event("map_created"));
 		});
@@ -62,5 +70,10 @@ export default class TiledMap extends PIXI.Container {
 
 	addLayer = (layer: TileLayer | ObjectLayer) => {
 		this.addChild(layer);
+	};
+
+	override destroy = () => {
+		super.destroy({ children: true, texture: true, baseTexture: true });
+		this.loader.destroy();
 	};
 }

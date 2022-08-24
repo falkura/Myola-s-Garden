@@ -19,7 +19,9 @@ export default class MapLoader {
 		const loader = ResourceController.loader;
 
 		for (const tileset of this.source.tilesets) {
-			loader.add(tileset.name, `${SessionConfig.ASSETS_ADDRESS}${tileset.image}`);
+			if (!loader.resources[tileset.name]) {
+				loader.add(tileset.name, `${SessionConfig.ASSETS_ADDRESS}${tileset.image}`);
+			}
 		}
 
 		loader.onProgress.add(() => {
@@ -36,10 +38,11 @@ export default class MapLoader {
 	};
 
 	destroy = () => {
-		const loader = ResourceController.loader;
-
-		for (const tileset of this.source.tilesets) {
-			delete loader.resources[tileset.name];
-		}
+		// const loader = ResourceController.loader;
+		// for (const tileset of this.source.tilesets) {
+		// 	delete loader.resources[tileset.name];
+		// }
+		// loader.progress = 0;
+		// loader.loading = false;
 	};
 }

@@ -1,12 +1,12 @@
 import { Config } from "./Config";
+import { MapController } from "./MapController";
 import { ResourceController } from "./ResourceLoader";
-import TiledMap from "./TMCore/TiledMap";
 
 export class Game {
 	app: PIXI.Application;
 	container = new PIXI.Container();
 	bg!: PIXI.Sprite;
-	tm?: TiledMap;
+	MC: MapController;
 
 	constructor(app: PIXI.Application) {
 		this.app = app;
@@ -14,9 +14,8 @@ export class Game {
 		this.add_event_listeners();
 		this.createBG();
 
+		this.MC = new MapController();
 		this.resize();
-
-		console.log("Hello World!");
 		this.loadMap();
 	}
 
@@ -29,10 +28,13 @@ export class Game {
 	add_event_listeners = () => {};
 
 	loadMap = () => {
-		this.tm = new TiledMap("map3");
+		this.MC.loadMap("map3").then(() => {
+			this.container.addChild(this.MC.map!);
+		});
 	};
 
 	resize = () => {
+		this.MC.resize();
 		this.bg.position.set(Config.project_width / 2, Config.project_height / 2);
 
 		this.bg.scale.set(

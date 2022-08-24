@@ -37,6 +37,7 @@ export class App {
 	get_pixi_app = () => {
 		PIXI.settings.ROUND_PIXELS = true;
 		PIXI.settings.SORTABLE_CHILDREN = true;
+		PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
 
 		return new PIXI.Application({
 			width: Config.project_width,

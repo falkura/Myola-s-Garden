@@ -4,11 +4,17 @@ export function clamp(num: number, min: number, max: number) {
 	return num <= min ? min : num >= max ? max : num;
 }
 
-export function waitForEvent(event: string): Promise<Event> {
+export function waitForEvent(event: string): Promise<void> {
 	return new Promise(resolve => {
-		document.addEventListener(event, resolve, {
-			once: true,
-		});
+		document.addEventListener(
+			event,
+			() => {
+				resolve();
+			},
+			{
+				once: true,
+			},
+		);
 	});
 }
 
