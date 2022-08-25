@@ -4,167 +4,167 @@ const CopyPlugin = require("copy-webpack-plugin");
 const DefinePlugin = require("webpack").DefinePlugin;
 
 const common = {
-	entry: "./src/index.ts",
+    entry: "./src/index.ts",
 
-	module: {
-		rules: [
-			{
-				test: /\.tsx?$/,
-				use: "ts-loader",
-				include: [path.resolve(__dirname, "src")],
-			},
-			{
-				test: /\.csv$/i,
-				use: "raw-loader",
-			},
-			{
-				test: /\.(png|ttf)$/,
-				loader: "url-loader",
-			},
-		],
-	},
+    module: {
+        rules: [
+            {
+                test: /\.tsx?$/,
+                use: "ts-loader",
+                include: [path.resolve(__dirname, "src")],
+            },
+            {
+                test: /\.csv$/i,
+                use: "raw-loader",
+            },
+            {
+                test: /\.(png|ttf)$/,
+                loader: "url-loader",
+            },
+        ],
+    },
 
-	resolve: {
-		extensions: [".ts", ".js"],
-	},
+    resolve: {
+        extensions: [".ts", ".js"],
+    },
 
-	externals: {
-		"pixi.js": "PIXI",
-	},
+    externals: {
+        "pixi.js": "PIXI",
+    },
 };
 
 const local = {
-	...common,
+    ...common,
 
-	name: "local",
+    name: "local",
 
-	mode: "development",
+    mode: "development",
 
-	watch: true,
+    watch: true,
 
-	output: {
-		path: path.join(__dirname, "/dist"),
-		filename: "app.js",
-		publicPath: "/",
-	},
+    output: {
+        path: path.join(__dirname, "/dist"),
+        filename: "app.js",
+        publicPath: "/",
+    },
 
-	devServer: {
-		static: {
-			directory: path.join(__dirname, "./dist"),
-		},
-		client: {
-			overlay: {
-				errors: true,
-				warnings: false,
-			},
-		},
-		compress: true,
-		port: 9000,
-		open: {
-			app: {
-				name: process.platform == "linux" ? "google-chrome" : "Chrome",
-			},
-		},
-		// historyApiFallback: {
-		// 	rewrites: [
-		// 		{ from: /.*\/dist\/app\.js/, to: "/dist/app.js" },
-		// 		{ from: /.*/, to: "./index.html" },
-		// 	],
-		// },
-	},
+    devServer: {
+        static: {
+            directory: path.join(__dirname, "./dist"),
+        },
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        },
+        compress: true,
+        port: 9000,
+        open: {
+            app: {
+                name: process.platform == "linux" ? "google-chrome" : "Chrome",
+            },
+        },
+        // historyApiFallback: {
+        // 	rewrites: [
+        // 		{ from: /.*\/dist\/app\.js/, to: "/dist/app.js" },
+        // 		{ from: /.*/, to: "./index.html" },
+        // 	],
+        // },
+    },
 
-	devtool: "eval-cheap-module-source-map",
+    devtool: "eval-cheap-module-source-map",
 
-	plugins: [
-		new DefinePlugin({
-			__ENVIRONMENT__: `"LOCAL"`,
-		}),
-		new CopyPlugin({
-			patterns: [
-				{ from: "./index.html", to: "./index.html" },
-				{ from: "./assets", to: "./assets" },
-			],
-		}),
-	],
+    plugins: [
+        new DefinePlugin({
+            __ENVIRONMENT__: `"LOCAL"`,
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "./index.html", to: "./index.html" },
+                { from: "./assets", to: "./assets" },
+            ],
+        }),
+    ],
 };
 
 const localNoOpen = {
-	...local,
+    ...local,
 
-	name: "local!",
+    name: "local!",
 
-	devServer: {
-		static: {
-			directory: path.join(__dirname, "./dist"),
-		},
-		client: {
-			overlay: {
-				errors: true,
-				warnings: false,
-			},
-		},
-		compress: true,
-		port: 9000,
-	},
+    devServer: {
+        static: {
+            directory: path.join(__dirname, "./dist"),
+        },
+        client: {
+            overlay: {
+                errors: true,
+                warnings: false,
+            },
+        },
+        compress: true,
+        port: 9000,
+    },
 };
 
 const dev = {
-	...common,
+    ...common,
 
-	name: "dev",
+    name: "dev",
 
-	mode: "development",
+    mode: "development",
 
-	output: {
-		path: path.join(__dirname, "/dist"),
-		filename: "app.js",
-		publicPath: "/",
-	},
+    output: {
+        path: path.join(__dirname, "/dist"),
+        filename: "app.js",
+        publicPath: "/",
+    },
 
-	devtool: "eval-cheap-module-source-map",
+    devtool: "eval-cheap-module-source-map",
 
-	plugins: [
-		new CleanWebpackPlugin(),
-		new CopyPlugin({
-			patterns: [
-				{ from: "./index.html", to: "./index.html" },
-				{ from: "./assets", to: "./assets" },
-			],
-		}),
-		new DefinePlugin({
-			__ENVIRONMENT__: `"DEV"`,
-		}),
-	],
+    plugins: [
+        new CleanWebpackPlugin(),
+        new CopyPlugin({
+            patterns: [
+                { from: "./index.html", to: "./index.html" },
+                { from: "./assets", to: "./assets" },
+            ],
+        }),
+        new DefinePlugin({
+            __ENVIRONMENT__: `"DEV"`,
+        }),
+    ],
 };
 
 const prod = {
-	...common,
+    ...common,
 
-	name: "prod",
+    name: "prod",
 
-	mode: "production",
+    mode: "production",
 
-	output: {
-		path: path.join(__dirname, "/dist"),
-		filename: "app.js",
-		publicPath: "/",
-	},
+    output: {
+        path: path.join(__dirname, "/dist"),
+        filename: "app.js",
+        publicPath: "/",
+    },
 
-	devtool: false,
+    devtool: false,
 
-	plugins: [
-		new CleanWebpackPlugin(),
-		new CopyPlugin({
-			patterns: [
-				// { from: "./prodIndex.html", to: "./index.html" },
-				{ from: "./index.html", to: "./index.html" },
-				{ from: "./assets", to: "./assets" },
-			],
-		}),
-		new DefinePlugin({
-			__ENVIRONMENT__: `"PROD"`,
-		}),
-	],
+    plugins: [
+        new CleanWebpackPlugin(),
+        new CopyPlugin({
+            patterns: [
+                // { from: "./prodIndex.html", to: "./index.html" },
+                { from: "./index.html", to: "./index.html" },
+                { from: "./assets", to: "./assets" },
+            ],
+        }),
+        new DefinePlugin({
+            __ENVIRONMENT__: `"PROD"`,
+        }),
+    ],
 };
 
 module.exports = [local, dev, prod, localNoOpen];

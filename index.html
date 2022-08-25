@@ -1,98 +1,98 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<meta http-equiv="Cache-Control" content="no-cache" />
-		<meta http-equiv="Pragma" content="no-cache" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <meta http-equiv="Cache-Control" content="no-cache" />
+        <meta http-equiv="Pragma" content="no-cache" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-		<title>Myola`s Garden</title>
-		<!-- Normalize.css -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" />
-		<!-- <link rel="stylesheet" href="lib/normalize.css" /> -->
-		<style>
-			html {
-				background-image: url("./assets/wallpaperflare.com_wallpaper.jpg");
-				background-position: center;
-				background-repeat: no-repeat;
-				background-size: cover;
-			}
+        <title>Myola`s Garden</title>
+        <!-- Normalize.css -->
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" />
+        <!-- <link rel="stylesheet" href="lib/normalize.css" /> -->
+        <style>
+            html {
+                background-image: url("./assets/wallpaperflare.com_wallpaper.jpg");
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
 
-			html,
-			body {
-				height: 100%;
-				max-height: 100%;
-				width: 100%;
-				max-width: 100%;
-				display: flex;
-				flex-wrap: wrap;
-				font-family: ARCADECLASSIC;
-			}
-		</style>
-	</head>
+            html,
+            body {
+                height: 100%;
+                max-height: 100%;
+                width: 100%;
+                max-width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                font-family: ARCADECLASSIC;
+            }
+        </style>
+    </head>
 
-	<body>
-		<!-- Main container -->
-		<canvas id="root"></canvas>
+    <body>
+        <!-- Main container -->
+        <canvas id="root"></canvas>
 
-		<!-- PixiJS -->
-		<script>
-			var supported;
+        <!-- PixiJS -->
+        <script>
+            var supported;
 
-			function isWebGLSupported() {
-				if (typeof supported === "undefined") {
-					supported = (function supported() {
-						var contextOptions = {
-							stencil: true,
-							failIfMajorPerformanceCaveat: true,
-						};
-						try {
-							if (!window.WebGLRenderingContext) {
-								return false;
-							}
-							var canvas = document.createElement("canvas");
-							var gl = canvas.getContext("webgl", contextOptions) || canvas.getContext("experimental-webgl", contextOptions);
-							var success = !!(gl && gl.getContextAttributes().stencil);
-							if (gl) {
-								var loseContext = gl.getExtension("WEBGL_lose_context");
-								if (loseContext) {
-									loseContext.loseContext();
-								}
-							}
-							gl = null;
-							return success;
-						} catch (e) {
-							return false;
-						}
-					})();
-				}
-				return supported;
-			}
+            function isWebGLSupported() {
+                if (typeof supported === "undefined") {
+                    supported = (function supported() {
+                        var contextOptions = {
+                            stencil: true,
+                            failIfMajorPerformanceCaveat: true,
+                        };
+                        try {
+                            if (!window.WebGLRenderingContext) {
+                                return false;
+                            }
+                            var canvas = document.createElement("canvas");
+                            var gl = canvas.getContext("webgl", contextOptions) || canvas.getContext("experimental-webgl", contextOptions);
+                            var success = !!(gl && gl.getContextAttributes().stencil);
+                            if (gl) {
+                                var loseContext = gl.getExtension("WEBGL_lose_context");
+                                if (loseContext) {
+                                    loseContext.loseContext();
+                                }
+                            }
+                            gl = null;
+                            return success;
+                        } catch (e) {
+                            return false;
+                        }
+                    })();
+                }
+                return supported;
+            }
 
-			var script = document.createElement("script");
+            var script = document.createElement("script");
 
-			script.src = isWebGLSupported()
-				? "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.12/pixi.js"
-				: "https://cdn.jsdelivr.net/npm/pixi.js-legacy@5.3.3/dist/pixi-legacy.js";
+            script.src = isWebGLSupported()
+                ? "https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.12/pixi.js"
+                : "https://cdn.jsdelivr.net/npm/pixi.js-legacy@5.3.3/dist/pixi-legacy.js";
 
-			document.head.appendChild(script);
+            document.head.appendChild(script);
 
-			script.onload = function () {
-				var script = document.createElement("script");
+            script.onload = function () {
+                var script = document.createElement("script");
 
-				script.type = "text/javascript";
-				script.src = "./app.js";
+                script.type = "text/javascript";
+                script.src = "./app.js";
 
-				document.head.appendChild(script);
-			};
-		</script>
-		<!-- Howler -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.js"></script>
-		<!-- FontFaceObserver -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.standalone.js"></script>
-		<!-- Tslib -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/tslib/2.3.1/tslib.js"></script>
-		<!-- Animejs -->
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-	</body>
+                document.head.appendChild(script);
+            };
+        </script>
+        <!-- Howler -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.0/howler.js"></script>
+        <!-- FontFaceObserver -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/fontfaceobserver/2.1.0/fontfaceobserver.standalone.js"></script>
+        <!-- Tslib -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/tslib/2.3.1/tslib.js"></script>
+        <!-- Animejs -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    </body>
 </html>

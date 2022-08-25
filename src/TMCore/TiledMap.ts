@@ -7,74 +7,74 @@ import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
 
 export default class TiledMap extends PIXI.Container {
-	source: IMapData;
-	loader!: MapLoader;
-	tilesets: TileSet[] = [];
-	layers: Array<TileLayer | ObjectLayer> = [];
-	mapName: string;
+    source: IMapData;
+    loader!: MapLoader;
+    tilesets: TileSet[] = [];
+    layers: Array<TileLayer | ObjectLayer> = [];
+    mapName: string;
 
-	_width!: number;
-	_height!: number;
+    _width!: number;
+    _height!: number;
 
-	constructor(resourceId: string) {
-		super();
-		this.mapName = resourceId;
-		this.source = ResourceController.getResource(resourceId).data as IMapData;
+    constructor(resourceId: string) {
+        super();
+        this.mapName = resourceId;
+        this.source = ResourceController.getResource(resourceId).data as IMapData;
 
-		this.loadResources().then(() => {
-			this.setTileSets();
-			this.setLayers();
+        this.loadResources().then(() => {
+            this.setTileSets();
+            this.setLayers();
 
-			this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
+            this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
 
-			this._width = this.width;
-			this._height = this.height;
+            this._width = this.width;
+            this._height = this.height;
 
-			document.dispatchEvent(new Event(EVENTS.Map.Created));
-		});
-	}
+            document.dispatchEvent(new Event(EVENTS.Map.Created));
+        });
+    }
 
-	loadResources = () => {
-		this.loader = new MapLoader(this);
-		this.addChild(this.loader.container); // @TODO loader screen
+    loadResources = () => {
+        this.loader = new MapLoader(this);
+        this.addChild(this.loader.container); // @TODO loader screen
 
-		return this.loader.load();
-	};
+        return this.loader.load();
+    };
 
-	setTileSets = () => {
-		console.log(this.source.tilesets);
-		this.source.tilesets.forEach((tileSetData: ITileset) => this.tilesets.push(new TileSet(tileSetData)));
-	};
+    setTileSets = () => {
+        console.log(this.source.tilesets);
+        this.source.tilesets.forEach((tileSetData: ITileset) => this.tilesets.push(new TileSet(tileSetData)));
+    };
 
-	setLayers = () => {
-		this.source.layers.forEach((layerData: ILayersData, index) => {
-			let tileLayer;
+    setLayers = () => {
+        this.source.layers.forEach((layerData: ILayersData, index) => {
+            let tileLayer;
 
-			switch (layerData.type) {
-				case LayerType.TileLayer:
-					tileLayer = new TileLayer(layerData, this);
-					break;
+            switch (layerData.type) {
+                case LayerType.TileLayer:
+                    tileLayer = new TileLayer(layerData, this);
+                    break;
 
-				case LayerType.ObjectGroup:
-					tileLayer = new ObjectLayer(layerData, this);
-					break;
+                case LayerType.ObjectGroup:
+                    tileLayer = new ObjectLayer(layerData, this);
+                    break;
 
-				default:
-					throw new Error("Incorrect layer type!");
-			}
+                default:
+                    throw new Error("Incorrect layer type!");
+            }
 
-			tileLayer.index = index;
-			this.layers.push(tileLayer);
-			this.addLayer(tileLayer);
-		});
-	};
+            tileLayer.index = index;
+            this.layers.push(tileLayer);
+            this.addLayer(tileLayer);
+        });
+    };
 
-	addLayer = (layer: TileLayer | ObjectLayer) => {
-		this.addChild(layer);
-	};
+    addLayer = (layer: TileLayer | ObjectLayer) => {
+        this.addChild(layer);
+    };
 
-	override destroy = () => {
-		super.destroy({ children: true, texture: true, baseTexture: true });
-		this.loader.destroy();
-	};
+    override destroy = () => {
+        super.destroy({ children: true, texture: true, baseTexture: true });
+        this.loader.destroy();
+    };
 }

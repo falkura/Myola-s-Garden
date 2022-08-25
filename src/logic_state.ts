@@ -3,21 +3,21 @@ import { AppState } from "./Models";
 import { Subject } from "./Observer";
 
 class LogicStateClass extends Subject {
-	app_state: AppState = "pre_preloader";
+    app_state: AppState = "pre_preloader";
 
-	is_music_on = true;
-	are_sound_fx_on = true;
+    is_music_on = true;
+    are_sound_fx_on = true;
 
-	is_mobile = false;
-	is_landscape = true;
+    is_mobile = false;
+    is_landscape = true;
 
-	app_width = Config.project_width;
-	app_height = Config.project_height;
+    app_width = Config.project_width;
+    app_height = Config.project_height;
 
-	isShift = false;
-	constructor() {
-		super();
-	}
+    isShift = false;
+    constructor() {
+        super();
+    }
 }
 
 export const LogicState = new LogicStateClass();

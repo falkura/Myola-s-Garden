@@ -4,32 +4,32 @@ import { EVENTS } from "./Events";
 import { ResourceController } from "./ResourceLoader";
 
 export class Preloader {
-	readonly container: PIXI.Container;
-	private readonly app: PIXI.Application;
+    readonly container: PIXI.Container;
+    private readonly app: PIXI.Application;
 
-	constructor(app: PIXI.Application) {
-		this.app = app;
-		this.container = new PIXI.Container();
+    constructor(app: PIXI.Application) {
+        this.app = app;
+        this.container = new PIXI.Container();
 
-		this.load_assets();
-		this.resize();
-	}
+        this.load_assets();
+        this.resize();
+    }
 
-	load_assets = () => {
-		ResourceController.addResources("main");
-		ResourceController.addMaps();
+    load_assets = () => {
+        ResourceController.addResources("main");
+        ResourceController.addMaps();
 
-		ResourceController.onProgress = () => {
-			console.log("Main " + ResourceController.loader.progress);
-		};
+        ResourceController.onProgress = () => {
+            console.log("Main " + ResourceController.loader.progress);
+        };
 
-		ResourceController.loadResources(() => {
-			for (const atlas of ATLASES["main"]) {
-				Object.assign(ResourceController.resources, ResourceController.resources[atlas.key].textures);
-			}
-			document.dispatchEvent(new Event(EVENTS.loading.project_loaded));
-		});
-	};
+        ResourceController.loadResources(() => {
+            for (const atlas of ATLASES["main"]) {
+                Object.assign(ResourceController.resources, ResourceController.resources[atlas.key].textures);
+            }
+            document.dispatchEvent(new Event(EVENTS.loading.project_loaded));
+        });
+    };
 
-	resize = () => {};
+    resize = () => {};
 }
