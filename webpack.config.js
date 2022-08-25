@@ -88,6 +88,26 @@ const local = {
 	],
 };
 
+const localNoOpen = {
+	...local,
+
+	name: "local!",
+
+	devServer: {
+		static: {
+			directory: path.join(__dirname, "./dist"),
+		},
+		client: {
+			overlay: {
+				errors: true,
+				warnings: false,
+			},
+		},
+		compress: true,
+		port: 9000,
+	},
+};
+
 const dev = {
 	...common,
 
@@ -147,4 +167,4 @@ const prod = {
 	],
 };
 
-module.exports = [local, dev, prod];
+module.exports = [local, dev, prod, localNoOpen];
