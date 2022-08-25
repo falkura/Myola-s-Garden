@@ -1,3 +1,4 @@
+import { EVENTS } from "../Events";
 import { ILayersData, IMapData, ITileset, LayerType } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
@@ -29,7 +30,7 @@ export default class TiledMap extends PIXI.Container {
 			this._width = this.width;
 			this._height = this.height;
 
-			document.dispatchEvent(new Event("map_created"));
+			document.dispatchEvent(new Event(EVENTS.Map.Created));
 		});
 	}
 

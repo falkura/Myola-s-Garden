@@ -20,7 +20,7 @@ export default class TileSet {
 			for (let x = this.source.margin; x < this.source.imagewidth; x += this.source.tilewidth + this.source.spacing) {
 				const tileRectangle = new PIXI.Rectangle(x, y, this.source.tilewidth, this.source.tileheight);
 
-				const texture = new PIXI.Texture(this.baseTexture as unknown as PIXI.BaseTexture, tileRectangle);
+				const texture = new PIXI.Texture(this.baseTexture, tileRectangle);
 
 				this.textures.push(texture);
 			}

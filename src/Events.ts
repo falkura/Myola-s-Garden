@@ -9,4 +9,25 @@ export const EVENTS = {
 		Complete: "LoadComplete",
 		Error: "LoadError",
 	},
+
+	Map: {
+		Created: "MapCreated",
+	},
+
+	Keyboard: {
+		Shift: {
+			On: "KeyboardShiftOn",
+			Off: "KeyboardShiftOff",
+		},
+		Move: {
+			On: "KeyboardMoveOn",
+			Off: "KeyboardMoveOff",
+		},
+	},
+
+	Actions: {
+		Tile: {
+			Choosen: "ActionsTileChoosen",
+		},
+	},
 };

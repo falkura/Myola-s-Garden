@@ -1,4 +1,5 @@
 import { Config } from "./Config";
+import { Keyboard } from "./Keyboard";
 import { MapController } from "./MapController";
 import { ResourceController } from "./ResourceLoader";
 
@@ -15,6 +16,7 @@ export class Game {
 		this.createBG();
 
 		this.MC = new MapController();
+		new Keyboard();
 		this.resize();
 		this.loadMap();
 	}

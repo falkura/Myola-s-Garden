@@ -14,6 +14,7 @@ class LogicStateClass extends Subject {
 	app_width = Config.project_width;
 	app_height = Config.project_height;
 
+	isShift = false;
 	constructor() {
 		super();
 	}

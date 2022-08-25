@@ -154,3 +154,27 @@ export interface IDefaultTileProperty {
 	/** Not implemented! */
 	visible: boolean;
 }
+
+export const movePath = {
+	KeyW: { x: 0, y: -1, dir: Direction.Up },
+	KeyS: { x: 0, y: 1, dir: Direction.Down },
+	KeyA: { x: -1, y: 0, dir: Direction.Left },
+	KeyD: { x: 1, y: 0, dir: Direction.Right },
+	ArrowUp: { x: 0, y: -1, dir: Direction.Up },
+	ArrowDown: { x: 0, y: 1, dir: Direction.Down },
+	ArrowLeft: { x: -1, y: 0, dir: Direction.Left },
+	ArrowRight: { x: 1, y: 0, dir: Direction.Right },
+};
+
+export interface IMovePath {
+	x: number;
+	y: number;
+	dir: Direction;
+}
+
+export const enum Direction {
+	Up = "up",
+	Down = "down",
+	Left = "left",
+	Right = "right",
+}

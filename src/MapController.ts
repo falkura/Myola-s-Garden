@@ -1,15 +1,21 @@
 import { Config } from "./Config";
+import { EVENTS } from "./Events";
+import { GroundController } from "./GroundController";
 import TiledMap from "./TMCore/TiledMap";
 import { waitForEvent } from "./Util";
 
 export class MapController {
 	map?: TiledMap;
-	constructor() {}
+	groundController: GroundController;
+	constructor() {
+		this.groundController = new GroundController(this);
+	}
 
 	loadMap = (key: string): Promise<void> => {
 		this.map = new TiledMap(key);
 
-		return waitForEvent("map_created").then(() => {
+		return waitForEvent(EVENTS.Map.Created).then(() => {
+			this.groundController.addCells();
 			this.resize();
 		});
 	};
