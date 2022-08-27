@@ -1,7 +1,7 @@
-import ObjectTile from "./ObjectTile";
-import Tile from "./Tile";
-import TiledMap from "./TiledMap";
-import TileSet from "./TileSet";
+import ObjectTile from "../TMCore/ObjectTile";
+import Tile from "../TMCore/Tile";
+import TiledMap from "../TMCore/TiledMap";
+import TileSet from "../TMCore/TileSet";
 
 export function findTileSet(map: TiledMap, gid: number): TileSet {
     let tileSet: TileSet | undefined;

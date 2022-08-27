@@ -7,7 +7,7 @@ import ObjectTile from "./ObjectTile";
 import Tile from "./Tile";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
-import { logMatrix } from "./TMUtils";
+import { logMatrix } from "../TMAdditions/TMUtils";
 
 export default class TiledMap extends PIXI.Container {
     source: IMapData;

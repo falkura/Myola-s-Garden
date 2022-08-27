@@ -1,6 +1,6 @@
 import { EVENTS } from "../Events";
 import { IMapData } from "../Models";
-import { createEmptyMatrix, matrixIterator } from "../TMCore/TMUtils";
+import { createEmptyMatrix, matrixIterator } from "./TMUtils";
 
 export class TMCellMap extends PIXI.Container {
     private mapData: IMapData;

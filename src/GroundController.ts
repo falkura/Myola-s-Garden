@@ -2,7 +2,7 @@ import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { concatMatrix, logMatrix, subtractMatrix } from "./TMCore/TMUtils";
+import { concatMatrix, logMatrix, subtractMatrix } from "./TMAdditions/TMUtils";
 
 export class GroundController {
     mapController: MapController;
