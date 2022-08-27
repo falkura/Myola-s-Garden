@@ -2,7 +2,7 @@ import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { concatMatrix, layerToMatrix, subtractMatrix } from "./TMCore/TMUtils";
+import { concatMatrix, logMatrix, subtractMatrix } from "./TMCore/TMUtils";
 
 export class GroundController {
     mapController: MapController;
@@ -18,14 +18,13 @@ export class GroundController {
         this.cellMap = new TMCellMap(this.mapController.map!.source);
         this.mapController.map!.addChild(this.cellMap);
 
-        const matrix = layerToMatrix(this.mapController.map!.layers[1], this.mapController.map!.source);
-        const matrix2 = layerToMatrix(this.mapController.map!.layers[5], this.mapController.map!.source);
-        const matrix3 = layerToMatrix(this.mapController.map!.layers[3], this.mapController.map!.source);
-
-        subtractMatrix(matrix, matrix2);
-        concatMatrix(matrix, matrix3);
+        const matrix = concatMatrix(
+            subtractMatrix(this.mapController.map!.layers[1].tiles, this.mapController.map!.layers[5].tiles),
+            this.mapController.map!.layers[3].tiles,
+        );
 
         this.cellMap.showByMatrix(matrix);
+        logMatrix(matrix, "Cell Map");
     };
 
     addEventListeners = () => {

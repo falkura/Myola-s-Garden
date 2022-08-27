@@ -1,10 +1,10 @@
 import TiledMap from "./TiledMap";
 import { ITileConfig, ITileLayerData } from "../Models";
-import { findTileSet } from "./TMUtils";
+import { createEmptyMatrix, findTileSet } from "./TMUtils";
 import Tile from "./Tile";
 
 export default class TileLayer extends PIXI.Container {
-    tiles!: Tile[];
+    tiles: Tile[][] = [];
     source: ITileLayerData;
     index!: number;
 
@@ -12,11 +12,11 @@ export default class TileLayer extends PIXI.Container {
         super();
         this.source = layer;
 
-        this.setTilesLayer(map);
+        this.setLayerTiles(map);
     }
 
-    setTilesLayer = (map: TiledMap) => {
-        this.tiles = [];
+    setLayerTiles = (map: TiledMap) => {
+        this.tiles = createEmptyMatrix<Tile>(this.source.width, this.source.height);
 
         for (let y = 0; y < this.source.height; y++) {
             for (let x = 0; x < this.source.width; x++) {
@@ -27,11 +27,11 @@ export default class TileLayer extends PIXI.Container {
                     const tileSet = findTileSet(map, this.source.data[tileConfig.index]);
                     const tile = new Tile(tileSet, tileConfig, this.source);
 
-                    this.tiles.push(tile);
+                    this.tiles[y][x] = tile;
                     this.addTile(tile);
                 } else {
                     // @TODO infinite map :)
-                    this.tiles.push(undefined as unknown as Tile);
+                    // this.tiles[x][y] = null as unknown as Tile;
                 }
             }
         }

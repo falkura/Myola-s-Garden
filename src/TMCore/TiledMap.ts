@@ -3,14 +3,21 @@ import { ILayersData, IMapData, ITileset, LayerType } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
 import ObjectLayer from "./ObjectLayer";
+import ObjectTile from "./ObjectTile";
+import Tile from "./Tile";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
+import { logMatrix } from "./TMUtils";
 
 export default class TiledMap extends PIXI.Container {
     source: IMapData;
     loader!: MapLoader;
     tilesets: TileSet[] = [];
-    layers: Array<TileLayer | ObjectLayer> = [];
+    /**```ts
+     * layers: Array<Tile | ObjectTile>; // this is the real type of layers, but STUPID TS can`t work with it 🙃
+     * ```*/
+    layers: Array<(TileLayer & { tiles: Array<Array<Tile | ObjectTile>> }) | (ObjectLayer & { tiles: Array<Array<Tile | ObjectTile>> })> =
+        [];
     mapName: string;
 
     _width!: number;
@@ -48,24 +55,26 @@ export default class TiledMap extends PIXI.Container {
 
     setLayers = () => {
         this.source.layers.forEach((layerData: ILayersData, index) => {
-            let tileLayer;
+            let layer;
 
             switch (layerData.type) {
                 case LayerType.TileLayer:
-                    tileLayer = new TileLayer(layerData, this);
+                    layer = new TileLayer(layerData, this) as TileLayer;
                     break;
 
                 case LayerType.ObjectGroup:
-                    tileLayer = new ObjectLayer(layerData, this);
+                    layer = new ObjectLayer(layerData, this) as ObjectLayer;
                     break;
 
                 default:
                     throw new Error("Incorrect layer type!");
             }
 
-            tileLayer.index = index;
-            this.layers.push(tileLayer);
-            this.addLayer(tileLayer);
+            layer.index = index;
+            this.layers.push(layer);
+            this.addLayer(layer);
+
+            logMatrix(layer.tiles as unknown[][], layer.source.name);
         });
     };
 

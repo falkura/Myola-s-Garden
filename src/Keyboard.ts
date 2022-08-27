@@ -35,6 +35,10 @@ export class Keyboard {
                 case "ShiftRight":
                     document.dispatchEvent(new Event(EVENTS.Keyboard.Shift.Off));
                     break;
+                case "AltLeft":
+                case "AltRight":
+                    e.preventDefault();
+                    break;
                 default:
                     // console.log(e.code);
                     break;
