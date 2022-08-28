@@ -1,6 +1,7 @@
 import "pixi-spine";
 import packageInfo from "../package.json";
 import { App } from "./App";
+import "./TMAdditions/MatrixUtils";
 
 declare const __ENVIRONMENT__: string;
 

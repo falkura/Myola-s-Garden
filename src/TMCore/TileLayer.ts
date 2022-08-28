@@ -1,7 +1,8 @@
 import TiledMap from "./TiledMap";
 import { ITileConfig, ITileLayerData } from "../Models";
-import { createEmptyMatrix, findTileSet } from "../TMAdditions/TMUtils";
+import { findTileSet } from "../TMAdditions/TMUtils";
 import Tile from "./Tile";
+import { createEmptyMatrix } from "../TMAdditions/MatrixUtils";
 
 export default class TileLayer extends PIXI.Container {
     tiles: Tile[][] = [];

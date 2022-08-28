@@ -18,31 +18,6 @@ export function findTileSet(map: TiledMap, gid: number): TileSet {
     return tileSet;
 }
 
-/*
-export function layerToMatrix(layer: TileLayer | ObjectLayer, mapData: IMapData) {
-    let matrix: Array<Array<Tile | ObjectTile>> = [];
-
-    if (layer.source.type === LayerType.TileLayer) {
-        for (let i = 0, k = -1; i < layer.tiles.length; i++) {
-            if (i % mapData.width === 0) {
-                k++;
-                matrix[k] = [];
-            }
-
-            matrix[k].push(layer.tiles[i]);
-        }
-    } else if (layer.source.type === LayerType.ObjectGroup) {
-        matrix = createEmptyMatrix(mapData.width, mapData.height);
-
-        for (const tile of layer.tiles) {
-            matrix[tile._y][tile._x] = tile;
-        }
-    }
-
-    return matrix;
-}
-*/
-
 export function copyMatrix<T>(source: T[][]) {
     return source.map(arr => {
         return arr.slice();
@@ -121,14 +96,13 @@ export function logMatrix<T>(matrix: T[][], matrixName?: string, expand = false)
 
 type ITile = Tile | ObjectTile;
 
-export interface ITileBurger {
-    tiles: { [key: number]: ITile | undefined };
-    topTile: ITile;
+export function getTileBurger(map: TiledMap, x: number, y: number): ITile[] {
+    const res: ITile[] = [];
+
+    for (const layer of map.layers) {
+        const tile = layer.tiles[y][x];
+        if (tile) res.push(tile);
+    }
+
+    return res.reverse();
 }
-// export function getTileBurger(map: TiledMap, x: number, y: number): ITileBurger {
-//     for (const layer of map.layers) {
-//         if (layer.source.type === LayerType.TileLayer) {
-//         } else {
-//         }
-//     }
-// }

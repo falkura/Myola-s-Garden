@@ -7,7 +7,6 @@ import ObjectTile from "./ObjectTile";
 import Tile from "./Tile";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
-import { logMatrix } from "../TMAdditions/TMUtils";
 
 export default class TiledMap extends PIXI.Container {
     source: IMapData;
@@ -74,7 +73,7 @@ export default class TiledMap extends PIXI.Container {
             this.layers.push(layer);
             this.addLayer(layer);
 
-            logMatrix(layer.tiles as unknown[][], layer.source.name);
+            layer.tiles.logMatrix(layer.source.name);
         });
     };
 

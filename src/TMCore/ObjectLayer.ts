@@ -1,7 +1,8 @@
 import { IObjectData, IObjectLayerData } from "../Models";
 import ObjectTile from "./ObjectTile";
 import TiledMap from "./TiledMap";
-import { createEmptyMatrix, findTileSet } from "../TMAdditions/TMUtils";
+import { findTileSet } from "../TMAdditions/TMUtils";
+import { createEmptyMatrix } from "../TMAdditions/MatrixUtils";
 
 export default class ObjectLayer extends PIXI.Container {
     tiles: ObjectTile[][] = [];

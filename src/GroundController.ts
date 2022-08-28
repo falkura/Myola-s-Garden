@@ -2,7 +2,7 @@ import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { concatMatrix, logMatrix, subtractMatrix } from "./TMAdditions/TMUtils";
+import { getTileBurger } from "./TMAdditions/TMUtils";
 
 export class GroundController {
     mapController: MapController;
@@ -18,18 +18,25 @@ export class GroundController {
         this.cellMap = new TMCellMap(this.mapController.map!.source);
         this.mapController.map!.addChild(this.cellMap);
 
-        const matrix = concatMatrix(
-            subtractMatrix(this.mapController.map!.layers[1].tiles, this.mapController.map!.layers[5].tiles),
-            this.mapController.map!.layers[3].tiles,
-        );
+        const matrix = this.mapController
+            .map!.layers[1].tiles.subtractMatrix(this.mapController.map!.layers[5].tiles)
+            .concatMatrix(this.mapController.map!.layers[3].tiles)
+            .logMatrix("Cell Map", true);
 
         this.cellMap.showByMatrix(matrix);
-        logMatrix(matrix, "Cell Map");
     };
 
     addEventListeners = () => {
         document.addEventListener(EVENTS.Keyboard.Shift.On, this.shiftOn);
         document.addEventListener(EVENTS.Keyboard.Shift.Off, this.shiftOff);
+        document.addEventListener(EVENTS.Actions.Tile.Choosen, this.onTileChoose);
+    };
+
+    onTileChoose = (e: Event) => {
+        const detail = (e as CustomEvent<PIXI.Point>).detail;
+
+        const b = getTileBurger(this.mapController.map!, detail.x, detail.y);
+        console.log(b);
     };
 
     shiftOn = () => {
