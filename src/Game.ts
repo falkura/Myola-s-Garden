@@ -15,7 +15,7 @@ export class Game {
         this.add_event_listeners();
         this.createBG();
 
-        this.MC = new MapController();
+        this.MC = new MapController(this.container);
         new Keyboard();
         this.resize();
         this.loadMap();

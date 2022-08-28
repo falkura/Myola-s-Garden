@@ -178,3 +178,38 @@ export const enum Direction {
     Left = "left",
     Right = "right",
 }
+
+export interface IGardenItemData {
+    plant: IPlantData;
+    seed: ISeedData;
+    drop: IDropData;
+    rarity: Rarity;
+    name: string;
+    description: string;
+}
+
+export interface IItemDefaultData {
+    tileset: string;
+    id: number;
+}
+
+export interface IPlantData extends IItemDefaultData {
+    growTime: number;
+    animation: number[];
+}
+
+export interface ISeedData extends IItemDefaultData {
+    price: number;
+    count: number;
+}
+
+export type IDropData = ISeedData;
+
+export const enum Rarity {
+    Common = 0x8e8e8e,
+    Uncommon = 0x76ba1b,
+    Rare = 0x187bcd,
+    Epic = 0xcc8899,
+    Legendary = 0xffa500,
+    Mythic = 0xcc1100,
+}

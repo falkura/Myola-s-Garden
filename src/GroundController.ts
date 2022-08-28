@@ -2,7 +2,7 @@ import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { getTileBurger } from "./TMAdditions/TMUtils";
+import { getTileBurger, logMatrix } from "./TMAdditions/TMUtils";
 
 export class GroundController {
     mapController: MapController;
@@ -20,8 +20,9 @@ export class GroundController {
 
         const matrix = this.mapController
             .map!.layers[1].tiles.subtractMatrix(this.mapController.map!.layers[5].tiles)
-            .concatMatrix(this.mapController.map!.layers[3].tiles)
-            .logMatrix("Cell Map", true);
+            .concatMatrix(this.mapController.map!.layers[3].tiles);
+
+        logMatrix(matrix, "Cell Map", false);
 
         this.cellMap.showByMatrix(matrix);
     };
