@@ -8,6 +8,7 @@ import Tile from "./Tile";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
 
+// 1.8.1
 export default class TiledMap extends PIXI.Container {
     source: IMapData;
     loader!: MapLoader;
@@ -81,7 +82,15 @@ export default class TiledMap extends PIXI.Container {
         this.addChild(layer);
     };
 
-    override destroy = () => {
+    getTilesetByName = (name: string): TileSet | undefined => {
+        for (const tileset of this.tilesets) {
+            if (tileset.source.name === name) return tileset;
+        }
+
+        return undefined;
+    };
+
+    cleanUp = () => {
         super.destroy({ children: true, texture: true, baseTexture: true });
         this.loader.destroy();
     };

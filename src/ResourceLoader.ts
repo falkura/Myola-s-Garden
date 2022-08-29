@@ -173,7 +173,8 @@ class Loader {
             div.innerHTML = ".";
             div.style.fontFamily = font.key;
             div.style.opacity = "0";
-            document.body.appendChild(div);
+            // div.style.visibility = "hidden";
+            document.getElementById("root")!.appendChild(div);
         });
     };
 }

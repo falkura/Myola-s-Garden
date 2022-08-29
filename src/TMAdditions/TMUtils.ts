@@ -106,3 +106,5 @@ export function getTileBurger(map: TiledMap, x: number, y: number): ITile[] {
 
     return res.reverse();
 }
+
+export function getItemByName() {}

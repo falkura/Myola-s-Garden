@@ -24,6 +24,8 @@ export class MapController {
     };
 
     setUp = () => {
+        this.container.addChild(this.map!);
+
         this.groundController = new GroundController(this);
         this.groundController.addCells();
 
@@ -32,10 +34,10 @@ export class MapController {
         this.resize();
     };
 
-    destroy = () => {
+    cleanUp = () => {
         if (this.map) {
             this.map.parent.removeChild(this.map);
-            this.map.destroy();
+            this.map.cleanUp();
             this.map = undefined;
         }
     };

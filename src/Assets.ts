@@ -22,7 +22,7 @@ export const ATLASES: Resources = {
 };
 
 /** Should be in assets/fonts/ */
-export const FONTS: Resource[] = [];
+export const FONTS: Resource[] = [{ key: "ARCADECLASSIC", path: "fonts/ARCADECLASSIC.ttf" }];
 
 export const MAPS: Resource[] = [
     {

@@ -24,7 +24,7 @@ export class GroundController {
 
         logMatrix(matrix, "Cell Map", false);
 
-        this.cellMap.showByMatrix(matrix);
+        // this.cellMap.showByMatrix(matrix);
     };
 
     addEventListeners = () => {

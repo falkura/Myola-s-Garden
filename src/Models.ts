@@ -203,6 +203,8 @@ export interface ISeedData extends IItemDefaultData {
     count: number;
 }
 
+export type IItemType = "plant" | "drop" | "seed";
+
 export type IDropData = ISeedData;
 
 export const enum Rarity {

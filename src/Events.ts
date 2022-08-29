@@ -29,5 +29,8 @@ export const EVENTS = {
         Tile: {
             Choosen: "ActionsTileChoosen",
         },
+        Inventory: {
+            Dropped: "ActionsInventoryDropped",
+        },
     },
 };

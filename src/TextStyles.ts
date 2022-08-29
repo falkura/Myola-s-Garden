@@ -12,4 +12,13 @@ export const TextStyles = {
         dropShadowDistance: 4,
         fill: ["#fafafa", "#969696"],
     }),
+    itemCount: new PIXI.TextStyle({
+        fontFamily: "calibri",
+        fontSize: 35,
+        fill: 0xffffff,
+        dropShadow: true,
+        dropShadowColor: 0x000000,
+        dropShadowDistance: 0,
+        dropShadowBlur: 15,
+    }),
 };

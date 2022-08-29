@@ -24,15 +24,14 @@ export class Game {
     createBG = () => {
         this.bg = ResourceController.getSprite("project_bg");
         this.bg.anchor.set(0.5, 0.5);
+        this.bg.zIndex = -1000;
         this.container.addChild(this.bg);
     };
 
     add_event_listeners = () => {};
 
     loadMap = () => {
-        this.MC.loadMap("map3").then(() => {
-            this.container.addChild(this.MC.map!);
-        });
+        this.MC.loadMap("map3");
     };
 
     resize = () => {
