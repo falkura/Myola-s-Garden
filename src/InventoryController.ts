@@ -19,22 +19,9 @@ export class InventoryController extends PIXI.Container {
 
     constructInventory = () => {
         this.inventory = new List(this.map, 8, 1, "inventoryBar");
-        this.inventory.position.set(400, 700);
+        this.inventory.position.set(400, 900);
         this.addChild(this.inventory);
         this.listArray.push(this.inventory);
-
-        const list = new List(this.map, 8, 2, "rand");
-        list.position.set(400, 200);
-        this.addChild(list);
-        this.listArray.push(list);
-
-        const list2 = new List(this.map, 8, 2, "anoth");
-        list2.position.set(400, 500);
-        this.addChild(list2);
-        this.listArray.push(list2);
-
-        // this.setActiveList(list2);
-        this.setActiveList(list);
     };
 
     setActiveList = (list: List) => {

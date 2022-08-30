@@ -122,7 +122,6 @@ export class ListItem extends PIXI.Container {
     };
 
     public set count(value: number) {
-        console.log(value);
         this._count = value;
 
         if (value <= 1) {

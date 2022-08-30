@@ -10,6 +10,7 @@ import TileSet from "./TileSet";
 
 // 1.8.1
 export default class TiledMap extends PIXI.Container {
+    app: PIXI.Application;
     source: IMapData;
     loader!: MapLoader;
     tilesets: TileSet[] = [];
@@ -23,8 +24,9 @@ export default class TiledMap extends PIXI.Container {
     _width!: number;
     _height!: number;
 
-    constructor(resourceId: string) {
+    constructor(resourceId: string, app: PIXI.Application) {
         super();
+        this.app = app;
         this.mapName = resourceId;
         this.source = ResourceController.getResource(resourceId).data as IMapData;
 
@@ -59,11 +61,11 @@ export default class TiledMap extends PIXI.Container {
 
             switch (layerData.type) {
                 case LayerType.TileLayer:
-                    layer = new TileLayer(layerData, this) as TileLayer;
+                    layer = new TileLayer(layerData, this);
                     break;
 
                 case LayerType.ObjectGroup:
-                    layer = new ObjectLayer(layerData, this) as ObjectLayer;
+                    layer = new ObjectLayer(layerData, this);
                     break;
 
                 default:

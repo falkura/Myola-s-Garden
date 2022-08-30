@@ -215,3 +215,13 @@ export const enum Rarity {
     Legendary = 0xffa500,
     Mythic = 0xcc1100,
 }
+
+/** !!! UNIQUE FOR ALL MAPS !!! */
+export const enum LayersArr {
+    Water = 0,
+    Ground = 1,
+    Hills = 3,
+    /** NOT IMPLEMENTED */
+    Garden = 4,
+    Buildings = 5,
+}

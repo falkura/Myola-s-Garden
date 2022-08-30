@@ -71,7 +71,6 @@ export class ListCell extends PIXI.Container {
     // }
 
     setItem = (item: IGardenItemData, type?: IItemType, count?: number) => {
-        console.log("setted");
         this.cleanUp();
         if (!type) type = "drop";
 

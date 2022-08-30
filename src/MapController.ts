@@ -3,20 +3,22 @@ import { EVENTS } from "./Events";
 import { GroundController } from "./GroundController";
 import { InventoryController } from "./InventoryController";
 import TiledMap from "./TMCore/TiledMap";
-import { waitForEvent } from "./Util";
+import { logImage, waitForEvent } from "./Util";
 
 export class MapController {
+    app: PIXI.Application;
     map?: TiledMap;
     groundController!: GroundController;
     inventoryController!: InventoryController;
     container: PIXI.Container;
 
-    constructor(container: PIXI.Container) {
+    constructor(container: PIXI.Container, app: PIXI.Application) {
         this.container = container;
+        this.app = app;
     }
 
     loadMap = (key: string): Promise<void> => {
-        this.map = new TiledMap(key);
+        this.map = new TiledMap(key, this.app);
 
         return waitForEvent(EVENTS.Map.Created).then(() => {
             this.setUp();
@@ -32,6 +34,8 @@ export class MapController {
         this.inventoryController = new InventoryController(this.map!);
         this.container.addChild(this.inventoryController);
         this.resize();
+
+        logImage(this.map!, this.app);
     };
 
     cleanUp = () => {

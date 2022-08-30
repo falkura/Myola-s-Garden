@@ -93,3 +93,20 @@ export function pausable_sleep(time: number) {
         instance,
     };
 }
+
+/** LOL IT`S REALLY WORKS */
+export function logImage(target: PIXI.Container, app: PIXI.Application, quality = 1) {
+    const w = target.getLocalBounds().width;
+    const h = target.getLocalBounds().height;
+
+    const style = [
+        "font-size: 1px;",
+        "line-height: " + (h % 2) + "px;",
+        "padding: " + h / 2 + "px " + w / 2 + "px;",
+        "background: url(" + app.renderer.extract.image(target, "image/png", quality).src + ");",
+    ].join(" ");
+
+    console.groupCollapsed("Image Log");
+    console.log("%c ", style);
+    console.groupEnd();
+}

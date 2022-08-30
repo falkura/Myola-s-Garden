@@ -1,8 +1,9 @@
 import { EVENTS } from "./Events";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
+import { LayersArr } from "./Models";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { getTileBurger, logMatrix } from "./TMAdditions/TMUtils";
+import { getTileBurger } from "./TMAdditions/TMUtils";
 
 export class GroundController {
     mapController: MapController;
@@ -17,14 +18,6 @@ export class GroundController {
     addCells = () => {
         this.cellMap = new TMCellMap(this.mapController.map!.source);
         this.mapController.map!.addChild(this.cellMap);
-
-        const matrix = this.mapController
-            .map!.layers[1].tiles.subtractMatrix(this.mapController.map!.layers[5].tiles)
-            .concatMatrix(this.mapController.map!.layers[3].tiles);
-
-        logMatrix(matrix, "Cell Map", false);
-
-        // this.cellMap.showByMatrix(matrix);
     };
 
     addEventListeners = () => {
@@ -57,6 +50,11 @@ export class GroundController {
     };
 
     onSeed = () => {
+        this.mapController.groundController.cellMap!.showByMatrix(
+            this.mapController
+                .map!.layers[LayersArr.Ground].tiles.concatMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles)
+                .subtractMatrix(this.mapController.map!.layers[LayersArr.Buildings].tiles),
+        );
         // const walkableLayers = this.mapController.map!.getWalkableLayers();
         // for (let i = 0; i < walkableLayers.length; i++) {
         // 	if (walkableLayers[i].source.id === this.character.activeLayer) {
@@ -78,6 +76,7 @@ export class GroundController {
     };
 
     offSeed = () => {
+        this.mapController.groundController.cellMap!.hideAll();
         // for (const layer of this.mapController.map!.getWalkableLayers()) {
         // 	for (const tile of layer.tiles) {
         // 		if (tile) tile.debugGraphics.visible = false;

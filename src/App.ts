@@ -50,19 +50,14 @@ export class App {
     };
 
     on_resize = () => {
+        const multiplier = window.innerHeight / LogicState.app_height;
+        const target_width = window.innerWidth / multiplier;
+
+        this.app.renderer.resize(target_width, LogicState.app_height);
+
         if (window.innerWidth < window.innerHeight) {
-            const multiplier = window.innerWidth / LogicState.app_width;
-            const target_height = window.innerHeight / multiplier;
-
-            this.app.renderer.resize(LogicState.app_width, target_height);
-
             LogicState.is_landscape = false;
         } else {
-            const multiplier = window.innerHeight / LogicState.app_height;
-            const target_width = window.innerWidth / multiplier;
-
-            this.app.renderer.resize(target_width, LogicState.app_height);
-
             LogicState.is_landscape = true;
         }
 
