@@ -6,6 +6,8 @@ import TiledMap from "./TMCore/TiledMap";
 export class InventoryController extends PIXI.Container {
     map: TiledMap;
     listArray: List[] = [];
+    activeList?: List;
+    inventory!: List;
 
     constructor(map: TiledMap) {
         super();
@@ -16,37 +18,57 @@ export class InventoryController extends PIXI.Container {
     }
 
     constructInventory = () => {
+        this.inventory = new List(this.map, 8, 1, "inventoryBar");
+        this.inventory.position.set(400, 700);
+        this.addChild(this.inventory);
+        this.listArray.push(this.inventory);
+
         const list = new List(this.map, 8, 2, "rand");
         list.position.set(400, 200);
         this.addChild(list);
         this.listArray.push(list);
-
-        // (window as any).list = list;
 
         const list2 = new List(this.map, 8, 2, "anoth");
         list2.position.set(400, 500);
         this.addChild(list2);
         this.listArray.push(list2);
 
-        const list3 = new List(this.map, 8, 1, "anotha");
-        list3.position.set(400, 700);
-        this.addChild(list3);
-        this.listArray.push(list3);
+        // this.setActiveList(list2);
+        this.setActiveList(list);
+    };
+
+    setActiveList = (list: List) => {
+        if (this.inventory.name !== list.name) {
+            this.activeList = list;
+        } else {
+            console.error("Inventory always active!");
+        }
+    };
+
+    removeActiveList = () => {
+        this.activeList = undefined;
     };
 
     addEventListeners = () => {
         document.addEventListener(EVENTS.Actions.Inventory.Dropped, this.onDrop);
+        document.addEventListener(EVENTS.Actions.Inventory.Shifted, this.onShift);
+    };
+
+    getHoveredList = (): List | undefined => {
+        let hoveredList: List | undefined;
+
+        this.listArray.forEach(list => {
+            if (list.isHovered) hoveredList = list;
+        });
+
+        return hoveredList;
     };
 
     onDrop = (e: Event) => {
         const droppedItem = (e as CustomEvent<ListItem>).detail;
         let done = false;
 
-        let hoveredList: List | undefined;
-
-        this.listArray.forEach(list => {
-            if (list.isHovered) hoveredList = list;
-        });
+        const hoveredList = this.getHoveredList();
 
         if (hoveredList) {
             const hoveredCell = hoveredList.getHoveredCell();
@@ -54,6 +76,7 @@ export class InventoryController extends PIXI.Container {
             if (hoveredCell && droppedItem.parentCell !== hoveredCell) {
                 if (hoveredCell.item) {
                     if (hoveredCell.item.data[hoveredCell.item.type] === droppedItem.data[droppedItem.type]) {
+                        // ADD
                         hoveredCell.item.count += droppedItem.count;
                         droppedItem.cleanUp();
                         done = true;
@@ -69,7 +92,7 @@ export class InventoryController extends PIXI.Container {
                         droppedItem.parentCell.setItem(savedData.data, savedData.type, savedData.count);
                     }
                 } else {
-                    // MOVE TO EMPTY CELL
+                    // SET ITEM IN EMPTY CELL
                     hoveredCell.setItem(droppedItem.data, droppedItem.type, droppedItem.count);
                     droppedItem.cleanUp();
                     done = true;
@@ -78,9 +101,48 @@ export class InventoryController extends PIXI.Container {
         }
 
         if (!done && droppedItem) {
+            // RETURN
             droppedItem.x = 0;
             droppedItem.y = 0;
         }
         // this.calculatePrice();
+    };
+
+    onShift = (e: Event) => {
+        const hoveredList = this.getHoveredList();
+        const shiftedItem = (e as CustomEvent<ListItem>).detail;
+
+        if (!hoveredList || !this.inventory) return;
+
+        let targetList: List;
+
+        if (hoveredList !== this.inventory) {
+            // FROM HOVERED TO INVENTORY
+            targetList = this.inventory;
+        } else {
+            if (this.activeList) {
+                // OR SHOUL I RETURN BEFORE, IF WE DON`T HAVE ACTIVE LIST?
+
+                // FROM INVENTORY TO ACTIVE
+                targetList = this.activeList;
+            } else {
+                return;
+            }
+        }
+
+        let targetCell = targetList.getCellByData(shiftedItem.data, shiftedItem.type);
+
+        if (!targetCell) {
+            targetCell = targetList.getEmptyCell();
+        } else {
+            targetCell.item!.count += shiftedItem.count;
+            shiftedItem.cleanUp();
+            return;
+        }
+
+        if (targetCell) {
+            targetCell.setItem(shiftedItem.data, shiftedItem.type, shiftedItem.count);
+            shiftedItem.cleanUp();
+        }
     };
 }

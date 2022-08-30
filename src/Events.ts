@@ -31,6 +31,7 @@ export const EVENTS = {
         },
         Inventory: {
             Dropped: "ActionsInventoryDropped",
+            Shifted: "ActionsInventoryShifted",
         },
     },
 };

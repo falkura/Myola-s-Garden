@@ -68,7 +68,6 @@ export class ListItem extends PIXI.Container {
     };
 
     pressEvent = (e: InteractionEvent) => {
-        console.log(this);
         if (!LogicState.isShift) {
             this.grandParentZIndex = this.parent.parent.zIndex;
             this.parentZIndex = this.parent.zIndex;
@@ -82,7 +81,7 @@ export class ListItem extends PIXI.Container {
             this.startX = e.data.global.x - this.x;
             this.startY = e.data.global.y - this.y;
         } else {
-            document.dispatchEvent(new CustomEvent<ListItem>("shifted", { detail: this }));
+            document.dispatchEvent(new CustomEvent<ListItem>(EVENTS.Actions.Inventory.Shifted, { detail: this }));
         }
     };
 

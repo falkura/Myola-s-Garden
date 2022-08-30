@@ -1,4 +1,5 @@
 import { Plants } from "../../GameConfigs/Plants";
+import { IGardenItemData, IItemType } from "../../Models";
 import TiledMap from "../../TMCore/TiledMap";
 import { ListCell } from "./ListCell";
 
@@ -72,9 +73,6 @@ export class List extends PIXI.Container {
     addEventListeners = () => {
         this.addListener("pointerover", this.hoverEvent);
         this.addListener("pointerout", this.unhoverEvent);
-
-        // document.addEventListener("inventoryVisible", () => (this.visible = !this.visible));
-        // document.addEventListener("shifted", this.onShifted)
     };
 
     hoverEvent = () => {
@@ -97,27 +95,34 @@ export class List extends PIXI.Container {
         return res;
     };
 
-    // onShifted = (e: Event) => {
-    //     const cell = (e as CustomEvent<ListCell>).detail;
+    getCellByData = (item: IGardenItemData, type: IItemType): ListCell | undefined => {
+        let res: ListCell | undefined;
 
-    //     if (cell.name !== this.name && this.isActive) {
-    //         let done = false;
-    //         this.cellMatrix.forEach(column => {
-    //             column.forEach(row => {
-    //                 if (!done)
-    //                     if (!row.item && cell.item) {
-    //                         row.setItem(cell.item!.data, cell.item!.type);
-    //                         row.item!.count = cell.item!.count;
+        this.cellMatrix.forEach(column => {
+            column.forEach(row => {
+                if (row.item && row.item.data === item && row.item.type === type) {
+                    res = row;
+                    return;
+                }
+            });
+        });
 
-    //                         cell.cleanup();
-    //                         done = true;
-    //                     }
-    //             });
-    //         });
-    //     }
+        return res;
+    };
 
-    //     this.calculatePrice();
-    // };
+    getEmptyCell = (): ListCell | undefined => {
+        let res: ListCell | undefined;
+
+        this.cellMatrix.forEach(column => {
+            column.forEach(row => {
+                if (!res && !row.item) {
+                    res = row;
+                }
+            });
+        });
+
+        return res;
+    };
 
     // calculatePrice = () => {
     //     let sum = 0;
@@ -135,27 +140,6 @@ export class List extends PIXI.Container {
     //     if (this.changeCallback) {
     //         this.changeCallback();
     //     }
-    // };
-
-    // onDrop = (e: Event) => {
-    //     const cell = (e as CustomEvent<ListCell>).detail;
-    // let done = false;
-    // this.cellMatrix.forEach(column => {
-    //     column.forEach(row => {
-    //         if (!done)
-    //             if (row.isHovered) {
-    //                 row.setItem(cell.item!.data, cell.item!.type);
-    //                 row.item!.count = cell.item!.count;
-    //                 cell.cleanup();
-    //                 done = true;
-    //             }
-    //     });
-    // });
-    // if (!done && cell.item) {
-    //     cell.item!.x = 0;
-    //     cell.item!.y = 0;
-    // }
-    // this.calculatePrice();
     // };
 
     // insertItem = (data: iPlantData): boolean => {
@@ -191,14 +175,14 @@ export class List extends PIXI.Container {
     //     this.calculatePrice();
     // };
 
-    // public set isActive(value: boolean) {
-    //     this._isActive = value;
-    //     // this.interactiveChildren = value;
-    // }
+    public set isActive(value: boolean) {
+        this._isActive = value;
+        // this.interactiveChildren = value;
+    }
 
-    // public get isActive(): boolean {
-    //     return this._isActive;
-    // }
+    public get isActive(): boolean {
+        return this._isActive;
+    }
 
     // getStorageData = () => {
     //     const data: any = [];
