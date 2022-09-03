@@ -1,6 +1,6 @@
 import { EVENTS } from "./Events";
-import { List } from "./TMComponents/List/List";
-import { ListItem } from "./TMComponents/List/ListItem";
+import { List } from "./GameComponents/List/List";
+import { ListItem } from "./GameComponents/List/ListItem";
 import TiledMap from "./TMCore/TiledMap";
 
 export class InventoryController extends PIXI.Container {

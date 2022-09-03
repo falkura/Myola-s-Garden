@@ -25,11 +25,11 @@ export class Clickable extends PIXI.Sprite {
         this.interactive = true;
         this.cursor = "pointer";
 
-        this.addListener("mousedown", this.pressEvent);
-        this.addListener("mouseover", this.hoverEvent);
-        this.addListener("mouseout", this.unhoverEvent);
-        this.addListener("mouseup", this.unpressEvent);
-        this.addListener("mouseupoutside", this.unpressEvent);
+        this.addListener("pointerdown", this.pressEvent);
+        this.addListener("pointerover", this.hoverEvent);
+        this.addListener("pointerout", this.unhoverEvent);
+        this.addListener("pointerup", this.unpressEvent);
+        this.addListener("pointerupoutside", this.unpressEvent);
     };
 
     activate = () => {

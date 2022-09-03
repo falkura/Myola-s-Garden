@@ -58,10 +58,10 @@ export class ListItem extends PIXI.Container {
     };
 
     addEventListener = () => {
-        this.addListener("mousedown", this.pressEvent);
-        this.addListener("mousemove", this.moveEvent);
-        this.addListener("mouseup", this.upEvent);
-        this.addListener("mouseupoutside", this.upEvent);
+        this.addListener("pointerdown", this.pressEvent);
+        this.addListener("pointermove", this.moveEvent);
+        this.addListener("pointerup", this.upEvent);
+        this.addListener("pointerupoutside", this.upEvent);
 
         this.sprite.addHover(this.parentCell.hoverEvent);
         this.sprite.addUnhover(this.parentCell.unhoverEvent);
