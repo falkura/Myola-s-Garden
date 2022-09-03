@@ -24,8 +24,7 @@ export default class ObjectLayer extends PIXI.Container {
                 const tileSet = findTileSet(map, objectTile.gid);
                 const tile = new ObjectTile(objectTile, tileSet, map);
 
-                this.tiles[tile._y][tile._x] = tile;
-                this.addTile(tile);
+                this.addTile(tile, tile._y, tile._x);
             }
         }
     }
@@ -34,7 +33,15 @@ export default class ObjectLayer extends PIXI.Container {
         return !!layer.gid;
     }
 
-    addTile(tile: ObjectTile) {
+    addTile = (tile: ObjectTile, x: number, y: number) => {
+        this.tiles[x][y] = tile;
         this.addChild(tile.sprite);
-    }
+    };
+
+    removeTile = (x: number, y: number) => {
+        const tile = this.tiles[y][x];
+
+        this.tiles[y][x] = undefined as unknown as ObjectTile;
+        this.removeChild(tile.sprite);
+    };
 }

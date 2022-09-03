@@ -28,8 +28,7 @@ export default class TileLayer extends PIXI.Container {
                     const tileSet = findTileSet(map, this.source.data[tileConfig.index]);
                     const tile = new Tile(tileSet, tileConfig, this.source);
 
-                    this.tiles[y][x] = tile;
-                    this.addTile(tile);
+                    this.addTile(tile, y, x);
                 } else {
                     // @TODO infinite map :)
                     // this.tiles[x][y] = null as unknown as Tile;
@@ -42,7 +41,15 @@ export default class TileLayer extends PIXI.Container {
         return this.source.data[i] !== 0;
     };
 
-    addTile = (tile: Tile) => {
+    addTile = (tile: Tile, x: number, y: number) => {
+        this.tiles[x][y] = tile;
         this.addChild(tile.sprite);
+    };
+
+    removeTile = (x: number, y: number) => {
+        const tile = this.tiles[y][x];
+
+        this.tiles[y][x] = undefined as unknown as Tile;
+        this.removeChild(tile.sprite);
     };
 }

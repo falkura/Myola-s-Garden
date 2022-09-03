@@ -302,9 +302,11 @@ export const Plants: IGardenItemData[] = [
     },
 ];
 
-export const Dirt = {
-    tileset: "Dirt",
-    base: 48,
+export const Other = {
+    Dirt: {
+        tileset: "Dirt",
+        id: 48,
+    },
 };
 
 export const Trees = {};

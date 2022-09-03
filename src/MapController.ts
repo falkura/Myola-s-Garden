@@ -20,6 +20,9 @@ export class MapController {
     loadMap = (key: string): Promise<void> => {
         this.map = new TiledMap(key, this.app);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (window as any).map = this.map;
+
         return waitForEvent(EVENTS.Map.Created).then(() => {
             this.setUp();
         });
