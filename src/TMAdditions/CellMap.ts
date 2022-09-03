@@ -26,7 +26,7 @@ export class TMCellMap extends PIXI.Container {
         }
     };
 
-    showByMatrix = <T>(matrix: T[][]) => {
+    showByMatrix = (matrix: unknown[][]) => {
         this.hideAll();
 
         for (let row = 0; row < matrix.length; row++) {

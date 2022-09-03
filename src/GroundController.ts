@@ -1,9 +1,11 @@
 import { EVENTS } from "./Events";
+import { ColorMatrixSkins } from "./GameConfigs/ColorMatrixSkins";
+import { Other } from "./GameConfigs/Plants";
 import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 import { LayersArr } from "./Models";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { getTileBurger } from "./TMAdditions/TMUtils";
+import { GetTileTextureId, matrixIterator } from "./TMAdditions/TMUtils";
 
 export class GroundController {
     mapController: MapController;
@@ -29,8 +31,36 @@ export class GroundController {
     onTileChoose = (e: Event) => {
         const detail = (e as CustomEvent<PIXI.Point>).detail;
 
-        const b = getTileBurger(this.mapController.map!, detail.x, detail.y);
-        console.log(b);
+        // const b = getTileBurger(this.mapController.map!, detail.x, detail.y)[0];
+        // console.log(b);
+
+        const tilesArr = this.mapController.map!.layers[LayersArr.Ground].tiles;
+        const targetTile = tilesArr[detail.y][detail.x];
+        if (!targetTile) return;
+        const tileset = this.mapController.map!.getTilesetByName(Other.Grass.tileset)!;
+        const sprite = new PIXI.AnimatedSprite([tileset.textures[Other.Grass.ids[0]]]);
+        const filter = new PIXI.filters.ColorMatrixFilter();
+        sprite.filters = [filter];
+
+        filter.matrix = [...ColorMatrixSkins.normalMatrix];
+
+        for (const skinProp of ColorMatrixSkins.skins[5]) {
+            filter.matrix[skinProp.index] = skinProp.color;
+        }
+
+        targetTile.addTileComp({ sprite, type: "dirt" });
+
+        for (const tile of matrixIterator(tilesArr)) {
+            if (tile && tile.additions.dirt) {
+                const arrForCheck = tilesArr.getMatrixSlise(tile._x - 1, tile._y - 1, 3, 3).map(arr => {
+                    return arr.map(el => {
+                        return el ? el.additions.dirt : undefined;
+                    });
+                });
+                const tid = GetTileTextureId(arrForCheck);
+                tile.additions.dirt.sprite.texture = tileset.textures[Other.Grass.ids[tid]];
+            }
+        }
     };
 
     shiftOn = () => {
@@ -53,7 +83,8 @@ export class GroundController {
         this.mapController.groundController.cellMap!.showByMatrix(
             this.mapController
                 .map!.layers[LayersArr.Ground].tiles.concatMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles)
-                .subtractMatrix(this.mapController.map!.layers[LayersArr.Buildings].tiles),
+                .subtractMatrix(this.mapController.map!.layers[LayersArr.Buildings].tiles)
+                .subtractMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles),
         );
         // const walkableLayers = this.mapController.map!.getWalkableLayers();
         // for (let i = 0; i < walkableLayers.length; i++) {

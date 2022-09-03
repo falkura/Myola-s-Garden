@@ -1,15 +1,13 @@
 import { IObjectData } from "../Models";
+import { TileBase } from "./TileBase";
 import TiledMap from "./TiledMap";
 import TileSet from "./TileSet";
 
-export default class ObjectTile {
-    _x!: number;
-    _y!: number;
-    sprite!: PIXI.AnimatedSprite;
-
+export default class ObjectTile extends TileBase {
     source: IObjectData;
 
     constructor(source: IObjectData, tileSet: TileSet, map: TiledMap) {
+        super();
         this.source = source;
 
         this.createTile(tileSet, map);
@@ -17,6 +15,8 @@ export default class ObjectTile {
 
     createTile = (tileSet: TileSet, map: TiledMap) => {
         this.sprite = new PIXI.AnimatedSprite([tileSet.textures[this.source.gid - tileSet.source.firstgid]]);
+
+        this.sprite.addChild(this);
 
         this.sprite.visible = this.source.visible;
         this.sprite.rotation = this.source.rotation * (Math.PI / 180);

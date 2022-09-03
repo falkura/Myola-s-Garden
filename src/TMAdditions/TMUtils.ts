@@ -52,7 +52,7 @@ export function concatMatrix<T, K>(target: Array<Array<T | K>>, source: K[][], r
     return target;
 }
 
-export function* matrixIterator<T>(matrix: T[][]): IterableIterator<T> {
+export function* matrixIterator<T>(matrix: T[][]): IterableIterator<T | undefined> {
     for (let x = 0; x < matrix.length; x++) {
         for (let y = 0; y < matrix[x].length; y++) {
             yield matrix[x][y];
@@ -62,8 +62,8 @@ export function* matrixIterator<T>(matrix: T[][]): IterableIterator<T> {
 
 export function createEmptyMatrix<T>(width: number, height: number): T[][] {
     return Array(width)
-        .fill(null as unknown as T)
-        .map(_a => Array(height).fill(null as unknown as T));
+        .fill(undefined as unknown as T)
+        .map(_a => Array(height).fill(undefined as unknown as T));
 }
 
 export function logMatrix<T>(matrix: T[][], matrixName?: string, expand = false): void {
@@ -108,3 +108,58 @@ export function getTileBurger(map: TiledMap, x: number, y: number): ITile[] {
 }
 
 export function getItemByName() {}
+
+/**
+ * I think this function already exists, but I don't know what it's called, soo
+ *
+ * I use it to find the right texture, depending on the existence of adjacent tiles
+ *
+ * It's a simple version, only 4 bit calculation, and checking only 4 sides.
+ * Can be upgraded to 8 sides, with 8 bit, but i don't have that many resources
+ * for it and also, i have a life (joke, i don't 💋)
+ *
+ * The first 4 bits are used in calculation - `4️⃣3️⃣2️⃣1️⃣`:
+ *
+ * - `1️⃣ - Top`
+ * - `2️⃣ - Left`
+ * - `3️⃣ - Right`
+ * - `4️⃣ - Bottom`
+ *
+ * Before using it, you need to prepare an array of textures, where the index in
+ * binary matches the correct texture. For example:
+ *
+ * Result number is 5. 5 in binary system is 0101.
+ * It means, that central element have contact with top (bit number 1) and right
+ * (bit number 3) sides, so in the texture array, you need to put a corner texture
+ * like  ┚ at position 5.
+ *
+ * @param field 3x3 matrix (it won't work with other sizes).
+ * @returns `number`, where each bit is responsible for an element on each side.
+ */
+export function GetTileTextureId(field: unknown[][]): number {
+    // Check matrix size
+    if (!field.checkMatrixSize(3, 3)) throw new Error("GetTileTextureId works only for 3x3 matrix!");
+
+    let result = 0;
+    let bIndes = 0;
+
+    field.forEach((row, ri) => {
+        row.forEach((elem, ei) => {
+            // Skip corner elements
+            if (ei - 1 !== 0 && ri - 1 !== 0) return;
+            // Skip center element
+            if (ei === ri) return;
+
+            // Check for existence
+            if (!!elem) {
+                // Change side number in result from 0 to 1
+                result = result | (1 << bIndes);
+            }
+
+            // Increase bit index for next side
+            bIndes++;
+        });
+    });
+
+    return result;
+}

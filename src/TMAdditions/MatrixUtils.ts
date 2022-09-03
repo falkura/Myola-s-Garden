@@ -1,7 +1,7 @@
 export function createEmptyMatrix<T>(width: number, height: number): T[][] {
     return Array(width)
-        .fill(null as unknown as T)
-        .map(_a => Array(height).fill(null as unknown as T));
+        .fill(undefined as unknown as T)
+        .map(_a => Array(height).fill(undefined as unknown as T));
 }
 
 export function* matrixIterator<T>(matrix: T[][]): IterableIterator<T> {
@@ -20,6 +20,9 @@ declare global {
         isMatrix(): boolean;
         copyMatrix(): T[];
         logMatrix(matrixName?: string, expand?: boolean): T[];
+        getMatrixSlise(x: number, y: number, width: number, height: number): T[];
+        subtractMatrixByRect(x: number, y: number, width: number, height: number): T[];
+        checkMatrixSize(width: number, height: number): boolean;
     }
 }
 
@@ -96,6 +99,42 @@ if (!Array.prototype.copyMatrix) {
         return this.map(arr => {
             return arr.slice();
         });
+    };
+}
+
+if (!Array.prototype.subtractMatrixByRect) {
+    Array.prototype.subtractMatrixByRect = function <T>(this: T[][], x: number, y: number, width: number, height: number): T[][] {
+        this.validateMatrixData("subtractMatrixByRect");
+
+        const target = this.copyMatrix();
+
+        for (let i = 0; i < target.length; i++) {
+            for (let j = 0; j < target[i].length; j++) {
+                if (j >= x && j < x + width && i >= y && i < y + height) continue;
+
+                target[i][j] = undefined as unknown as T;
+            }
+        }
+
+        return target;
+    };
+}
+
+if (!Array.prototype.getMatrixSlise) {
+    Array.prototype.getMatrixSlise = function <T>(this: T[][], x: number, y: number, width: number, height: number): T[][] {
+        this.validateMatrixData("getSlise");
+
+        return this.copyMatrix()
+            .slice(y, y + height)
+            .map(row => row.slice(x, x + width));
+    };
+}
+
+if (!Array.prototype.checkMatrixSize) {
+    Array.prototype.checkMatrixSize = function <T>(this: T[][], width: number, height: number): boolean {
+        if (!this.isMatrix() || this.length !== width || this[0].length !== height) return false;
+
+        return true;
     };
 }
 

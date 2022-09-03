@@ -1,15 +1,13 @@
 import { ITile, ITileAnimation, ITileConfig, ITileLayerData, ITileset } from "../Models";
+import { TileBase } from "./TileBase";
 import TileSet from "./TileSet";
 
-export default class Tile {
-    _x!: number;
-    _y!: number;
-    sprite!: PIXI.AnimatedSprite;
-
+export default class Tile extends TileBase {
     layerData: ITileLayerData;
     props?: ITile;
 
     constructor(tileSet: TileSet, tileConfig: ITileConfig, layerData: ITileLayerData) {
+        super();
         this.layerData = layerData;
 
         this.createTile(tileSet, tileConfig);
