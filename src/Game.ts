@@ -31,7 +31,7 @@ export class Game {
     add_event_listeners = () => {};
 
     loadMap = () => {
-        this.MC.loadMap("map3");
+        this.MC.loadMap("testtiledmap");
     };
 
     resize = () => {
