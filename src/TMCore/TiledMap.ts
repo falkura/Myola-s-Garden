@@ -1,10 +1,7 @@
 import { EVENTS } from "../Events";
-import { ILayersData, IMapData, ITileset, LayerType } from "../Models";
+import { IMapData, ITileLayerData, ITileset } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
-import ObjectLayer from "./ObjectLayer";
-import ObjectTile from "./ObjectTile";
-import Tile from "./Tile";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
 
@@ -14,11 +11,7 @@ export default class TiledMap extends PIXI.Container {
     source: IMapData;
     loader!: MapLoader;
     tilesets: TileSet[] = [];
-    /**```ts
-     * layers: Array<Tile | ObjectTile>; // this is the real type of layers, but STUPID TS can`t work with it 🙃
-     * ```*/
-    layers: Array<(TileLayer & { tiles: Array<Array<Tile | ObjectTile>> }) | (ObjectLayer & { tiles: Array<Array<Tile | ObjectTile>> })> =
-        [];
+    layers: TileLayer[] = [];
     mapName: string;
 
     _width!: number;
@@ -56,21 +49,8 @@ export default class TiledMap extends PIXI.Container {
     };
 
     setLayers = () => {
-        this.source.layers.forEach((layerData: ILayersData, index) => {
-            let layer;
-
-            switch (layerData.type) {
-                case LayerType.TileLayer:
-                    layer = new TileLayer(layerData, this);
-                    break;
-
-                case LayerType.ObjectGroup:
-                    layer = new ObjectLayer(layerData, this);
-                    break;
-
-                default:
-                    throw new Error("Incorrect layer type!");
-            }
+        this.source.layers.forEach((layerData: ITileLayerData, index) => {
+            const layer = new TileLayer(layerData, this);
 
             layer.index = index;
             this.layers.push(layer);
@@ -80,7 +60,7 @@ export default class TiledMap extends PIXI.Container {
         });
     };
 
-    addLayer = (layer: TileLayer | ObjectLayer) => {
+    addLayer = (layer: TileLayer) => {
         this.addChild(layer);
     };
 

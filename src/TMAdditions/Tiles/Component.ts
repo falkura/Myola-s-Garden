@@ -1,4 +1,3 @@
-import ObjectTile from "../../TMCore/ObjectTile";
 import Tile from "../../TMCore/Tile";
 import { TileCompTypes } from "../../TMCore/TileBase";
 import TiledMap from "../../TMCore/TiledMap";
@@ -10,7 +9,7 @@ export default class Component {
     sprite!: PIXI.AnimatedSprite | PIXI.Sprite;
     id: number;
     type: TileCompTypes;
-    parentTile?: Tile | ObjectTile;
+    parentTile?: Tile;
 
     constructor(id: number, tilesetName: string, map: TiledMap, type: TileCompTypes) {
         this.id = id;
@@ -34,7 +33,7 @@ export default class Component {
         this.sprite.anchor.set(0.5);
     };
 
-    setInTile = (tile: Tile | ObjectTile) => {
+    setInTile = (tile: Tile) => {
         const data = {
             sprite: this.sprite,
             type: this.type,

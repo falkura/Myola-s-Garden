@@ -6,7 +6,7 @@ export interface IMapData {
     tilewidth: number;
     tileheight: number;
     tilesets: ITileset[];
-    layers: ILayersData[];
+    layers: ITileLayerData[];
     /** Not implemented! */
     compressionlevel: number;
     /** Not implemented! */
@@ -44,40 +44,19 @@ export interface ITileset {
     tilecount: number;
 }
 
-export interface ITileLayerData extends ILayer {
-    type: LayerType.TileLayer;
+export interface ITileLayerData {
     data: number[];
     width: number;
     height: number;
-    // properties?: iProperties[];
-    // tiles: Tile[];
-}
-
-export interface IObjectLayerData extends ILayer {
-    type: LayerType.ObjectGroup;
-    objects: IObjectData[];
-    // tiles: ObjectTile[];
-    /** Not implemented! */
-    draworder: string;
-}
-
-export interface ILayer {
     id: number;
     name: string;
-    type: LayerType;
+    type: "tilelayer";
     x: number;
     y: number;
     /** Not implemented! */
     opacity: number;
     /** Not implemented! */
     visible: boolean;
-}
-
-export type ILayersData = ITileLayerData | IObjectLayerData;
-
-export const enum LayerType {
-    TileLayer = "tilelayer",
-    ObjectGroup = "objectgroup",
 }
 
 export interface ITile {

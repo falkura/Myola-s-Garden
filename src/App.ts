@@ -5,7 +5,6 @@ import { Preloader } from "./Preloader";
 import { Game } from "./Game";
 import { Config } from "./Config";
 import { EVENTS } from "./Events";
-import { get_platform } from "./Util";
 import { ResourceController } from "./ResourceLoader";
 
 export class App {
@@ -17,7 +16,7 @@ export class App {
     game?: Game;
 
     constructor() {
-        LogicState.is_mobile = get_platform();
+        LogicState.is_mobile = PIXI.utils.isMobile.any;
         this.canvas = document.getElementById("root") as HTMLCanvasElement;
 
         this.canvas.style.width = "100%";

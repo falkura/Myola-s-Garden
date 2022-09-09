@@ -1,4 +1,3 @@
-import ObjectTile from "../TMCore/ObjectTile";
 import Tile from "../TMCore/Tile";
 import TiledMap from "../TMCore/TiledMap";
 import TileSet from "../TMCore/TileSet";
@@ -94,10 +93,8 @@ export function logMatrix<T>(matrix: T[][], matrixName?: string, expand = false)
     console.groupEnd();
 }
 
-type ITile = Tile | ObjectTile;
-
-export function getTileBurger(map: TiledMap, x: number, y: number): ITile[] {
-    const res: ITile[] = [];
+export function getTileBurger(map: TiledMap, x: number, y: number): Tile[] {
+    const res: Tile[] = [];
 
     for (const layer of map.layers) {
         const tile = layer.tiles[y][x];
