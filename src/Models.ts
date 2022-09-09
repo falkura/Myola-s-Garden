@@ -220,8 +220,8 @@ export const enum Rarity {
 export const enum LayersArr {
     Water = 0,
     Ground = 1,
-    Hills = 3,
+    Hills = 2,
     /** NOT IMPLEMENTED */
-    Garden = 4,
-    Buildings = 5,
+    Garden = 3,
+    Buildings = 4,
 }

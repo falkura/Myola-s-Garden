@@ -29,4 +29,8 @@ export const MAPS: Resource[] = [
         key: "map3",
         path: "map3.json",
     },
+    {
+        key: "testtiledmap",
+        path: "testtiledmap.json",
+    },
 ];
