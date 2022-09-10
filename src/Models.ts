@@ -1,3 +1,5 @@
+import Tile from "./TMCore/Tile";
+
 export type AppState = "pre_preloader" | "preloader" | "idle";
 
 export interface IMapData {
@@ -58,6 +60,9 @@ export interface ITileLayerData {
     /** Not implemented! */
     visible: boolean;
 }
+
+/** AA - Animation with autostart */
+export type TileWithAA = Tile & { props: ITile & { animation: ITileAnimation[] } };
 
 export interface ITile {
     animation?: ITileAnimation[];

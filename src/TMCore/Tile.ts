@@ -1,10 +1,16 @@
 import { ITile, ITileAnimation, ITileConfig, ITileLayerData, ITileset } from "../Models";
-import { TileBase } from "./TileBase";
+import TileComponent from "./TileComponent";
 import TileSet from "./TileSet";
 
-export default class Tile extends TileBase {
+export default class Tile extends PIXI.Container {
     layerData: ITileLayerData;
     props?: ITile;
+
+    _x!: number;
+    _y!: number;
+
+    sprite!: PIXI.AnimatedSprite; // external constructor
+    additions?: TileComponent;
 
     constructor(tileSet: TileSet, tileConfig: ITileConfig, layerData: ITileLayerData) {
         super();
@@ -26,7 +32,7 @@ export default class Tile extends TileBase {
         this._y = tileConfig.y;
 
         if (this.sprite.textures.length > 1 && this.props && this.props.animation) {
-            // @TODO what ttto dddo?? ?
+            // @TODO set correct animation speed
             this.sprite.animationSpeed = 1000 / 60 / this.props.animation[0].duration;
             this.sprite.gotoAndPlay(0);
         }
@@ -56,6 +62,28 @@ export default class Tile extends TileBase {
         if (textures[0] === undefined) console.error("There is no textures for tile");
 
         this.sprite = new PIXI.AnimatedSprite(textures);
-        // this.sprite.textures = textures; // I dono way i did it
+        // this.sprite.textures = textures; // I dono why i did it
+    };
+
+    addTileComp = (comp: TileComponent) => {
+        if (this.additions) {
+            console.error("TileComponent already exist in tile!", this);
+            return;
+        }
+
+        this.additions = comp;
+
+        comp.sprite.anchor.set(0.5);
+        this.sprite.addChild(comp.sprite);
+    };
+
+    removeTileComp = () => {
+        if (!this.additions) {
+            console.error("There is no TileComponent in tile!", this);
+            return;
+        }
+
+        this.sprite.removeChild(this.additions.sprite);
+        this.additions = undefined;
     };
 }

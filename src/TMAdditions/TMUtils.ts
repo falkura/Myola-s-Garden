@@ -104,6 +104,16 @@ export function getTileBurger(map: TiledMap, x: number, y: number): Tile[] {
     return res.reverse();
 }
 
+export function getTopTile(map: TiledMap, x: number, y: number): Tile {
+    let res!: Tile;
+
+    for (let i = map.layers.length - 1; i >= 0; i--) {
+        if (map.layers[i].tiles[y][x] && !res) res = map.layers[i].tiles[y][x];
+    }
+
+    return res;
+}
+
 export function getItemByName() {}
 
 /**

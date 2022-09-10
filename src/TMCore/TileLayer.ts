@@ -1,5 +1,5 @@
 import TiledMap from "./TiledMap";
-import { ITileConfig, ITileLayerData } from "../Models";
+import { ITileConfig, ITileLayerData, TileWithAA } from "../Models";
 import { findTileSet } from "../TMAdditions/TMUtils";
 import Tile from "./Tile";
 import { createEmptyMatrix } from "../TMAdditions/MatrixUtils";
@@ -27,6 +27,10 @@ export default class TileLayer extends PIXI.Container {
                     const tileConfig: ITileConfig = { index, x, y };
                     const tileSet = findTileSet(map, this.source.data[tileConfig.index]);
                     const tile = new Tile(tileSet, tileConfig, this.source);
+
+                    if (tile.props && tile.props.animation) {
+                        map.AATiles.push(tile as TileWithAA);
+                    }
 
                     this.addTile(tile, y, x);
                 } else {

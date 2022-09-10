@@ -1,19 +1,19 @@
-export class Clickable extends PIXI.Sprite {
+import { InteractionEvent } from "pixi.js";
+
+export class Clickable extends PIXI.AnimatedSprite {
     is_hovered = false;
-    pressEvents: Array<{ (): void }> = [];
-    hoverEvents: Array<{ (): void }> = [];
-    unhoverEvents: Array<{ (): void }> = [];
+    pressEvents: Array<{ (e: InteractionEvent): void }> = [];
+    hoverEvents: Array<{ (e: InteractionEvent): void }> = [];
+    unhoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     defaultScale = 1;
-    hoverScale = 1.2;
+    hoverScale = 1.1;
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;
+    /** Dispatch hover event if mouse is over after click */
+    hoverAfterUp = true;
 
-    constructor(texture: PIXI.Texture, disableHover = false) {
-        super(texture);
-
-        if (disableHover) {
-            this.hoverScale = 1;
-        }
+    constructor(...textures: PIXI.Texture[]) {
+        super([...textures]);
 
         this.deactivateFilter = new PIXI.filters.ColorMatrixFilter();
         this.deactivateFilter.desaturate();
@@ -32,6 +32,17 @@ export class Clickable extends PIXI.Sprite {
         this.addListener("pointerupoutside", this.unpressEvent);
     };
 
+    removeInteractivity = () => {
+        this.interactive = false;
+        this.cursor = "none";
+
+        this.removeListener("pointerdown", this.pressEvent);
+        this.removeListener("pointerover", this.hoverEvent);
+        this.removeListener("pointerout", this.unhoverEvent);
+        this.removeListener("pointerup", this.unpressEvent);
+        this.removeListener("pointerupoutside", this.unpressEvent);
+    };
+
     activate = () => {
         this.isActive = true;
         this.interactive = true;
@@ -46,71 +57,76 @@ export class Clickable extends PIXI.Sprite {
         this.filters = [this.deactivateFilter];
     };
 
-    addHover = (callback: () => void) => {
+    addHover = (callback: (e: InteractionEvent) => void) => {
         this.hoverEvents.push(callback);
     };
 
-    removeHover = (callback: () => void) => {
+    removeHover = (callback: (e: InteractionEvent) => void) => {
         this.hoverEvents.splice(this.hoverEvents.indexOf(callback), 1);
     };
 
-    addUnhover = (callback: () => void) => {
+    addUnhover = (callback: (e: InteractionEvent) => void) => {
         this.unhoverEvents.push(callback);
     };
 
-    removeUnhover = (callback: () => void) => {
+    removeUnhover = (callback: (e: InteractionEvent) => void) => {
         this.unhoverEvents.splice(this.hoverEvents.indexOf(callback), 1);
     };
 
-    addPress = (callback: () => void) => {
+    addPress = (callback: (e: InteractionEvent) => void) => {
         this.pressEvents.push(callback);
     };
 
-    removePress = (callback: () => void) => {
+    removePress = (callback: (e: InteractionEvent) => void) => {
         this.pressEvents.splice(this.pressEvents.indexOf(callback), 1);
     };
 
-    pressEvent = () => {
+    pressEvent = (e: InteractionEvent) => {
         this.scale.set(this.defaultScale);
 
         this.pressEvents.forEach(callback => {
-            callback();
+            callback(e);
         });
     };
 
-    unpressEvent = () => {
+    unpressEvent = (e: InteractionEvent) => {
         this.scale.set(this.defaultScale);
-        if (this.is_hovered) {
-            this.hoverEvent();
+        if (this.is_hovered && this.hoverAfterUp) {
+            this.hoverEvent(e);
         } else {
-            this.unhoverEvent();
+            this.unhoverEvent(e);
         }
     };
 
-    hoverEvent = () => {
+    hoverEvent = (e: InteractionEvent) => {
         this.is_hovered = true;
         this.scale.set(this.defaultScale * this.hoverScale);
 
         this.hoverEvents.forEach(callback => {
-            callback.apply(this);
+            // callback.apply(this);
+            callback(e);
         });
     };
 
-    unhoverEvent = () => {
+    unhoverEvent = (e: InteractionEvent) => {
         this.is_hovered = false;
         this.scale.set(this.defaultScale);
 
         this.unhoverEvents.forEach(callback => {
-            callback();
+            callback(e);
         });
     };
 
+    disableHoverScale = () => {
+        this.hoverScale = 1;
+    };
+
+    enableHoverScale = () => {
+        this.hoverScale = 1.1;
+    };
+
     cleanUp = () => {
-        this.removeListener("mousedown", this.pressEvent);
-        this.removeListener("mouseover", this.hoverEvent);
-        this.removeListener("mouseout", this.unhoverEvent);
-        this.removeListener("mouseup", this.unpressEvent);
-        this.removeListener("mouseupoutside", this.unpressEvent);
+        this.removeInteractivity();
 
         this.destroy();
     };

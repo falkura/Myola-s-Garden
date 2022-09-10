@@ -1,5 +1,5 @@
 import { EVENTS } from "../Events";
-import { IMapData, ITileLayerData, ITileset } from "../Models";
+import { IMapData, ITileLayerData, ITileset, TileWithAA } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
 import TileLayer from "./TileLayer";
@@ -13,6 +13,8 @@ export default class TiledMap extends PIXI.Container {
     tilesets: TileSet[] = [];
     layers: TileLayer[] = [];
     mapName: string;
+    /** AA - Animation with autostart */
+    AATiles: TileWithAA[] = [];
 
     _width!: number;
     _height!: number;
