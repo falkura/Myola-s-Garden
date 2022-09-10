@@ -6,6 +6,7 @@ import { SessionConfig } from "./Config";
 export type ResourceType = "preload" | "main";
 
 export interface Resources {
+    defaultPath: string;
     preload?: Resource[];
     main: Resource[];
     preloadMobile?: Resource[];
@@ -86,7 +87,7 @@ class Loader {
             assetList[type]?.forEach(asset => {
                 this.loader.add(
                     asset.key,
-                    `${SessionConfig.ASSETS_ADDRESS}${asset.path}`,
+                    `${SessionConfig.ASSETS_ADDRESS}${assetList.defaultPath}${asset.path}`,
                     assetList === ANIMATIONS
                         ? {
                               metadata: {
@@ -160,7 +161,7 @@ class Loader {
                 document.createTextNode(
                     `@font-face {
                         font-family: "${font.key}";
-                        src: url("./assets/${font.path}") format("${fontCssFormat}");
+                        src: url("./assets/fonts/${font.path}") format("${fontCssFormat}");
                     }`,
                 ),
             );
