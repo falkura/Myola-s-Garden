@@ -39,9 +39,13 @@ export function delayedCallback(callback: () => void, time: number) {
     };
 }
 
-export function rescale_to_width(target: PIXI.Container, target_width: number) {
-    const scale_value = Math.min((target.scale.x * target_width) / target.width, 1);
-    target.scale.set(scale_value);
+export function rescale_to_width(target_text: PIXI.Container, target_width: number, scale = 0) {
+    if (scale) {
+        target_text.scale.set(scale);
+        return scale;
+    }
+    const scale_value = Math.min((target_text.scale.x * target_width) / target_text.width, 1);
+    target_text.scale.set(scale_value);
 
     return scale_value;
 }

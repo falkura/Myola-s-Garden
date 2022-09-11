@@ -13,11 +13,40 @@ export const IMAGES: Resources = {
 
     main: [
         {
-            key: "project_bg",
-            path: "project_bg.jpg",
+            key: "city",
+            path: "city.jpg",
+        },
+        {
+            key: "plate",
+            path: "plate.png",
+        },
+        {
+            key: "empty_long_on",
+            path: "empty_long_on.png",
+        },
+        {
+            key: "empty_long_off",
+            path: "empty_long_off.png",
+        },
+        {
+            key: "check_icon",
+            path: "check_icon.png",
         },
     ],
-    preload: [],
+    preload: [
+        {
+            key: "MouseCatpawNormal",
+            path: "cursor/MouseCatpawNormal.png",
+        },
+        {
+            key: "MouseCatpawPointer",
+            path: "cursor/MouseCatpawPointer.png",
+        },
+        {
+            key: "MouseCatpawHold",
+            path: "cursor/MouseCatpawHold.png",
+        },
+    ],
 };
 
 /** Should be in assets/atlases/ */

@@ -1,32 +1,26 @@
 import { Config } from "./Config";
+import { GuiController } from "./GUI/GUIController";
 import { Keyboard } from "./Keyboard";
 import { MapController } from "./MapController";
-import { ResourceController } from "./ResourceLoader";
 
 export class Game {
     app: PIXI.Application;
     container = new PIXI.Container();
-    bg!: PIXI.Sprite;
     MC: MapController;
+    GUI: GuiController;
 
     constructor(app: PIXI.Application) {
         this.app = app;
 
         this.add_event_listeners();
-        this.createBG();
 
         this.MC = new MapController(this.container, app);
+        this.GUI = new GuiController(app);
+        this.container.addChild(this.GUI.container);
         new Keyboard();
         this.resize();
-        this.loadMap();
+        // this.loadMap();
     }
-
-    createBG = () => {
-        this.bg = ResourceController.getSprite("project_bg");
-        this.bg.anchor.set(0.5, 0.5);
-        this.bg.zIndex = -1000;
-        this.container.addChild(this.bg);
-    };
 
     add_event_listeners = () => {};
 
@@ -36,12 +30,6 @@ export class Game {
 
     resize = () => {
         this.MC.resize();
-        this.bg.position.set(Config.project_width / 2, Config.project_height / 2);
-
-        this.bg.scale.set(
-            Config.project_width / this.bg.texture.width > Config.project_height / this.bg.texture.height
-                ? Config.project_width / this.bg.texture.width
-                : Config.project_height / this.bg.texture.height,
-        );
+        this.GUI.resize();
     };
 }

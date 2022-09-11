@@ -34,4 +34,11 @@ export const EVENTS = {
             Shifted: "ActionsInventoryShifted",
         },
     },
+
+    GUI: {
+        Lang: {
+            Choose: "GUILangChoose",
+            Ok: "GUILangOk",
+        },
+    },
 };
