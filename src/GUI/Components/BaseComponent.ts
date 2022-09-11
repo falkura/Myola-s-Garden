@@ -10,12 +10,16 @@ export class BaseComponent extends PIXI.Sprite {
         if (height) this.height = height;
 
         this.defaultScale = this.scale;
+
+        return this;
     };
 
     setScale = (scaleX: number, scaleY?: number) => {
         scaleY = scaleY || scaleX;
         this.scale.set(scaleX, scaleY);
         this.defaultScale = { x: scaleX, y: scaleY };
+
+        return this;
     };
 
     hide = () => {

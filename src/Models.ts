@@ -209,3 +209,8 @@ export const enum LayersArr {
     Garden = 3,
     Buildings = 4,
 }
+
+export interface IScreen {
+    show: () => void;
+    hide: () => void;
+}

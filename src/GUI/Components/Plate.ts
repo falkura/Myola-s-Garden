@@ -7,3 +7,10 @@ export class Plate extends BaseComponent {
         this.anchor.set(0.5);
     }
 }
+
+export class PlateLong extends BaseComponent {
+    constructor() {
+        super(ResourceController.getTexture("empty_long_off"));
+        this.anchor.set(0.5);
+    }
+}

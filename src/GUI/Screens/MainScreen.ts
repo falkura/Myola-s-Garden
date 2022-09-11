@@ -1,103 +1,56 @@
 import { Config } from "../../Config";
 import { EVENTS } from "../../Events";
-import { TextStyles } from "../../TextStyles";
-import { rescale_to_width } from "../../Util";
-import { BaseScreen } from "../Components/BaseScreen";
+import { LogicState } from "../../logic_state";
+import { IScreen } from "../../Models";
 import { Button } from "../Components/Buttons";
-import { CheckButton } from "../Components/CheckButton";
 
-export const Languages = {
-    English: "en",
-    Ukrainian: "ua",
-    Russian: "terrorist",
-};
-
-type Lang = keyof typeof Languages;
-
-interface LangButton {
-    button: CheckButton;
-    lang: Lang;
-}
-
-export class MainScreen extends BaseScreen {
-    langButtons: CheckButton[] = [];
-    okButton!: Button;
-    lang: Lang = "English";
+export class MainScreen extends PIXI.Container implements IScreen {
+    buttons: Button[] = [];
 
     constructor() {
-        super("Select Language");
-        this.exit.hide();
+        super();
 
-        document.addEventListener(EVENTS.GUI.Lang.Choose, this.onLangChoosen);
         this.createButtons();
         this.resize();
     }
 
-    private onLangChoosen = (e: Event) => {
-        const detail = (e as CustomEvent<LangButton>).detail;
-
-        this.langButtons.forEach(btn => {
-            btn.unsetChoosen();
-        });
-
-        detail.button.setChoosen();
-
-        this.okButton.activate();
-        console.log(detail);
-    };
-
     private createButtons = () => {
-        for (const lang of Object.keys(Languages)) {
-            const button = this.createLangButton(lang);
-            this.langButtons.push(button);
+        this.createButton("New Game", EVENTS.GUI.MainScreen.NewGame);
+        const continueButton = this.createButton("Continue", EVENTS.GUI.MainScreen.Continue);
 
-            button.event = new CustomEvent<LangButton>(EVENTS.GUI.Lang.Choose, { detail: { lang: lang as Lang, button: button } });
+        LogicState.add_observer(continueButton);
 
-            this.addChild(button);
-        }
-
-        this.createOkButton();
+        continueButton.on_state_update = () => {
+            if (LogicState.game_exist) {
+                continueButton.activate();
+            } else {
+                continueButton.deactivate();
+            }
+        };
+        this.createButton("Settings", EVENTS.GUI.MainScreen.Settings);
+        this.createButton("Credits", EVENTS.GUI.MainScreen.Credits);
     };
 
-    private createLangButton = (lang: string) => {
-        const button = new CheckButton("empty_long_on", "empty_long_off");
-        const text = new PIXI.Text(lang, TextStyles.buttonText);
-        text.position.y = -1;
-        text.anchor.set(0.5, 0.5);
+    private createButton = (text: string, event: string) => {
+        const button = new Button("empty_long_on", "empty_long_off").setText(text).setScale(3).setEvent(event);
 
-        rescale_to_width(text, button.width * 0.5);
+        this.addChild(button);
+        this.buttons.push(button);
 
-        button.addChild(text);
-
-        button.setScale(3);
         return button;
     };
 
-    private createOkButton = () => {
-        this.okButton = new Button("empty_big_on", "empty_big_off");
+    show = () => {
+        this.visible = true;
+    };
 
-        const text = new PIXI.Text("OK", TextStyles.buttonText);
-        text.position.y = -1;
-        text.anchor.set(0.5, 0.5);
-        rescale_to_width(text, this.okButton.width * 0.4);
-
-        this.okButton.addChild(text);
-
-        this.okButton.setScale(3.5);
-        this.okButton.deactivate();
-
-        this.okButton.event = EVENTS.GUI.Lang.Ok;
-
-        this.addChild(this.okButton);
+    hide = () => {
+        this.visible = false;
     };
 
     resize = () => {
-        this.baseResize();
-
-        this.langButtons.forEach((btn, i) => {
-            btn.position.set(Config.project_width / 2, this.plate.y - this.plate.height / 2 + 250 + btn.height * 1.05 * i);
+        this.buttons.forEach((btn, i) => {
+            btn.position.set(Config.project_width / 2, Config.project_height / 2 + btn.height * 1.05 * i);
         });
-
-        this.okButton.position.set(Config.project_width / 2, this.plate.y + this.plate.height / 2 - this.okButton.height - 20);
     };
 }

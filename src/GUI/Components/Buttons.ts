@@ -1,4 +1,3 @@
-import anime from "animejs";
 import { Howl } from "howler";
 import { Observer } from "../../Observer";
 import { AUDIO_MANAGER } from "../../AudioManager";
@@ -6,11 +5,12 @@ import { InteractionEvent } from "pixi.js";
 import { ResourceController } from "../../ResourceLoader";
 import { ButtonList } from "../../GameConfigs/ButtonsList";
 import { BaseComponent } from "./BaseComponent";
+import { TextStyles } from "../../TextStyles";
+import { rescale_to_width } from "../../Util";
 
 export class Button extends BaseComponent implements Observer {
-    private currentAnim?: anime.AnimeInstance;
-    idleTexture: PIXI.Texture;
-    pressedTexture: PIXI.Texture;
+    private idleTexture: PIXI.Texture;
+    private pressedTexture: PIXI.Texture;
     event?: string | CustomEvent;
     callback?: (e: PIXI.InteractionEvent) => void;
     isClosedWindow: boolean;
@@ -24,6 +24,9 @@ export class Button extends BaseComponent implements Observer {
 
     on_state_update?: () => void;
     sound_name = "click_sound";
+
+    text?: PIXI.Text;
+    textScale = 1;
 
     constructor(idleTexture: ButtonList, pressedTexture: ButtonList, isClosedWindow = false, withoutPressed = false) {
         super(ResourceController.getTexture(idleTexture));
@@ -44,7 +47,35 @@ export class Button extends BaseComponent implements Observer {
         this.activate();
     }
 
-    activate = () => {
+    public setText = (text: string) => {
+        this.text = new PIXI.Text(text, TextStyles.buttonText);
+        this.text.position.y = -1;
+        this.text.anchor.set(0.5, 0.5);
+
+        rescale_to_width(this.text, this.width * 0.5);
+
+        this.textScale = this.text.scale.x;
+        this.addChild(this.text);
+
+        return this;
+    };
+
+    public removeText = () => {
+        if (!this.text) return this;
+
+        this.removeChild(this.text);
+        this.text = undefined;
+
+        return this;
+    };
+
+    public setEvent = (event?: typeof this.event) => {
+        this.event = event;
+
+        return this;
+    };
+
+    public activate = () => {
         if (this.isActive) return;
 
         this.isActive = true;
@@ -60,9 +91,11 @@ export class Button extends BaseComponent implements Observer {
         this.addListener("pointerupoutside", this.unpressEvent);
 
         this.setScale(this.defaultScale.x, this.defaultScale.y);
+
+        return this;
     };
 
-    deactivate = () => {
+    public deactivate = () => {
         if (!this.isActive) return;
 
         this.isActive = false;
@@ -76,19 +109,21 @@ export class Button extends BaseComponent implements Observer {
         this.removeListener("pointerout", this.unhoverEvent);
         this.removeListener("pointerup", this.unpressEvent);
         this.removeListener("pointerupoutside", this.unpressEvent);
+
+        return this;
     };
 
-    hoverEvent = () => {
+    private hoverEvent = () => {
         this.isHovered = true;
         this.filters = [this.hoverFilter];
     };
 
-    unhoverEvent = () => {
+    private unhoverEvent = () => {
         this.isHovered = false;
         this.filters = [];
     };
 
-    pressEvent = (e: InteractionEvent) => {
+    private pressEvent = (e: InteractionEvent) => {
         let sound;
 
         if (this.sound_name) {
@@ -101,6 +136,11 @@ export class Button extends BaseComponent implements Observer {
 
         if (this.pressedTexture) {
             this.texture = this.pressedTexture;
+        }
+
+        if (this.text) {
+            this.text.scale.set(this.textScale * 0.9);
+            this.text.anchor.y = 0.4;
         }
 
         if (this.event) {
@@ -116,8 +156,13 @@ export class Button extends BaseComponent implements Observer {
         }
     };
 
-    unpressEvent = () => {
+    private unpressEvent = () => {
         this.texture = this.idleTexture;
+
+        if (this.text) {
+            this.text.scale.set(this.textScale);
+            this.text.anchor.y = 0.5;
+        }
 
         if (this.isHovered) {
             this.hoverEvent();
@@ -126,8 +171,10 @@ export class Button extends BaseComponent implements Observer {
         }
     };
 
-    set_normal_texture = (texture: PIXI.Texture) => {
+    public setDefaultTexture = (texture: PIXI.Texture) => {
         this.idleTexture = texture;
         this.texture = texture;
+
+        return this;
     };
 }

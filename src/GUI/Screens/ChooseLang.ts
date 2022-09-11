@@ -1,5 +1,6 @@
 import { Config } from "../../Config";
 import { EVENTS } from "../../Events";
+import { IScreen } from "../../Models";
 import { TextStyles } from "../../TextStyles";
 import { rescale_to_width } from "../../Util";
 import { BaseScreen } from "../Components/BaseScreen";
@@ -19,7 +20,7 @@ interface LangButton {
     lang: Lang;
 }
 
-export class ChooseLang extends BaseScreen {
+export class ChooseLang extends BaseScreen implements IScreen {
     langButtons: CheckButton[] = [];
     okButton!: Button;
     lang: Lang = "English";
@@ -89,6 +90,14 @@ export class ChooseLang extends BaseScreen {
         this.okButton.event = EVENTS.GUI.Lang.Ok;
 
         this.addChild(this.okButton);
+    };
+
+    show = () => {
+        this.visible = true;
+    };
+
+    hide = () => {
+        this.visible = false;
     };
 
     resize = () => {

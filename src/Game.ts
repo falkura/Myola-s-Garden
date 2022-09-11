@@ -1,6 +1,8 @@
 import { Config } from "./Config";
+import { EVENTS } from "./Events";
 import { GuiController } from "./GUI/GUIController";
 import { Keyboard } from "./Keyboard";
+import { LogicState } from "./logic_state";
 import { MapController } from "./MapController";
 
 export class Game {
@@ -22,13 +24,16 @@ export class Game {
         // this.loadMap();
     }
 
-    add_event_listeners = () => {};
+    add_event_listeners = () => {
+        document.addEventListener(EVENTS.GUI.MainScreen.RUS.Yes, this.loadMap);
+    };
 
     loadMap = () => {
         this.MC.loadMap("testtiledmap");
     };
 
     resize = () => {
+        LogicState.notify_all();
         this.MC.resize();
         this.GUI.resize();
     };

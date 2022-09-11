@@ -1,4 +1,5 @@
 import { Config } from "../../Config";
+import { EVENTS } from "../../Events";
 import { TextStyles } from "../../TextStyles";
 import { Button } from "./Buttons";
 import { Plate } from "./Plate";
@@ -35,6 +36,7 @@ export class BaseScreen extends PIXI.Container {
         this.addChild(this.line);
 
         this.exit = new Button("close_on", "close_off");
+        this.exit.event = EVENTS.GUI.MainScreen.Exit;
         this.exit.setScale(2);
         this.addChild(this.exit);
 

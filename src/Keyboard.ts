@@ -19,6 +19,9 @@ export class Keyboard {
                 case "KeyI":
                     // document.dispatchEvent(new Event("inventoryVisible"));
                     break;
+                case "Escape":
+                    document.dispatchEvent(new Event(EVENTS.GUI.MainScreen.Exit));
+                    break;
                 default:
                     console.log(e.code);
                     break;

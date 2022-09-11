@@ -15,6 +15,12 @@ class LogicStateClass extends Subject {
     app_height = Config.project_height;
 
     isShift = false;
+
+    language_choosen = true;
+    game_exist = false;
+
+    game_started = false;
+
     constructor() {
         super();
     }

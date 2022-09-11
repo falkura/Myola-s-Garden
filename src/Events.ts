@@ -40,5 +40,27 @@ export const EVENTS = {
             Choose: "GUILangChoose",
             Ok: "GUILangOk",
         },
+        MainScreen: {
+            NewGame: "GUIMainScreenNewGame",
+            Continue: "GUIMainScreenContinue",
+            Settings: "GUIMainScreenSettings",
+            Credits: "GUIMainScreenCredits",
+            Exit: "GUIMainScreenExit",
+            RUS: {
+                Yes: "GUIMainScreenRUSYes",
+                No: "GUIMainScreenRUSNo",
+            },
+        },
+        Settings: {
+            Music: "GUISettingsMusic",
+            Sounds: "GUISettingsSounds",
+            Quality: "GUISettingsQuality",
+            FullScreen: "GUISettingsFullScreen",
+            Language: "GUISettingsLanguage",
+            Mute: "GUISettingsMute",
+            FPS: "GUISettingsFPS",
+            Vibro: "GUISettingsVibro",
+            TextSize: "GUISettingsTextSize",
+        },
     },
 };
