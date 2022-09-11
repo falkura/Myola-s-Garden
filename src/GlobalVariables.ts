@@ -2,7 +2,7 @@ import { Config } from "./Config";
 import { AppState } from "./Models";
 import { Subject } from "./Observer";
 
-class LogicStateClass extends Subject {
+class GlobalVariablesClass extends Subject {
     app_state: AppState = "pre_preloader";
 
     is_music_on = true;
@@ -26,4 +26,4 @@ class LogicStateClass extends Subject {
     }
 }
 
-export const LogicState = new LogicStateClass();
+export const Global_Vars = new GlobalVariablesClass();

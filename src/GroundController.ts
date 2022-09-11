@@ -2,7 +2,7 @@ import { InteractionEvent } from "pixi.js";
 import { EVENTS } from "./Events";
 import { ColorMatrixSkins } from "./GameConfigs/ColorMatrixSkins";
 import { Other } from "./GameConfigs/Plants";
-import { LogicState } from "./logic_state";
+import { Global_Vars } from "./GlobalVariables";
 import { MapController } from "./MapController";
 import { LayersArr } from "./Models";
 import { TMCellMap } from "./TMAdditions/CellMap";
@@ -84,14 +84,14 @@ export class GroundController {
     shiftOn = () => {
         if (this.seedMode) return;
 
-        LogicState.isShift = true;
+        Global_Vars.isShift = true;
         this.seedMode = true;
 
         this.onSeed();
     };
 
     shiftOff = () => {
-        LogicState.isShift = false;
+        Global_Vars.isShift = false;
         this.seedMode = false;
 
         this.offSeed();

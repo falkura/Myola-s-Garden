@@ -1,7 +1,7 @@
 import { Config } from "../../Config";
 import { EVENTS } from "../../Events";
 import { TextStyles } from "../../TextStyles";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 import { Plate } from "./Plate";
 
 export class BaseScreen extends PIXI.Container {

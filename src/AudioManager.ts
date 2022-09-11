@@ -1,5 +1,5 @@
 import { Howl, Howler } from "howler";
-import { LogicState } from "./logic_state";
+import { Global_Vars } from "./GlobalVariables";
 
 class AudioManager {
     MUSIC: Howl[] = [];
@@ -15,7 +15,7 @@ class AudioManager {
         });
 
         window.addEventListener("focus", () => {
-            if (LogicState.are_sound_fx_on && LogicState.is_music_on) {
+            if (Global_Vars.are_sound_fx_on && Global_Vars.is_music_on) {
                 Howler.mute(false);
             }
         });

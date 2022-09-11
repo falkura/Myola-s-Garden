@@ -1,5 +1,5 @@
 import * as PIXI from "pixi.js";
-import { LogicState } from "./logic_state";
+import { Global_Vars } from "./GlobalVariables";
 import { PrePreloader } from "./PrePreloader";
 import { Preloader } from "./Preloader";
 import { Game } from "./Game";
@@ -16,7 +16,7 @@ export class App {
     game?: Game;
 
     constructor() {
-        LogicState.is_mobile = PIXI.utils.isMobile.any;
+        Global_Vars.is_mobile = PIXI.utils.isMobile.any;
         this.canvas = document.getElementById("root") as HTMLCanvasElement;
 
         this.canvas.style.width = "100%";
@@ -49,21 +49,21 @@ export class App {
     };
 
     on_resize = () => {
-        const multiplier = window.innerHeight / LogicState.app_height;
+        const multiplier = window.innerHeight / Global_Vars.app_height;
         const target_width = window.innerWidth / multiplier;
 
-        this.app.renderer.resize(target_width, LogicState.app_height);
+        this.app.renderer.resize(target_width, Global_Vars.app_height);
 
         if (window.innerWidth < window.innerHeight) {
-            LogicState.is_landscape = false;
+            Global_Vars.is_landscape = false;
         } else {
-            LogicState.is_landscape = true;
+            Global_Vars.is_landscape = true;
         }
 
         Config.project_width = this.app.view.width;
         Config.project_height = this.app.view.height;
 
-        LogicState.notify_all();
+        Global_Vars.notify_all();
 
         if (this.game) {
             this.game.resize();
@@ -86,8 +86,8 @@ export class App {
 
         this.preloader = new Preloader(this.app);
         this.app.stage.addChild(this.preloader.container);
-        LogicState.app_state = "preloader";
-        LogicState.notify_all();
+        Global_Vars.app_state = "preloader";
+        Global_Vars.notify_all();
     };
 
     on_project_loaded = () => {
@@ -97,7 +97,7 @@ export class App {
 
         Object.assign(globalThis, {
             main: this.game,
-            ls: LogicState,
+            ls: Global_Vars,
             app: this,
             rc: ResourceController,
             config: Config,
@@ -105,13 +105,13 @@ export class App {
 
         this.app.stage.addChildAt(this.game.container, 0);
 
-        LogicState.app_state = "idle";
-        LogicState.notify_all();
+        Global_Vars.app_state = "idle";
+        Global_Vars.notify_all();
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         Object.assign(window as any, {
             game: this.game,
-            ls: LogicState,
+            ls: Global_Vars,
             app: this,
         });
     };

@@ -1,6 +1,6 @@
 import { InteractionEvent } from "pixi.js";
 import { EVENTS } from "../../Events";
-import { LogicState } from "../../logic_state";
+import { Global_Vars } from "../../GlobalVariables";
 import { IGardenItemData, IItemType } from "../../Models";
 import { TextStyles } from "../../TextStyles";
 import { Clickable } from "../Clickable";
@@ -68,7 +68,7 @@ export class ListItem extends PIXI.Container {
     };
 
     pressEvent = (e: InteractionEvent) => {
-        if (!LogicState.isShift) {
+        if (!Global_Vars.isShift) {
             this.grandParentZIndex = this.parent.parent.zIndex;
             this.parentZIndex = this.parent.zIndex;
 

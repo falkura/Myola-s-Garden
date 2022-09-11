@@ -1,6 +1,6 @@
 import { IResourceDictionary } from "pixi.js";
 import { ANIMATIONS, ATLASES, FONTS, IMAGES, MAPS } from "./Assets";
-import { LogicState } from "./logic_state";
+import { Global_Vars } from "./GlobalVariables";
 import { SessionConfig } from "./Config";
 
 export type ResourceType = "preload" | "main";
@@ -98,7 +98,7 @@ class Loader {
                 );
             });
 
-            if (LogicState.is_mobile) {
+            if (Global_Vars.is_mobile) {
                 assetList[`${type}Mobile`]?.forEach(asset => {
                     this.loader.add(asset.key, `${SessionConfig.ASSETS_ADDRESS}${asset.path}`);
                 });

@@ -1,10 +1,10 @@
 import anime from "animejs";
 import { Config } from "../Config";
 import { EVENTS } from "../Events";
-import { LogicState } from "../logic_state";
+import { Global_Vars } from "../GlobalVariables";
 import { IScreen } from "../Models";
 import { ResourceController } from "../ResourceLoader";
-import { Button } from "./Components/Buttons";
+import { Button } from "./Components/Button";
 import { Plate } from "./Components/Plate";
 import { ChooseLang } from "./Screens/ChooseLang";
 import { CreditsScreen } from "./Screens/CreditsScreen";
@@ -37,7 +37,7 @@ export class GuiController {
         this.createScreens();
         this.addEventListeners();
 
-        if (LogicState.language_choosen) {
+        if (Global_Vars.language_choosen) {
             this.showScreen("main");
         } else {
             this.showScreen("chooseLang");
@@ -93,7 +93,7 @@ export class GuiController {
     };
 
     showScreen = async (target: Screens) => {
-        if (LogicState.game_started || this.currentScreen === target) return;
+        if (Global_Vars.game_started || this.currentScreen === target) return;
         this.currentScreen = target;
 
         console.log("Show:", target, "screen");
@@ -130,7 +130,7 @@ export class GuiController {
     };
 
     onNewGame = () => {
-        if (LogicState.game_exist) {
+        if (Global_Vars.game_exist) {
             this.showScreen("rusure");
         } else {
             this.hideAllScreens();

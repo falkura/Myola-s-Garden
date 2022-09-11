@@ -1,6 +1,6 @@
 import { ButtonList } from "../../GameConfigs/ButtonsList";
 import { ResourceController } from "../../ResourceLoader";
-import { Button } from "./Buttons";
+import { Button } from "./Button";
 
 export class CheckButton extends Button {
     isChoosen = false;

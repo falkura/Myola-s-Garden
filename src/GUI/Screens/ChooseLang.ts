@@ -4,7 +4,7 @@ import { IScreen } from "../../Models";
 import { TextStyles } from "../../TextStyles";
 import { rescale_to_width } from "../../Util";
 import { BaseScreen } from "../Components/BaseScreen";
-import { Button } from "../Components/Buttons";
+import { Button } from "../Components/Button";
 import { CheckButton } from "../Components/CheckButton";
 
 export const Languages = {

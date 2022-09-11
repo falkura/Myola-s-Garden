@@ -1,8 +1,8 @@
 import { Config } from "../../Config";
 import { EVENTS } from "../../Events";
-import { LogicState } from "../../logic_state";
+import { Global_Vars } from "../../GlobalVariables";
 import { IScreen } from "../../Models";
-import { Button } from "../Components/Buttons";
+import { Button } from "../Components/Button";
 
 export class MainScreen extends PIXI.Container implements IScreen {
     buttons: Button[] = [];
@@ -18,10 +18,10 @@ export class MainScreen extends PIXI.Container implements IScreen {
         this.createButton("New Game", EVENTS.GUI.MainScreen.NewGame);
         const continueButton = this.createButton("Continue", EVENTS.GUI.MainScreen.Continue);
 
-        LogicState.add_observer(continueButton);
+        Global_Vars.add_observer(continueButton);
 
         continueButton.on_state_update = () => {
-            if (LogicState.game_exist) {
+            if (Global_Vars.game_exist) {
                 continueButton.activate();
             } else {
                 continueButton.deactivate();

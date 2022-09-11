@@ -2,7 +2,7 @@ import { Config } from "../../Config";
 import { EVENTS } from "../../Events";
 import { IScreen } from "../../Models";
 import { TextStyles } from "../../TextStyles";
-import { Button } from "../Components/Buttons";
+import { Button } from "../Components/Button";
 import { Plate, PlateLong } from "../Components/Plate";
 
 export class RUSureScreen extends PIXI.Container implements IScreen {

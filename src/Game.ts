@@ -1,8 +1,7 @@
-import { Config } from "./Config";
 import { EVENTS } from "./Events";
 import { GuiController } from "./GUI/GUIController";
 import { Keyboard } from "./Keyboard";
-import { LogicState } from "./logic_state";
+import { Global_Vars } from "./GlobalVariables";
 import { MapController } from "./MapController";
 
 export class Game {
@@ -33,7 +32,7 @@ export class Game {
     };
 
     resize = () => {
-        LogicState.notify_all();
+        Global_Vars.notify_all();
         this.MC.resize();
         this.GUI.resize();
     };
