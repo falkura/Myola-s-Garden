@@ -59,6 +59,13 @@ export const ATLASES: Resources = {
             path: "GUI_Buttons.json",
         },
     ],
+
+    preload: [
+        {
+            key: "loading_sprites",
+            path: "loading_sprites.json",
+        },
+    ],
 };
 
 /** Should be in assets/fonts/ */
