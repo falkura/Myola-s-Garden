@@ -2,8 +2,10 @@ import { IResourceDictionary } from "pixi.js";
 import { ANIMATIONS, ATLASES, FONTS, IMAGES, MAPS } from "./Assets";
 import { Global_Vars } from "./GlobalVariables";
 import { SessionConfig } from "./Config";
+import { LoaderScreen } from "./GUI/Screens/LoaderScreen";
 
-export type ResourceType = "preload" | "main";
+type ResourceType = "preload" | "main";
+export type LoadProcesses = ResourceType | "map";
 
 export interface Resources {
     defaultPath: string;
@@ -20,11 +22,25 @@ export interface Resource {
 }
 
 class Loader {
-    private onProgressCb: (() => void) | undefined;
+    private _screen?: LoaderScreen;
     loader = PIXI.Loader.shared;
 
     public get resources(): IResourceDictionary {
         return this.loader.resources;
+    }
+
+    public set screen(ls: LoaderScreen | undefined) {
+        if (this._screen) return;
+
+        this._screen = ls;
+
+        this.loader.onProgress.add(() => {
+            this._screen?.update(this.loader.progress);
+        });
+    }
+
+    public get screen(): LoaderScreen | undefined {
+        return this._screen;
     }
 
     getResource = (key: string): PIXI.LoaderResource => {
@@ -112,23 +128,30 @@ class Loader {
         });
     };
 
-    loadResources = (onLoad: () => void) => {
-        this.loader.load(() => {
-            onLoad();
-            if (this.onProgressCb) {
-                this.loader.onProgress.detach(this.onProgressCb);
-                this.onProgressCb = undefined;
-            }
+    /** Now you can use it like promise with await.
+     *
+     * Note, that onLoad will be executed first, before promise resolve.
+     */
+    loadResources = (onLoad: () => void, processName: LoadProcesses) => {
+        console.log(Global_Vars.app_state);
+        this.screen?.show(processName);
+
+        return new Promise<void>(resolve => {
+            this.loader.load(async () => {
+                await this.screen?.hide();
+
+                if (processName !== "map" && ATLASES[processName]) {
+                    for (const atlas of ATLASES[processName]!) {
+                        Object.assign(ResourceController.resources, ResourceController.resources[atlas.key].textures);
+                    }
+                }
+
+                onLoad();
+
+                resolve();
+            });
         });
     };
-
-    public set onProgress(cb: () => void) {
-        if (!this.onProgressCb) {
-            this.onProgressCb = this.loader.onProgress.add(cb);
-        } else {
-            console.error("An onProgress function already added!");
-        }
-    }
 
     loadFonts = () => {
         const newStyle = document.createElement("style");

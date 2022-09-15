@@ -9,7 +9,7 @@ import TileSet from "./TileSet";
 export default class TiledMap extends PIXI.Container {
     app: PIXI.Application;
     source: IMapData;
-    loader!: MapLoader;
+    loader?: MapLoader;
     tilesets: TileSet[] = [];
     layers: TileLayer[] = [];
     mapName: string;
@@ -24,25 +24,26 @@ export default class TiledMap extends PIXI.Container {
         this.app = app;
         this.mapName = resourceId;
         this.source = ResourceController.getResource(resourceId).data as IMapData;
-
-        this.loadResources().then(() => {
-            this.setTileSets();
-            this.setLayers();
-
-            this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
-
-            this._width = this.width;
-            this._height = this.height;
-
-            document.dispatchEvent(new Event(EVENTS.Map.Created));
-        });
     }
 
-    loadResources = () => {
-        this.loader = new MapLoader(this);
-        this.addChild(this.loader.container); // @TODO loader screen
+    load = () => {
+        return new Promise<void>(resolve => {
+            this.loader = new MapLoader(this);
 
-        return this.loader.load();
+            this.loader
+                .load()
+                .then(this.setTileSets)
+                .then(this.setLayers)
+                .then(() => {
+                    this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
+
+                    this._width = this.width;
+                    this._height = this.height;
+
+                    document.dispatchEvent(new Event(EVENTS.Map.Created));
+                    resolve();
+                });
+        });
     };
 
     setTileSets = () => {
@@ -76,6 +77,6 @@ export default class TiledMap extends PIXI.Container {
 
     cleanUp = () => {
         super.destroy({ children: true, texture: true, baseTexture: true });
-        this.loader.destroy();
+        this.loader?.destroy();
     };
 }

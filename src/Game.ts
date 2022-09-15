@@ -8,7 +8,7 @@ export class Game {
     app: PIXI.Application;
     container = new PIXI.Container();
     MC: MapController;
-    GUI: GuiController;
+    GUI!: GuiController;
 
     constructor(app: PIXI.Application) {
         this.app = app;
@@ -33,7 +33,7 @@ export class Game {
 
     resize = () => {
         Global_Vars.notify_all();
-        this.MC.resize();
-        this.GUI.resize();
+        this.MC?.resize();
+        this.GUI?.resize();
     };
 }

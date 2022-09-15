@@ -68,7 +68,7 @@ export class ListItem extends PIXI.Container {
     };
 
     pressEvent = (e: InteractionEvent) => {
-        if (!Global_Vars.isShift) {
+        if (!Global_Vars.is_shift) {
             this.grandParentZIndex = this.parent.parent.zIndex;
             this.parentZIndex = this.parent.zIndex;
 

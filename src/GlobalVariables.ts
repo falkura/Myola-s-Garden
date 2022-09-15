@@ -14,9 +14,9 @@ class GlobalVariablesClass extends Subject {
     app_width = Config.project_width;
     app_height = Config.project_height;
 
-    isShift = false;
+    is_shift = false;
 
-    language_choosen = true;
+    language_choosen = false;
     game_exist = false;
 
     game_started = false;

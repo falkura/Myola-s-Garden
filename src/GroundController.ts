@@ -84,14 +84,14 @@ export class GroundController {
     shiftOn = () => {
         if (this.seedMode) return;
 
-        Global_Vars.isShift = true;
+        Global_Vars.is_shift = true;
         this.seedMode = true;
 
         this.onSeed();
     };
 
     shiftOff = () => {
-        Global_Vars.isShift = false;
+        Global_Vars.is_shift = false;
         this.seedMode = false;
 
         this.offSeed();

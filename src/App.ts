@@ -1,17 +1,15 @@
 import * as PIXI from "pixi.js";
 import { Global_Vars } from "./GlobalVariables";
-import { PrePreloader } from "./PrePreloader";
 import { Preloader } from "./Preloader";
 import { Game } from "./Game";
 import { Config } from "./Config";
 import { EVENTS } from "./Events";
 import { ResourceController } from "./ResourceLoader";
+import { LoaderScreen } from "./GUI/Screens/LoaderScreen";
 
 export class App {
     readonly canvas: HTMLCanvasElement;
     readonly app: PIXI.Application;
-    readonly is_landscape: boolean = true;
-    pre_preloader?: PrePreloader;
     preloader?: Preloader;
     game?: Game;
 
@@ -24,16 +22,17 @@ export class App {
         this.canvas.style.marginTop = "0";
         this.canvas.style.marginLeft = "0";
 
-        this.app = this.get_pixi_app();
+        this.app = this.getPixiApp();
 
-        this.setup_events();
-        this.load_preloader();
+        this.loadPreloader();
 
         window.onresize = this.on_resize;
+        window.onorientationchange = this.on_resize;
+
         this.on_resize();
     }
 
-    get_pixi_app = () => {
+    getPixiApp = () => {
         PIXI.settings.ROUND_PIXELS = true;
         PIXI.settings.SORTABLE_CHILDREN = true;
         PIXI.settings.SCALE_MODE = PIXI.SCALE_MODES.NEAREST;
@@ -65,38 +64,47 @@ export class App {
 
         Global_Vars.notify_all();
 
+        ResourceController.screen?.resize();
+
         if (this.game) {
             this.game.resize();
         } else if (this.preloader) {
             this.preloader.resize();
-        } else if (this.pre_preloader) {
-            this.pre_preloader.resize();
         }
     };
 
-    load_preloader = () => {
-        this.pre_preloader = new PrePreloader(this.app);
-        this.app.stage.addChild(this.pre_preloader.container);
-    };
-
-    on_preloader_loaded = () => {
-        if (this.pre_preloader) {
-            this.app.stage.removeChild(this.pre_preloader.container);
-        }
+    loadPreloader = () => {
+        document.addEventListener(EVENTS.System.PreloaderLoaded, this.on_preloader_loaded);
 
         this.preloader = new Preloader(this.app);
         this.app.stage.addChild(this.preloader.container);
+    };
+
+    on_preloader_loaded = () => {
+        if (this.preloader) {
+            this.app.stage.removeChild(this.preloader.container);
+        }
+
+        ResourceController.screen = new LoaderScreen();
+        this.app.stage.addChild(ResourceController.screen);
+
         Global_Vars.app_state = "preloader";
+
+        ResourceController.addResources("main");
+        ResourceController.addMaps();
+
+        ResourceController.loadResources(() => {
+            this.onGameLoaded();
+        }, "main");
+
         Global_Vars.notify_all();
     };
 
-    on_project_loaded = () => {
-        this.app.stage.removeChild(this.preloader!.container);
-
+    onGameLoaded = () => {
         this.game = new Game(this.app);
 
         Object.assign(globalThis, {
-            main: this.game,
+            game: this.game,
             ls: Global_Vars,
             app: this,
             rc: ResourceController,
@@ -107,17 +115,5 @@ export class App {
 
         Global_Vars.app_state = "idle";
         Global_Vars.notify_all();
-
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        Object.assign(window as any, {
-            game: this.game,
-            ls: Global_Vars,
-            app: this,
-        });
-    };
-
-    setup_events = () => {
-        document.addEventListener(EVENTS.loading.preloader_loaded, this.on_preloader_loaded);
-        document.addEventListener(EVENTS.loading.project_loaded, this.on_project_loaded);
     };
 }

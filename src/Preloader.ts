@@ -1,35 +1,71 @@
-import { ATLASES } from "./Assets";
-import "./AudioManager";
+import { Config, SessionConfig } from "./Config";
 import { EVENTS } from "./Events";
+import { AUDIO_MANAGER } from "./AudioManager";
 import { ResourceController } from "./ResourceLoader";
 
 export class Preloader {
     readonly container: PIXI.Container;
     private readonly app: PIXI.Application;
+    private gr?: PIXI.Graphics;
 
     constructor(app: PIXI.Application) {
         this.app = app;
-        this.container = new PIXI.Container();
 
-        this.load_assets();
-        this.resize();
+        this.container = new PIXI.Container();
+        this.createLoader();
+        this.load_fonts();
+
+        this.update_state();
+
+        this.load_assets().then(this.start_preloader);
     }
 
-    load_assets = () => {
-        ResourceController.addResources("main");
-        ResourceController.addMaps();
+    createLoader = () => {
+        this.gr = new PIXI.Graphics().lineStyle(15, 0x000000, 1).arc(0, 0, 100, 0, Math.PI);
+        this.gr.position.set(Config.project_width / 2, Config.project_height / 2);
+        this.container.addChild(this.gr);
 
-        ResourceController.onProgress = () => {
-            console.log("Main " + ResourceController.loader.progress);
+        const rotation = () => {
+            if (this.gr) this.gr.rotation += 0.1;
         };
 
-        ResourceController.loadResources(() => {
-            for (const atlas of ATLASES["main"]) {
-                Object.assign(ResourceController.resources, ResourceController.resources[atlas.key].textures);
-            }
-            document.dispatchEvent(new Event(EVENTS.loading.project_loaded));
+        this.app.ticker.add(rotation);
+
+        document.addEventListener(
+            EVENTS.System.PreloaderLoaded,
+            () => {
+                this.app.ticker.remove(rotation);
+            },
+            {
+                once: true,
+            },
+        );
+    };
+
+    update_state = () => {
+        const url = `${window.location.origin}${window.location.pathname}`.replace("index.html", "");
+
+        SessionConfig.ASSETS_ADDRESS = `${url}assets/`;
+        SessionConfig.API_ADDRESS = url;
+    };
+
+    load_fonts = () => {
+        ResourceController.loadFonts();
+    };
+
+    load_assets = () => {
+        return new Promise<void>(resolve => {
+            ResourceController.addResources("preload");
+            ResourceController.loadResources(resolve, "preload");
         });
     };
 
-    resize = () => {};
+    start_preloader = () => {
+        document.dispatchEvent(new Event(EVENTS.System.PreloaderLoaded));
+        AUDIO_MANAGER.init(); // @TODO change to audio loading
+    };
+
+    resize = () => {
+        if (this.gr) this.gr.position.set(Config.project_width / 2, Config.project_height / 2);
+    };
 }

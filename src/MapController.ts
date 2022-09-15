@@ -1,9 +1,8 @@
 import { Config } from "./Config";
-import { EVENTS } from "./Events";
 import { GroundController } from "./GroundController";
 import { InventoryController } from "./InventoryController";
 import TiledMap from "./TMCore/TiledMap";
-import { logImage, waitForEvent } from "./Util";
+import { logImage } from "./Util";
 
 export class MapController {
     app: PIXI.Application;
@@ -17,20 +16,17 @@ export class MapController {
         this.app = app;
     }
 
-    loadMap = (key: string): Promise<void> => {
+    loadMap = (key: string) => {
         this.map = new TiledMap(key, this.app);
+        this.container.addChild(this.map!);
 
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (window as any).map = this.map;
 
-        return waitForEvent(EVENTS.Map.Created).then(() => {
-            this.setUp();
-        });
+        this.map.load().then(this.setUp);
     };
 
     setUp = () => {
-        this.container.addChild(this.map!);
-
         this.groundController = new GroundController(this);
         this.groundController.addCells();
 

@@ -13,10 +13,6 @@ export const IMAGES: Resources = {
 
     main: [
         {
-            key: "city",
-            path: "city.jpg",
-        },
-        {
             key: "plate",
             path: "plate.png",
         },
@@ -45,6 +41,10 @@ export const IMAGES: Resources = {
         {
             key: "MouseCatpawHold",
             path: "cursor/MouseCatpawHold.png",
+        },
+        {
+            key: "city",
+            path: "city.jpg",
         },
     ],
 };
