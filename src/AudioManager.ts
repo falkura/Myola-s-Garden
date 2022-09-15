@@ -5,6 +5,8 @@ class AudioManager {
     MUSIC: Howl[] = [];
     SOUND_FXS: Howl[] = [];
 
+    initialized = false;
+
     constructor() {
         document.body.addEventListener("pointerdown", this.init, {
             once: true,
@@ -22,6 +24,8 @@ class AudioManager {
     }
 
     init = () => {
+        if (this.initialized) return;
+        this.initialized = true;
         // this.some_music = new Howl({
         //     src: [`${SessionConfig.ASSETS_ADDRESS}audio/some_music.mp3`],
         // });
