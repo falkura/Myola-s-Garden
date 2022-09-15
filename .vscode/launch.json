@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "TEST",
+            "url": "http://localhost:9000",
+            "webRoot": "${workspaceFolder}",
+            "runtimeArgs": ["--profile-directory=Work"]
+        },
+        {
+            "type": "chrome",
+            "request": "launch",
+            "name": "Launch Chrome against localhost",
+            "url": "http://localhost:9000",
+            "webRoot": "${workspaceFolder}",
+            "runtimeArgs": ["--profile-directory=Work"],
+            "preLaunchTask": "npm: local"
+        }
+    ]
+}
