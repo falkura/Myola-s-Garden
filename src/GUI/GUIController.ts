@@ -37,7 +37,7 @@ export class GuiController {
         this.createScreens();
         this.addEventListeners();
 
-        if (Global_Vars.language_choosen) {
+        if (Global_Vars.language_choosen || Global_Vars.fast_load) {
             this.showScreen("main");
         } else {
             this.showScreen("chooseLang");

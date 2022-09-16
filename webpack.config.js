@@ -2,6 +2,7 @@ const path = require("path");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
 const DefinePlugin = require("webpack").DefinePlugin;
+const package_config = require("./package.json").config;
 
 const common = {
     entry: "./src/index.ts",
@@ -65,12 +66,6 @@ const local = {
                 name: process.platform == "linux" ? "google-chrome" : "Chrome",
             },
         },
-        // historyApiFallback: {
-        // 	rewrites: [
-        // 		{ from: /.*\/dist\/app\.js/, to: "/dist/app.js" },
-        // 		{ from: /.*/, to: "./index.html" },
-        // 	],
-        // },
     },
 
     devtool: "eval-cheap-module-source-map",
@@ -80,10 +75,22 @@ const local = {
             __ENVIRONMENT__: `"LOCAL"`,
         }),
         new CopyPlugin({
-            patterns: [
-                { from: "./index.html", to: "./index.html" },
-                { from: "./assets", to: "./assets" },
-            ],
+            patterns: package_config.LOCAL_DEV
+                ? [
+                      {
+                          from: "./page/local.html",
+                          to: "./index.html",
+                      },
+                      { from: "./assets", to: "./assets" },
+                      { from: "./libs", to: "./libs" },
+                  ]
+                : [
+                      {
+                          from: "./page/index.html",
+                          to: "./index.html",
+                      },
+                      { from: "./assets", to: "./assets" },
+                  ],
         }),
     ],
 };
@@ -127,7 +134,7 @@ const dev = {
         new CleanWebpackPlugin(),
         new CopyPlugin({
             patterns: [
-                { from: "./index.html", to: "./index.html" },
+                { from: "./page/index.html", to: "./index.html" },
                 { from: "./assets", to: "./assets" },
             ],
         }),
@@ -156,8 +163,7 @@ const prod = {
         new CleanWebpackPlugin(),
         new CopyPlugin({
             patterns: [
-                // { from: "./prodIndex.html", to: "./index.html" },
-                { from: "./index.html", to: "./index.html" },
+                { from: "./page/prodIndex.html", to: "./index.html" },
                 { from: "./assets", to: "./assets" },
             ],
         }),

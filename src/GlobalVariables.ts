@@ -1,7 +1,9 @@
 import { Config } from "./Config";
 import { AppState } from "./Models";
 import { Subject } from "./Observer";
+import packageInfo from "../package.json";
 
+declare const __ENVIRONMENT__: string;
 class GlobalVariablesClass extends Subject {
     app_state: AppState = "pre_preloader";
 
@@ -20,6 +22,8 @@ class GlobalVariablesClass extends Subject {
     game_exist = false;
 
     game_started = false;
+
+    fast_load = packageInfo.config.LOCAL_DEV && __ENVIRONMENT__ === "LOCAL";
 
     constructor() {
         super();

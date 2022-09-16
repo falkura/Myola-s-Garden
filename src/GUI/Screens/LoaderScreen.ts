@@ -1,4 +1,5 @@
 import { Config } from "../../Config";
+import { Global_Vars } from "../../GlobalVariables";
 import { LoadProcesses, ResourceController } from "../../ResourceLoader";
 // import { delayedCallback } from "../../Util";
 
@@ -63,13 +64,19 @@ export class LoaderScreen extends PIXI.Container {
         return new Promise<void>(resolve => {
             this.update(100);
 
-            this.progress.onComplete = () => {
+            const onComplete = () => {
                 this.visible = false;
 
                 this.progress.onComplete = () => {};
                 this.update();
                 resolve();
             };
+
+            if (Global_Vars.fast_load) {
+                onComplete();
+            } else {
+                this.progress.onComplete = onComplete;
+            }
         });
     };
 
