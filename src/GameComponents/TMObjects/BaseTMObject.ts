@@ -8,6 +8,7 @@ export class BaseTMObject {
     source: IObjectData;
     type!: TileCompTypes;
     num?: number;
+    underroof?: boolean;
 
     constructor(texture: PIXI.Texture, objectData: IObjectData, map: TiledMap) {
         this.source = objectData;
@@ -17,6 +18,7 @@ export class BaseTMObject {
         this.setSprite(texture);
     }
 
+    // @TODO need automatization
     private setProps = () => {
         this.source.properties?.forEach(prop => {
             if (prop.name === "type") {
@@ -25,6 +27,10 @@ export class BaseTMObject {
 
             if (prop.name === "num") {
                 this.num = prop.value as number;
+            }
+
+            if (prop.name === "underroof") {
+                this.underroof = prop.value as boolean;
             }
         });
     };

@@ -346,6 +346,11 @@
                          "name":"type",
                          "type":"string",
                          "value":"bed"
+                        }, 
+                        {
+                         "name":"underroof",
+                         "type":"bool",
+                         "value":false
                         }],
                  "rotation":0,
                  "type":"",
@@ -364,6 +369,11 @@
                          "name":"type",
                          "type":"string",
                          "value":"bed"
+                        }, 
+                        {
+                         "name":"underroof",
+                         "type":"bool",
+                         "value":false
                         }],
                  "rotation":0,
                  "type":"",

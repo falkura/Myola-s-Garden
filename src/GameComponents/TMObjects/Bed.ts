@@ -5,5 +5,9 @@ import { BaseTMObject } from "./BaseTMObject";
 export class Bed extends BaseTMObject {
     constructor(texture: PIXI.Texture, objectData: IObjectData, map: TiledMap) {
         super(texture, objectData, map);
+
+        this.sprite.addHover(() => {
+            console.log(123);
+        });
     }
 }

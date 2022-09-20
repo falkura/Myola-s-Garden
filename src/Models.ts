@@ -146,6 +146,7 @@ export interface ITileConstructInfo extends ITileConfig {
 export interface ObjectProps {
     type: string;
     num?: number;
+    underroof?: boolean;
 }
 
 export interface ObjectPropsRaw {
