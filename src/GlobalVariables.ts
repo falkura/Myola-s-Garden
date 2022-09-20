@@ -25,6 +25,8 @@ class GlobalVariablesClass extends Subject {
 
     fast_load = packageInfo.config.LOCAL_DEV && __ENVIRONMENT__ === "LOCAL";
 
+    dragging_item = false;
+
     constructor() {
         super();
     }

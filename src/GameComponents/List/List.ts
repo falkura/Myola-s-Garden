@@ -28,16 +28,20 @@ export class List extends PIXI.Container {
         this.name = name;
 
         this.createList();
+
+        this.visible = false;
+
         if (name === "rand") {
             this.cellMatrix[0][0].setItem(Plants[0], "drop", 15);
         } else {
-            this.cellMatrix[0][0].setItem(Plants[1], "drop", 50);
+            this.cellMatrix[0][0].setItem(Plants[1], "drop", 10);
         }
     }
 
     createList = () => {
         this.interactive = true;
         this.interactiveChildren = true;
+
         this.createBG();
         this.createListCells();
         this.addEventListeners();
@@ -48,7 +52,10 @@ export class List extends PIXI.Container {
         const height = this.radius * 2 + (this.cellSize + this.padding) * this.rows;
 
         const outterBg = new PIXI.Graphics().beginFill(0xc89d7c).drawRoundedRect(0, 0, width, height, this.radius).endFill();
+        const shadow = new PIXI.Graphics().beginFill(0x444444, 0.65).drawRoundedRect(0, 0, width, height, this.radius).endFill();
+        shadow.filters = [new PIXI.filters.BlurFilter(5)];
 
+        this.addChild(shadow);
         this.addChild(outterBg);
     };
 
@@ -73,6 +80,11 @@ export class List extends PIXI.Container {
     addEventListeners = () => {
         this.addListener("pointerover", this.hoverEvent);
         this.addListener("pointerout", this.unhoverEvent);
+    };
+
+    removeEventListeners = () => {
+        this.removeListener("pointerover", this.hoverEvent);
+        this.removeListener("pointerout", this.unhoverEvent);
     };
 
     hoverEvent = () => {
@@ -177,38 +189,21 @@ export class List extends PIXI.Container {
 
     public set isActive(value: boolean) {
         this._isActive = value;
-        // this.interactiveChildren = value;
     }
 
     public get isActive(): boolean {
         return this._isActive;
     }
 
-    // getStorageData = () => {
-    //     const data: any = [];
+    cleanUp = () => {
+        this.removeEventListeners();
 
-    //     this.cellMatrix.forEach((column, i) => {
-    //         column.forEach((row, j) => {
-    //             if (row.item) {
-    //                 data.push({
-    //                     column: i,
-    //                     row: j,
-    //                     item: row.item.data,
-    //                     type: row.item.type,
-    //                     count: row.item.count,
-    //                 });
-    //             }
-    //         });
-    //     });
+        this.cellMatrix.forEach(row => {
+            row.forEach(cell => {
+                cell.cleanUp();
+            });
+        });
 
-    //     return data;
-    // };
-
-    // restore = (id: number | string) => {
-    //     for (const data of LocalStorage.getDataById(id).data) {
-    //         this.cellMatrix[data.column][data.row].setItem(data.item, data.type, data.count);
-    //     }
-    // };
-
-    // addCell = () => {};
+        this.destroy();
+    };
 }

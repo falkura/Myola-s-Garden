@@ -52,13 +52,36 @@ export interface ITileLayerData {
     height: number;
     id: number;
     name: string;
-    type: "tilelayer";
+    type: LayerType.TileLayer;
     x: number;
     y: number;
     /** Not implemented! */
     opacity: number;
     /** Not implemented! */
     visible: boolean;
+}
+
+export const enum LayerType {
+    TileLayer = "tilelayer",
+    ObjectLayer = "objectgroup",
+}
+
+export interface IObjectLayerData {
+    objects: IObjectData[];
+    name: string;
+    type: LayerType.ObjectLayer;
+    /** Not implemented! */
+    id: number;
+    /** Not implemented! */
+    x: number;
+    /** Not implemented! */
+    y: number;
+    /** Not implemented! */
+    opacity: number;
+    /** Not implemented! */
+    visible: boolean;
+    /** Not implemented! */
+    draworder: string;
 }
 
 /** AA - Animation with autostart */
@@ -120,12 +143,26 @@ export interface ITileConstructInfo extends ITileConfig {
     props?: ITile;
 }
 
+export interface ObjectProps {
+    type: string;
+    num?: number;
+}
+
+export interface ObjectPropsRaw {
+    name: keyof ObjectProps;
+    value: string | boolean | number;
+    /** Not implemented! */
+    type: string;
+}
+
 export interface IObjectData extends IDefaultTileProperty {
     gid: number;
+    rotation: number;
+    properties: ObjectPropsRaw[];
 }
 
 export interface IDefaultTileProperty {
-    id: string;
+    id: number;
     rotation: number;
     width: number;
     height: number;
@@ -206,11 +243,14 @@ export const enum LayersArr {
     Ground = 1,
     Hills = 2,
     /** NOT IMPLEMENTED */
-    Garden = 3,
-    Buildings = 4,
+    Buildings_1 = 3,
+    Buildings_2 = 4,
+    Buildings_3 = 4,
 }
 
 export interface IScreen {
     show: () => void;
     hide: () => void;
 }
+
+export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed";

@@ -9,19 +9,49 @@ export class InventoryController extends PIXI.Container {
     activeList?: List;
     inventory!: List;
 
+    closeCallback?: () => void;
+
     constructor(map: TiledMap) {
         super();
 
         this.map = map;
         this.constructInventory();
         this.addEventListeners();
+
+        this.addChests();
+
+        this.resize();
     }
 
+    addChests = () => {
+        this.map.objectLayers.chests.forEach(chest => {
+            const list = this.createList(4, 3, `chest_${chest.num}`);
+            chest.list = list;
+        });
+    };
+
+    createList = (columns: number, rows: number, name: string) => {
+        const list = new List(this.map, columns, rows, name);
+        this.addChild(list);
+        this.listArray.push(list);
+
+        return list;
+    };
+
     constructInventory = () => {
-        this.inventory = new List(this.map, 8, 1, "inventoryBar");
+        this.inventory = this.createList(8, 1, "inventoryBar");
         this.inventory.position.set(400, 900);
-        this.addChild(this.inventory);
-        this.listArray.push(this.inventory);
+        this.inventory.visible = true;
+    };
+
+    getListByName = (name: string) => {
+        let result: List | undefined;
+
+        this.listArray.forEach(list => {
+            if (list.name === name) result = list;
+        });
+
+        return result;
     };
 
     setActiveList = (list: List) => {
@@ -39,6 +69,64 @@ export class InventoryController extends PIXI.Container {
     addEventListeners = () => {
         document.addEventListener(EVENTS.Actions.Inventory.Dropped, this.onDrop);
         document.addEventListener(EVENTS.Actions.Inventory.Shifted, this.onShift);
+        document.addEventListener(EVENTS.Actions.Inventory.ShowChest, this.showChest);
+        document.addEventListener(EVENTS.Actions.Inventory.HideChest, this.hideChest);
+        document.addEventListener(EVENTS.Map.Click, this.onMapClick);
+    };
+
+    removeEventListeners = () => {
+        document.removeEventListener(EVENTS.Actions.Inventory.Dropped, this.onDrop);
+        document.removeEventListener(EVENTS.Actions.Inventory.Shifted, this.onShift);
+        document.removeEventListener(EVENTS.Actions.Inventory.ShowChest, this.showChest);
+        document.removeEventListener(EVENTS.Actions.Inventory.HideChest, this.hideChest);
+        document.removeEventListener(EVENTS.Map.Click, this.onMapClick);
+    };
+
+    onMapClick = () => {
+        if (this.closeCallback) {
+            this.closeCallback();
+            this.closeCallback = undefined;
+
+            if (this.activeList) {
+                this.activeList.visible = false;
+                this.removeActiveList();
+            }
+
+            console.log("map clicked");
+        }
+    };
+
+    showChest = (e: Event) => {
+        const num = (e as CustomEvent<number>).detail;
+        const target = this.map.objectLayers.chests[num];
+
+        this.onMapClick();
+        // this.map.objectLayers.chests.forEach(chest => {
+        //     if (chest && chest.isOpen) {
+        //         chest.close();
+        //     }
+        // });
+
+        target.open().then(() => {
+            this.closeCallback = target.close;
+        });
+
+        if (this.activeList) {
+            this.activeList.visible = false;
+            this.removeActiveList();
+        }
+
+        this.setActiveList(target.list);
+        // this.addCloseClick(target.close);
+    };
+
+    hideChest = (e: Event) => {
+        const num = (e as CustomEvent<number>).detail;
+        const target = this.map.objectLayers.chests[num];
+
+        target.close();
+
+        this.removeActiveList();
     };
 
     getHoveredList = (): List | undefined => {
@@ -131,5 +219,22 @@ export class InventoryController extends PIXI.Container {
             targetCell.setItem(shiftedItem.data, shiftedItem.type, shiftedItem.count);
             shiftedItem.cleanUp();
         }
+    };
+
+    cleanUp = () => {
+        this.removeEventListeners();
+
+        this.listArray.forEach(list => {
+            list.cleanUp();
+        });
+    };
+
+    resize = () => {
+        this.map.objectLayers.chests.forEach(chest => {
+            chest.list.position.set(
+                chest.sprite.getBounds().x - chest.list.width / 2 + chest.sprite.width,
+                chest.sprite.getBounds().y - chest.list.height + chest.sprite.height / 2,
+            );
+        });
     };
 }

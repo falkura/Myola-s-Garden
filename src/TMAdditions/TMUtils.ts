@@ -1,3 +1,4 @@
+import { IObjectData } from "../Models";
 import Tile from "../TMCore/Tile";
 import TiledMap from "../TMCore/TiledMap";
 import TileSet from "../TMCore/TileSet";
@@ -169,4 +170,8 @@ export function GetTileTextureId(field: unknown[][]): number {
     });
 
     return result;
+}
+
+export function getObjectTileTexture(ts: TileSet, data: IObjectData) {
+    return ts.textures[data.gid - ts.source.firstgid];
 }

@@ -9,8 +9,9 @@ export class Clickable extends PIXI.AnimatedSprite {
     hoverScale = 1.1;
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;
-    /** Dispatch hover event if mouse is over after click */
+    /** Dispatch hover event if mouse is over the sprite after click */
     hoverAfterUp = true;
+    disableUnpress = false;
 
     constructor(...textures: PIXI.Texture[]) {
         super([...textures]);
@@ -91,6 +92,8 @@ export class Clickable extends PIXI.AnimatedSprite {
 
     unpressEvent = (e: InteractionEvent) => {
         this.scale.set(this.defaultScale);
+        if (this.disableUnpress) return;
+
         if (this.is_hovered && this.hoverAfterUp) {
             this.hoverEvent(e);
         } else {

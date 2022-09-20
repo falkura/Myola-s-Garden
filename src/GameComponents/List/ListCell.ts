@@ -71,11 +71,11 @@ export class ListCell extends PIXI.Container {
     // }
 
     setItem = (item: IGardenItemData, type?: IItemType, count?: number) => {
-        this.cleanUp();
+        this.removeListItem();
         if (!type) type = "drop";
 
         this.item = new ListItem(this, item, type);
-        this.item.cleanUpCallback = this.cleanUp;
+        this.item.cleanUpCallback = this.removeListItem;
 
         this.addChild(this.item);
 
@@ -99,9 +99,16 @@ export class ListCell extends PIXI.Container {
         this.bg.removeListener("mouseout", this.unhoverEvent);
     };
 
-    cleanUp = () => {
+    removeListItem = () => {
         this.item = undefined;
         this.addEventListeners();
         this.unhoverEvent();
+    };
+
+    cleanUp = () => {
+        this.item?.cleanUp();
+        this.removeEventListeners();
+        this.bg.destroy();
+        this.destroy();
     };
 }

@@ -12,6 +12,7 @@ export default class TileLayer extends PIXI.Container {
     constructor(layer: ITileLayerData, map: TiledMap) {
         super();
         this.source = layer;
+        console.log(layer);
 
         this.setLayerTiles(map);
     }

@@ -1,7 +1,8 @@
 import { EVENTS } from "../Events";
-import { IMapData, ITileLayerData, ITileset, TileWithAA } from "../Models";
+import { IMapData, IObjectLayerData, ITileLayerData, ITileset, LayerType, TileWithAA } from "../Models";
 import { ResourceController } from "../ResourceLoader";
 import MapLoader from "./MapLoader";
+import { ObjectLayers } from "./ObjectLayers";
 import TileLayer from "./TileLayer";
 import TileSet from "./TileSet";
 
@@ -15,6 +16,7 @@ export default class TiledMap extends PIXI.Container {
     mapName: string;
     /** AA - Animation with autostart */
     AATiles: TileWithAA[] = [];
+    objectLayers!: ObjectLayers;
 
     _width!: number;
     _height!: number;
@@ -24,6 +26,7 @@ export default class TiledMap extends PIXI.Container {
         this.app = app;
         this.mapName = resourceId;
         this.source = ResourceController.getResource(resourceId).data as IMapData;
+        console.log(this.source);
     }
 
     load = () => {
@@ -35,15 +38,23 @@ export default class TiledMap extends PIXI.Container {
                 .then(this.setTileSets)
                 .then(this.setLayers)
                 .then(() => {
-                    this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
-
-                    this._width = this.width;
-                    this._height = this.height;
-
-                    document.dispatchEvent(new Event(EVENTS.Map.Created));
+                    this.onLoadCallback();
                     resolve();
                 });
         });
+    };
+
+    private onLoadCallback = () => {
+        this.pivot.set(-this.source.tilewidth / 2, -this.source.tileheight / 2);
+
+        this._width = this.width;
+        this._height = this.height;
+
+        document.dispatchEvent(new Event(EVENTS.Map.Created));
+
+        this.interactive = true;
+        this.addListener("pointerdown", this.onMapClick);
+        this.addListener("pointerover", this.onMapHover);
     };
 
     setTileSets = () => {
@@ -52,19 +63,21 @@ export default class TiledMap extends PIXI.Container {
     };
 
     setLayers = () => {
-        this.source.layers.forEach((layerData: ITileLayerData, index) => {
-            const layer = new TileLayer(layerData, this);
+        this.objectLayers = new ObjectLayers(this);
+        this.objectLayers.zIndex = 100;
 
-            layer.index = index;
-            this.layers.push(layer);
-            this.addLayer(layer);
+        this.source.layers.forEach((layerData: ITileLayerData | IObjectLayerData, index) => {
+            if (layerData.type == LayerType.TileLayer) {
+                const layer = new TileLayer(layerData, this);
 
-            layer.tiles.logMatrix(layer.source.name);
+                layer.index = index;
+                this.layers.push(layer);
+                this.addChild(layer);
+                // layer.tiles.logMatrix(layer.source.name);
+            } else {
+                this.objectLayers.addLayer(layerData);
+            }
         });
-    };
-
-    addLayer = (layer: TileLayer) => {
-        this.addChild(layer);
     };
 
     getTilesetByName = (name: string): TileSet | undefined => {
@@ -75,7 +88,18 @@ export default class TiledMap extends PIXI.Container {
         return undefined;
     };
 
+    onMapClick = () => {
+        document.dispatchEvent(new Event(EVENTS.Map.Click));
+    };
+
+    onMapHover = () => {
+        document.dispatchEvent(new Event(EVENTS.Map.Hover));
+    };
+
     cleanUp = () => {
+        this.removeListener("pointerdown", this.onMapClick);
+        this.removeListener("pointerover", this.onMapHover);
+
         super.destroy({ children: true, texture: true, baseTexture: true });
         this.loader?.destroy();
     };

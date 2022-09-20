@@ -80,4 +80,8 @@ export const MAPS: Resource[] = [
         key: "testtiledmap",
         path: "testtiledmap.json",
     },
+    {
+        key: "testtiledmap2",
+        path: "testtiledmap2.json",
+    },
 ];

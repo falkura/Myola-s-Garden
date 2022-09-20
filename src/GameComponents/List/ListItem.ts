@@ -89,6 +89,8 @@ export class ListItem extends PIXI.Container {
         if (this.dragging) {
             this.x = e.data.global.x - this.startX;
             this.y = e.data.global.y - this.startY;
+
+            Global_Vars.dragging_item = true;
         }
     };
 
@@ -98,6 +100,8 @@ export class ListItem extends PIXI.Container {
 
         this.interactiveChildren = true;
         this.dragging = false;
+
+        Global_Vars.dragging_item = false;
 
         this.startX = this.x;
         this.startY = this.y;

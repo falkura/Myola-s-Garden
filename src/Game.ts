@@ -7,7 +7,7 @@ import { MapController } from "./MapController";
 export class Game {
     app: PIXI.Application;
     container = new PIXI.Container();
-    MC: MapController;
+    MC!: MapController;
     GUI!: GuiController;
 
     constructor(app: PIXI.Application) {
@@ -15,19 +15,23 @@ export class Game {
 
         this.add_event_listeners();
 
-        this.MC = new MapController(this.container, app);
-        this.GUI = new GuiController(app);
-        this.container.addChild(this.GUI.container);
+        // this.GUI = new GuiController(app);
+        // this.container.addChild(this.GUI.container);
         new Keyboard();
         this.resize();
-        // this.loadMap();
+        this.loadMap();
     }
 
     add_event_listeners = () => {
         document.addEventListener(EVENTS.GUI.MainScreen.RUS.Yes, this.loadMap);
     };
 
+    createMC = () => {
+        this.MC = new MapController(this.container, this.app);
+    };
+
     loadMap = () => {
+        this.createMC();
         this.MC.loadMap("testtiledmap");
     };
 

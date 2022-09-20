@@ -11,6 +11,8 @@ export const EVENTS = {
 
     Map: {
         Created: "MapCreated",
+        Click: "MapClick",
+        Hover: "MapHover",
     },
 
     Keyboard: {
@@ -31,6 +33,13 @@ export const EVENTS = {
         Inventory: {
             Dropped: "ActionsInventoryDropped",
             Shifted: "ActionsInventoryShifted",
+            Create: "ActionsInventoryCreate",
+            ShowChest: "ActionsInventoryShowChest",
+            HideChest: "ActionsInventoryHideChest",
+        },
+        Roof: {
+            Hover: "ActionsRoofHover",
+            Unhover: "ActionsRoofUnhover",
         },
     },
 

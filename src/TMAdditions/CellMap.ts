@@ -51,6 +51,20 @@ export class TMCellMap extends PIXI.Container {
             cell.show();
         }
     };
+
+    cleanUp = () => {
+        if (this.cellArray) {
+            this.cellArray.forEach(row => {
+                row.forEach(cell => {
+                    cell.cleanUp();
+                });
+            });
+
+            this.cellArray.length = 0;
+        }
+
+        this.destroy();
+    };
 }
 
 class TMCell extends PIXI.Sprite {
@@ -86,23 +100,33 @@ class TMCell extends PIXI.Sprite {
         // cell.zIndex = 10;
     };
 
+    onPointerDown = () => {
+        console.log(this._x, this._y);
+        document.dispatchEvent(
+            new CustomEvent<PIXI.Point>(EVENTS.Actions.Tile.Choosen, {
+                detail: new PIXI.Point(this._x, this._y),
+            }),
+        );
+    };
+
+    onPointerOver = () => {
+        this.alpha = this._alphaHover;
+    };
+
+    onPointerOut = () => {
+        this.alpha = this._alphaStatic;
+    };
+
     addEventListeners = () => {
-        this.addListener("pointerover", () => {
-            this.alpha = this._alphaHover;
-        });
+        this.addListener("pointerover", this.onPointerOver);
+        this.addListener("pointerout", this.onPointerOut);
+        this.addListener("pointerdown", this.onPointerDown);
+    };
 
-        this.addListener("pointerout", () => {
-            this.alpha = this._alphaStatic;
-        });
-
-        this.addListener("pointerdown", () => {
-            console.log(this._x, this._y);
-            document.dispatchEvent(
-                new CustomEvent<PIXI.Point>(EVENTS.Actions.Tile.Choosen, {
-                    detail: new PIXI.Point(this._x, this._y),
-                }),
-            );
-        });
+    removeEventListeners = () => {
+        this.removeListener("pointerover", this.onPointerOver);
+        this.removeListener("pointerout", this.onPointerOut);
+        this.removeListener("pointerdown", this.onPointerDown);
     };
 
     hide = () => {
@@ -111,5 +135,10 @@ class TMCell extends PIXI.Sprite {
 
     show = () => {
         this.visible = true;
+    };
+
+    cleanUp = () => {
+        this.removeEventListeners();
+        this.destroy();
     };
 }

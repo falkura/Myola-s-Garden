@@ -1,9 +1,10 @@
 import { Config } from "../../Config";
 import { Global_Vars } from "../../GlobalVariables";
+import { IScreen } from "../../Models";
 import { LoadProcesses, ResourceController } from "../../ResourceLoader";
 // import { delayedCallback } from "../../Util";
 
-export class LoaderScreen extends PIXI.Container {
+export class LoaderScreen extends PIXI.Container implements IScreen {
     bg!: PIXI.Sprite;
     progress!: PIXI.AnimatedSprite;
     loadAnimSize = 37;

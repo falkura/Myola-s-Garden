@@ -1,12 +1,9 @@
 import { InteractionEvent } from "pixi.js";
 import { EVENTS } from "./Events";
-import { ColorMatrixSkins } from "./GameConfigs/ColorMatrixSkins";
-import { Other } from "./GameConfigs/Plants";
 import { Global_Vars } from "./GlobalVariables";
 import { MapController } from "./MapController";
-import { LayersArr } from "./Models";
 import { TMCellMap } from "./TMAdditions/CellMap";
-import { GetTileTextureId, getTopTile, matrixIterator } from "./TMAdditions/TMUtils";
+import { getTopTile } from "./TMAdditions/TMUtils";
 import TileComponent from "./TMCore/TileComponent";
 
 export class GroundController {
@@ -30,12 +27,17 @@ export class GroundController {
         document.addEventListener(EVENTS.Actions.Tile.Choosen, this.onTileChoose);
     };
 
+    removeEventListeners = () => {
+        document.removeEventListener(EVENTS.Keyboard.Shift.On, this.shiftOn);
+        document.removeEventListener(EVENTS.Keyboard.Shift.Off, this.shiftOff);
+        document.removeEventListener(EVENTS.Actions.Tile.Choosen, this.onTileChoose);
+    };
+
     onTileChoose = (e: Event) => {
         const detail = (e as CustomEvent<PIXI.Point>).detail;
 
         const b = getTopTile(this.mapController.map!, detail.x, detail.y);
         console.log(b);
-        (window as any).lastTile = b;
 
         const comp = new TileComponent(64, "Allitems", this.mapController.map!);
 
@@ -98,12 +100,12 @@ export class GroundController {
     };
 
     onSeed = () => {
-        this.mapController.groundController.cellMap!.showByMatrix(
-            this.mapController
-                .map!.layers[LayersArr.Ground].tiles.concatMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles)
-                .subtractMatrix(this.mapController.map!.layers[LayersArr.Buildings].tiles)
-                .subtractMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles),
-        );
+        // this.mapController.groundController.cellMap!.showByMatrix(
+        //     this.mapController
+        //         .map!.layers[LayersArr.Ground].tiles.concatMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles)
+        //         .subtractMatrix(this.mapController.map!.layers[LayersArr.Buildings_2].tiles)
+        //         .subtractMatrix(this.mapController.map!.layers[LayersArr.Hills].tiles),
+        // );
         // const walkableLayers = this.mapController.map!.getWalkableLayers();
         // for (let i = 0; i < walkableLayers.length; i++) {
         // 	if (walkableLayers[i].source.id === this.character.activeLayer) {
@@ -131,5 +133,9 @@ export class GroundController {
         // 		if (tile) tile.debugGraphics.visible = false;
         // 	}
         // }
+    };
+
+    cleanUp = () => {
+        this.removeEventListeners();
     };
 }

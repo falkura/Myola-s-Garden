@@ -1,6 +1,7 @@
 import { Config } from "./Config";
 import { GroundController } from "./GroundController";
 import { InventoryController } from "./InventoryController";
+import { RoofController } from "./RoofController";
 import TiledMap from "./TMCore/TiledMap";
 import { logImage } from "./Util";
 
@@ -8,6 +9,7 @@ export class MapController {
     app: PIXI.Application;
     map?: TiledMap;
     groundController!: GroundController;
+    roofController!: RoofController;
     inventoryController!: InventoryController;
     container: PIXI.Container;
 
@@ -30,6 +32,8 @@ export class MapController {
         this.groundController = new GroundController(this);
         this.groundController.addCells();
 
+        this.roofController = new RoofController(this.map!);
+
         this.inventoryController = new InventoryController(this.map!);
         this.container.addChild(this.inventoryController);
         this.resize();
@@ -39,6 +43,10 @@ export class MapController {
 
     cleanUp = () => {
         if (this.map) {
+            this.groundController.cleanUp();
+            this.roofController.cleanUp();
+            this.inventoryController.cleanUp();
+
             this.map.parent.removeChild(this.map);
             this.map.cleanUp();
             this.map = undefined;
@@ -53,5 +61,7 @@ export class MapController {
                     : Config.project_height / this.map._height,
             );
         }
+
+        this.inventoryController?.resize();
     };
 }
