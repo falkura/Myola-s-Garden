@@ -5,6 +5,7 @@ import { BaseTMObject } from "./BaseTMObject";
 import { Bed } from "./Bed";
 import { Chest } from "./Chest";
 import { Roof } from "./Roof";
+import { Stone } from "./Stone";
 import { Wall } from "./Wall";
 
 export class ObjectsFactory {
@@ -46,6 +47,9 @@ export class ObjectsFactory {
                 break;
             case "bed":
                 TMObject = new Bed(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
+                break;
+            case "stone":
+                TMObject = new Stone(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
                 break;
             default:
                 TMObject = new BaseTMObject(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);

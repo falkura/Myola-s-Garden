@@ -41,6 +41,11 @@ export const EVENTS = {
             Hover: "ActionsRoofHover",
             Unhover: "ActionsRoofUnhover",
         },
+        TMObject: {
+            Press: "ActionsTMObjectPress",
+            Hover: "ActionsTMObjectHover",
+            Unhover: "ActionsTMObjectUnhover",
+        },
     },
 
     GUI: {

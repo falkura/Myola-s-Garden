@@ -6,6 +6,7 @@ export class Clickable extends PIXI.AnimatedSprite {
     hoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     unhoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     defaultScale = 1;
+    /** Default: 1.1 */
     hoverScale = 1.1;
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;

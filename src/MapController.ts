@@ -3,6 +3,7 @@ import { GroundController } from "./GroundController";
 import { InventoryController } from "./InventoryController";
 import { RoofController } from "./RoofController";
 import TiledMap from "./TMCore/TiledMap";
+import { TMObjectPopupController } from "./TMObjectPopupController";
 import { logImage } from "./Util";
 
 export class MapController {
@@ -11,6 +12,7 @@ export class MapController {
     groundController!: GroundController;
     roofController!: RoofController;
     inventoryController!: InventoryController;
+    TMObjectPopupController!: TMObjectPopupController;
     container: PIXI.Container;
 
     constructor(container: PIXI.Container, app: PIXI.Application) {
@@ -36,6 +38,10 @@ export class MapController {
 
         this.inventoryController = new InventoryController(this.map!);
         this.container.addChild(this.inventoryController);
+
+        this.TMObjectPopupController = new TMObjectPopupController(this.map!);
+        this.container.addChild(this.TMObjectPopupController);
+
         this.resize();
 
         logImage(this.map!, this.app);
@@ -46,6 +52,7 @@ export class MapController {
             this.groundController.cleanUp();
             this.roofController.cleanUp();
             this.inventoryController.cleanUp();
+            this.TMObjectPopupController.cleanUp();
 
             this.map.parent.removeChild(this.map);
             this.map.cleanUp();
@@ -63,5 +70,6 @@ export class MapController {
         }
 
         this.inventoryController?.resize();
+        this.TMObjectPopupController?.resize();
     };
 }

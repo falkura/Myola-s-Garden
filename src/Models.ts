@@ -254,4 +254,4 @@ export interface IScreen {
     hide: () => void;
 }
 
-export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed";
+export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed" | "stone";

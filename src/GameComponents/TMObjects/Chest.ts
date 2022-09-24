@@ -1,3 +1,4 @@
+import anime from "animejs";
 import { EVENTS } from "../../Events";
 import { IObjectData } from "../../Models";
 import { getObjectTileTexture } from "../../TMAdditions/TMUtils";
@@ -47,9 +48,15 @@ export class Chest extends BaseTMObject {
         this.inAction = true;
         this.sprite.gotoAndPlay(0);
 
-        this.list.visible = true;
-
         return new Promise(resolve => {
+            this.list.visible = true;
+            anime({
+                targets: this.list,
+                duration: 150,
+                easing: "linear",
+                alpha: [0, 1],
+            });
+
             this.sprite.onComplete = () => {
                 this.sprite.textures.reverse();
                 this.sprite.onComplete = () => {};
@@ -69,9 +76,18 @@ export class Chest extends BaseTMObject {
         this.inAction = true;
         this.sprite.gotoAndPlay(0);
 
-        this.list.visible = false;
-
         return new Promise(resolve => {
+            this.list.visible = true;
+            anime({
+                targets: this.list,
+                duration: 150,
+                easing: "linear",
+                alpha: [1, 0],
+                complete: () => {
+                    this.list.visible = false;
+                },
+            });
+
             this.sprite.onComplete = () => {
                 this.sprite.textures.reverse();
                 this.sprite.onComplete = () => {};

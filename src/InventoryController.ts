@@ -232,7 +232,7 @@ export class InventoryController extends PIXI.Container {
     resize = () => {
         this.map.objectLayers.chests.forEach(chest => {
             chest.list.position.set(
-                chest.sprite.getBounds().x - chest.list.width / 2 + chest.sprite.width,
+                chest.sprite.getGlobalPosition().x - chest.list.width / 2,
                 chest.sprite.getBounds().y - chest.list.height + chest.sprite.height / 2,
             );
         });

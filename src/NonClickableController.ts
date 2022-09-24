@@ -30,6 +30,10 @@ export class NonClickableController {
             if (!this.hoveredSprite.getBounds().contains(e.data.global.x, e.data.global.y)) {
                 this.hoveredSprite.emit("pointerout");
                 this.hoveredSprite = undefined;
+
+                this.map.app.renderer.plugins.interaction.interactionDOMElement.style.cursor = "default";
+            } else {
+                this.map.app.renderer.plugins.interaction.interactionDOMElement.style.cursor = "pointer";
             }
         } else {
             this.sprites.forEach(sprite => {
