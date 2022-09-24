@@ -66,6 +66,7 @@ export class TMObjectPopupController extends PIXI.Container {
     };
 
     cleanUp = () => {
+        document.removeEventListener(EVENTS.Actions.TMObject.Press, this.showPopup);
         this.popup.cleanUp();
     };
 
