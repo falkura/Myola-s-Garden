@@ -91,6 +91,7 @@ export interface ITile {
     animation?: ITileAnimation[];
     properties?: ITileProperties[];
     objectgroup?: ITileObjectGroup;
+    type?: TileCompTypes;
     id: number;
 }
 
@@ -144,7 +145,7 @@ export interface ITileConstructInfo extends ITileConfig {
 }
 
 export interface ObjectProps {
-    type: string;
+    type?: string;
     num?: number;
     underroof?: boolean;
 }
@@ -160,6 +161,8 @@ export interface IObjectData extends IDefaultTileProperty {
     gid: number;
     rotation: number;
     properties: ObjectPropsRaw[];
+    type: TileCompTypes;
+    translate: PIXI.Point;
 }
 
 export interface IDefaultTileProperty {
@@ -171,8 +174,6 @@ export interface IDefaultTileProperty {
     y: number;
     /** Not implemented! */
     name: string;
-    /** Not implemented! */
-    type: string;
     /** Not implemented! */
     visible: boolean;
 }
@@ -254,4 +255,4 @@ export interface IScreen {
     hide: () => void;
 }
 
-export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed" | "stone";
+export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed" | "stone" | "decoration" | "waterwave";

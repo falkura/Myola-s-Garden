@@ -323,11 +323,6 @@
                          "name":"num",
                          "type":"int",
                          "value":0
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"chest"
                         }],
                  "rotation":0,
                  "type":"",
@@ -343,14 +338,9 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"type",
-                         "type":"string",
-                         "value":"bed"
-                        }, 
-                        {
                          "name":"underroof",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -366,14 +356,9 @@
                  "name":"",
                  "properties":[
                         {
-                         "name":"type",
-                         "type":"string",
-                         "value":"bed"
-                        }, 
-                        {
                          "name":"underroof",
                          "type":"bool",
-                         "value":false
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -392,11 +377,6 @@
                          "name":"num",
                          "type":"int",
                          "value":1
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"chest"
                         }],
                  "rotation":0,
                  "type":"",
@@ -415,11 +395,6 @@
                          "name":"num",
                          "type":"int",
                          "value":2
-                        }, 
-                        {
-                         "name":"type",
-                         "type":"string",
-                         "value":"chest"
                         }],
                  "rotation":0,
                  "type":"",
@@ -492,6 +467,11 @@
                          "name":"type",
                          "type":"string",
                          "value":"stone"
+                        }, 
+                        {
+                         "name":"underroof",
+                         "type":"bool",
+                         "value":true
                         }],
                  "rotation":0,
                  "type":"",
@@ -499,6 +479,126 @@
                  "width":32,
                  "x":163,
                  "y":203.5
+                }, 
+                {
+                 "gid":838,
+                 "height":16,
+                 "id":162,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":336,
+                 "y":304
+                }, 
+                {
+                 "gid":842,
+                 "height":16,
+                 "id":163,
+                 "name":"",
+                 "rotation":0,
+                 "type":"waterwave",
+                 "visible":true,
+                 "width":16,
+                 "x":304,
+                 "y":144
+                }, 
+                {
+                 "gid":3221226310,
+                 "height":16,
+                 "id":166,
+                 "name":"",
+                 "rotation":0,
+                 "type":"waterwave",
+                 "visible":true,
+                 "width":16,
+                 "x":160,
+                 "y":112
+                }, 
+                {
+                 "gid":832,
+                 "height":16,
+                 "id":167,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":304,
+                 "y":288
+                }, 
+                {
+                 "gid":2147484480,
+                 "height":16,
+                 "id":168,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":272,
+                 "y":176
+                }, 
+                {
+                 "gid":834,
+                 "height":16,
+                 "id":169,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":214,
+                 "y":343
+                }, 
+                {
+                 "gid":835,
+                 "height":16,
+                 "id":170,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":97.5,
+                 "y":320.5
+                }, 
+                {
+                 "gid":836,
+                 "height":16,
+                 "id":171,
+                 "name":"",
+                 "rotation":0,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":326,
+                 "y":290
+                }, 
+                {
+                 "gid":836,
+                 "height":16,
+                 "id":172,
+                 "name":"",
+                 "rotation":20.0219524823313,
+                 "type":"",
+                 "visible":true,
+                 "width":16,
+                 "x":92.1699027919393,
+                 "y":160.573846568064
+                }, 
+                {
+                 "gid":1073742666,
+                 "height":16,
+                 "id":173,
+                 "name":"",
+                 "rotation":0,
+                 "type":"waterwave",
+                 "visible":true,
+                 "width":16,
+                 "x":187.5,
+                 "y":352
                 }],
          "opacity":1,
          "type":"objectgroup",
@@ -1219,7 +1319,7 @@
          "y":0
         }],
  "nextlayerid":11,
- "nextobjectid":162,
+ "nextobjectid":174,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.8.1",
@@ -1348,6 +1448,55 @@
          "spacing":0,
          "tilecount":54,
          "tileheight":16,
+         "tiles":[
+                {
+                 "id":9,
+                 "type":"bed"
+                }, 
+                {
+                 "id":10,
+                 "type":"bed"
+                }, 
+                {
+                 "id":11,
+                 "type":"bed"
+                }, 
+                {
+                 "id":18,
+                 "type":"bed"
+                }, 
+                {
+                 "id":19,
+                 "type":"bed"
+                }, 
+                {
+                 "id":20,
+                 "type":"bed"
+                }, 
+                {
+                 "id":27,
+                 "type":"bed"
+                }, 
+                {
+                 "id":28,
+                 "type":"bed"
+                }, 
+                {
+                 "id":29,
+                 "type":"bed"
+                }, 
+                {
+                 "id":36,
+                 "type":"bed"
+                }, 
+                {
+                 "id":37,
+                 "type":"bed"
+                }, 
+                {
+                 "id":38,
+                 "type":"bed"
+                }],
          "tilewidth":16
         }, 
         {
@@ -1442,12 +1591,43 @@
          "tiles":[
                 {
                  "id":0,
-                 "properties":[
-                        {
-                         "name":"ObjectType",
-                         "type":"string",
-                         "value":"chest"
-                        }]
+                 "type":"chest"
+                }, 
+                {
+                 "id":1,
+                 "type":"chest"
+                }, 
+                {
+                 "id":2,
+                 "type":"chest"
+                }, 
+                {
+                 "id":3,
+                 "type":"chest"
+                }, 
+                {
+                 "id":4,
+                 "type":"chest"
+                }, 
+                {
+                 "id":5,
+                 "type":"chest"
+                }, 
+                {
+                 "id":6,
+                 "type":"chest"
+                }, 
+                {
+                 "id":7,
+                 "type":"chest"
+                }, 
+                {
+                 "id":8,
+                 "type":"chest"
+                }, 
+                {
+                 "id":9,
+                 "type":"chest"
                 }],
          "tilewidth":48
         }, 
@@ -1553,6 +1733,67 @@
          "spacing":0,
          "tilecount":60,
          "tileheight":16,
+         "tiles":[
+                {
+                 "id":12,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":1
+                        }],
+                 "type":"stone"
+                }, 
+                {
+                 "id":13,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":2
+                        }],
+                 "type":"stone"
+                }, 
+                {
+                 "id":14,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":3
+                        }],
+                 "type":"stone"
+                }, 
+                {
+                 "id":15,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":4
+                        }],
+                 "type":"stone"
+                }, 
+                {
+                 "id":16,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":5
+                        }],
+                 "type":"stone"
+                }, 
+                {
+                 "id":17,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":6
+                        }],
+                 "type":"stone"
+                }],
          "tilewidth":16
         }, 
         {
@@ -1579,6 +1820,74 @@
          "spacing":0,
          "tilecount":24,
          "tileheight":16,
+         "tiles":[
+                {
+                 "animation":[
+                        {
+                         "duration":1000,
+                         "tileid":6
+                        }, 
+                        {
+                         "duration":1000,
+                         "tileid":7
+                        }],
+                 "id":6,
+                 "type":"decoration"
+                }, 
+                {
+                 "id":7,
+                 "type":"decoration"
+                }, 
+                {
+                 "id":8,
+                 "type":"decoration"
+                }, 
+                {
+                 "id":9,
+                 "type":"decoration"
+                }, 
+                {
+                 "id":10,
+                 "type":"decoration"
+                }, 
+                {
+                 "id":11,
+                 "type":"decoration"
+                }, 
+                {
+                 "animation":[
+                        {
+                         "duration":600,
+                         "tileid":12
+                        }, 
+                        {
+                         "duration":600,
+                         "tileid":13
+                        }, 
+                        {
+                         "duration":600,
+                         "tileid":14
+                        }, 
+                        {
+                         "duration":600,
+                         "tileid":15
+                        }],
+                 "id":12,
+                 "type":"waterwave"
+                }, 
+                {
+                 "animation":[
+                        {
+                         "duration":600,
+                         "tileid":16
+                        }, 
+                        {
+                         "duration":600,
+                         "tileid":17
+                        }],
+                 "id":16,
+                 "type":"waterwave"
+                }],
          "tilewidth":16
         }, 
         {
@@ -1592,6 +1901,17 @@
          "spacing":0,
          "tilecount":1,
          "tileheight":32,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":8
+                        }],
+                 "type":"stone"
+                }],
          "tilewidth":32
         }, 
         {
@@ -1605,6 +1925,17 @@
          "spacing":0,
          "tilecount":1,
          "tileheight":32,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":7
+                        }],
+                 "type":"stone"
+                }],
          "tilewidth":32
         }, 
         {
@@ -1618,6 +1949,17 @@
          "spacing":0,
          "tilecount":1,
          "tileheight":48,
+         "tiles":[
+                {
+                 "id":0,
+                 "properties":[
+                        {
+                         "name":"size",
+                         "type":"int",
+                         "value":9
+                        }],
+                 "type":"stone"
+                }],
          "tilewidth":32
         }],
  "tilewidth":16,

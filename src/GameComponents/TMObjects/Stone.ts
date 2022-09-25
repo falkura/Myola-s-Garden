@@ -1,12 +1,13 @@
 import { EVENTS } from "../../Events";
 import { IObjectData } from "../../Models";
 import TiledMap from "../../TMCore/TiledMap";
+import TileSet from "../../TMCore/TileSet";
 import { PopupData } from "../../TMObjectPopupController";
-import { BaseTMObject } from "./BaseTMObject";
+import { StaticTMObject } from "./BaseTMObject";
 
-export class Stone extends BaseTMObject {
-    constructor(texture: PIXI.Texture, objectData: IObjectData, map: TiledMap) {
-        super(texture, objectData, map);
+export class Stone extends StaticTMObject {
+    constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
+        super(tileset, objectData, map);
 
         this.sprite.hoverScale = 1.03;
         this.sprite.addPress(this.onPress);

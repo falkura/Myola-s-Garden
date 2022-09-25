@@ -67,7 +67,7 @@ export default class Tile extends PIXI.Container {
 
     addTileComp = (comp: TileComponent) => {
         if (this.additions) {
-            console.error("TileComponent already exist in tile!", this);
+            console.error("TileComponent already exist in tile!\n", this);
             return;
         }
 
@@ -79,7 +79,7 @@ export default class Tile extends PIXI.Container {
 
     removeTileComp = () => {
         if (!this.additions) {
-            console.error("There is no TileComponent in tile!", this);
+            console.error("There is no TileComponent in tile!\n", this);
             return;
         }
 

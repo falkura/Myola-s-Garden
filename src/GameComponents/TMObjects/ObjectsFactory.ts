@@ -1,12 +1,15 @@
 import { IObjectData, TileCompTypes } from "../../Models";
-import { findTileSet } from "../../TMAdditions/TMUtils";
+import { findTileSet, validateGid } from "../../TMAdditions/TMUtils";
 import TiledMap from "../../TMCore/TiledMap";
-import { BaseTMObject } from "./BaseTMObject";
+import { AnimatedDecoration } from "./AnimatedDecoration";
+import { StaticTMObject } from "./BaseTMObject";
 import { Bed } from "./Bed";
 import { Chest } from "./Chest";
+import { Decoration } from "./Decoration";
 import { Roof } from "./Roof";
 import { Stone } from "./Stone";
 import { Wall } from "./Wall";
+import { WaterWave } from "./WaterWave";
 
 export class ObjectsFactory {
     map: TiledMap;
@@ -16,6 +19,8 @@ export class ObjectsFactory {
     }
 
     private getType = (data: IObjectData): TileCompTypes => {
+        if (data.type) return data.type;
+
         let type: TileCompTypes | undefined;
 
         data.properties?.forEach(prop => {
@@ -24,37 +29,67 @@ export class ObjectsFactory {
             }
         });
 
-        if (!type) type = "unknown";
+        if (!type) {
+            const objData = findTileSet(this.map, data.gid)?.getTMObjectData(data.gid);
+            if (objData && objData.type) type = objData.type;
+        }
+
+        if (!type) {
+            console.error("There is no type in tile!\n", data);
+            type = "unknown";
+        }
 
         return type;
     };
 
     createTMObject = (objectData: IObjectData) => {
+        validateGid(objectData);
+
         const type = this.getType(objectData);
         const TS = findTileSet(this.map, objectData.gid);
 
-        let TMObject;
+        let TMObjectConstructor;
 
         switch (type) {
             case "chest":
-                TMObject = new Chest(TS, objectData, this.map);
+                TMObjectConstructor = Chest;
                 break;
+
             case "wall":
-                TMObject = new Wall(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
+                TMObjectConstructor = Wall;
                 break;
+
             case "roof":
-                TMObject = new Roof(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
+                TMObjectConstructor = Roof;
                 break;
+
             case "bed":
-                TMObject = new Bed(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
+                TMObjectConstructor = Bed;
                 break;
+
+            case "decoration":
+                if (TS.getTMObjectData(objectData.gid)?.animation) {
+                    TMObjectConstructor = AnimatedDecoration;
+                } else {
+                    TMObjectConstructor = Decoration;
+                }
+                break;
+
             case "stone":
-                TMObject = new Stone(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
+                TMObjectConstructor = Stone;
                 break;
+
+            case "waterwave":
+                TMObjectConstructor = WaterWave;
+                break;
+
             default:
-                TMObject = new BaseTMObject(TS.textures[objectData.gid - TS.source.firstgid], objectData, this.map);
-                console.error("incorrect type of TMObject");
+                TMObjectConstructor = StaticTMObject;
+                console.error("Incorrect type of TMObject!\n", objectData);
         }
+
+        const TMObject = new TMObjectConstructor(TS, objectData, this.map);
+        TMObject.type = type;
 
         TMObject.sprite.position.set(objectData.x + objectData.width / 2, objectData.y - objectData.height / 2);
 

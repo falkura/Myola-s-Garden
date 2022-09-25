@@ -25,7 +25,7 @@ export class InventoryController extends PIXI.Container {
 
     addChests = () => {
         this.map.objectLayers.chests.forEach(chest => {
-            const list = this.createList(4, 3, `chest_${chest.num}`);
+            const list = this.createList(4, 3, `chest_${chest.props.num}`);
             chest.list = list;
         });
     };

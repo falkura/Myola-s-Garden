@@ -1,24 +1,19 @@
 import anime from "animejs";
 import { EVENTS } from "../../Events";
 import { IObjectData } from "../../Models";
-import { getObjectTileTexture } from "../../TMAdditions/TMUtils";
 import TiledMap from "../../TMCore/TiledMap";
 import TileSet from "../../TMCore/TileSet";
 import { List } from "../List/List";
-import { BaseTMObject } from "./BaseTMObject";
+import { StaticTMObject } from "./BaseTMObject";
 
-export class Chest extends BaseTMObject {
-    tileset: TileSet;
+export class Chest extends StaticTMObject {
     list!: List;
 
     isOpen = false;
-
     inAction = false;
 
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
-        super(getObjectTileTexture(tileset, objectData), objectData, map);
-
-        this.tileset = tileset;
+        super(tileset, objectData, map);
 
         this.sprite.hitArea = new PIXI.Rectangle(
             -this.sprite.width * this.sprite.anchor.x + this.sprite.width / 3,
@@ -33,9 +28,9 @@ export class Chest extends BaseTMObject {
             if (this.inAction) return;
 
             if (this.isOpen) {
-                document.dispatchEvent(new CustomEvent(EVENTS.Actions.Inventory.HideChest, { detail: this.num! }));
+                document.dispatchEvent(new CustomEvent(EVENTS.Actions.Inventory.HideChest, { detail: this.props.num! }));
             } else {
-                document.dispatchEvent(new CustomEvent(EVENTS.Actions.Inventory.ShowChest, { detail: this.num! }));
+                document.dispatchEvent(new CustomEvent(EVENTS.Actions.Inventory.ShowChest, { detail: this.props.num! }));
             }
         });
     }

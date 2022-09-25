@@ -114,7 +114,7 @@ export class ListItem extends PIXI.Container {
 
         this.sprite.width = width;
         this.sprite.height = height;
-        this.sprite.defaultScale = this.sprite.scale.x;
+        this.sprite.defaultScale = this.sprite.scale;
 
         this.countText.scale.set(1 / this.sprite.scale.x);
         this.countText.position.set(this.sprite.width / 2 - this.countText.width / 2, this.countText.height / 2 - 1);

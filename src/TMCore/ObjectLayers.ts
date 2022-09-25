@@ -30,14 +30,14 @@ export class ObjectLayers extends PIXI.Container {
 
             switch (object.type) {
                 case "roof":
-                    if (this.roofs[object.num!]) {
-                        this.roofs[object.num!].push(object);
+                    if (this.roofs[object.props.num!]) {
+                        this.roofs[object.props.num!].push(object);
                     } else {
-                        this.roofs[object.num!] = [object];
+                        this.roofs[object.props.num!] = [object];
                     }
                     break;
                 case "chest":
-                    this.chests[object.num!] = object as Chest;
+                    this.chests[object.props.num!] = object as Chest;
 
                     break;
 
@@ -46,7 +46,7 @@ export class ObjectLayers extends PIXI.Container {
             }
 
             // @TODO need automatization
-            if (object.underroof != undefined) {
+            if (object.props.underroof != undefined) {
                 this.NCController.add(object.sprite as Clickable);
             }
 

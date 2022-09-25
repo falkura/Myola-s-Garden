@@ -5,7 +5,7 @@ export class Clickable extends PIXI.AnimatedSprite {
     pressEvents: Array<{ (e: InteractionEvent): void }> = [];
     hoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     unhoverEvents: Array<{ (e: InteractionEvent): void }> = [];
-    defaultScale = 1;
+    defaultScale = new PIXI.Point(1, 1);
     /** Default: 1.1 */
     hoverScale = 1.1;
     isActive = true;
@@ -84,7 +84,7 @@ export class Clickable extends PIXI.AnimatedSprite {
     };
 
     pressEvent = (e: InteractionEvent) => {
-        this.scale.set(this.defaultScale);
+        this.scale.set(this.defaultScale.x, this.defaultScale.y);
 
         this.pressEvents.forEach(callback => {
             callback(e);
@@ -92,7 +92,7 @@ export class Clickable extends PIXI.AnimatedSprite {
     };
 
     unpressEvent = (e: InteractionEvent) => {
-        this.scale.set(this.defaultScale);
+        this.scale.set(this.defaultScale.x, this.defaultScale.y);
         if (this.disableUnpress) return;
 
         if (this.is_hovered && this.hoverAfterUp) {
@@ -104,7 +104,7 @@ export class Clickable extends PIXI.AnimatedSprite {
 
     hoverEvent = (e: InteractionEvent) => {
         this.is_hovered = true;
-        this.scale.set(this.defaultScale * this.hoverScale);
+        this.scale.set(this.defaultScale.x * this.hoverScale, this.defaultScale.y * this.hoverScale);
 
         this.hoverEvents.forEach(callback => {
             // callback.apply(this);
@@ -114,7 +114,7 @@ export class Clickable extends PIXI.AnimatedSprite {
 
     unhoverEvent = (e: InteractionEvent) => {
         this.is_hovered = false;
-        this.scale.set(this.defaultScale);
+        this.scale.set(this.defaultScale.x, this.defaultScale.y);
 
         this.unhoverEvents.forEach(callback => {
             callback(e);

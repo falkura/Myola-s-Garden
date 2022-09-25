@@ -39,6 +39,26 @@ export function getTopTile(map: TiledMap, x: number, y: number): Tile {
     return res;
 }
 
+export function getObjectTileTexture(ts: TileSet, data: IObjectData) {
+    return ts.textures[data.gid - ts.source.firstgid];
+}
+
+// Boooriiing
+export function validateGid(data: IObjectData) {
+    if (data.gid > 3221225472) {
+        data.gid -= 3221225472;
+        data.translate = new PIXI.Point(-1, -1);
+    } else if (data.gid > 2147483648) {
+        data.gid -= 2147483648;
+        data.translate = new PIXI.Point(-1, 1);
+    } else if (data.gid > 1073741824) {
+        data.gid -= 1073741824;
+        data.translate = new PIXI.Point(1, -1);
+    } else {
+        data.translate = new PIXI.Point(1, 1);
+    }
+}
+
 export function getItemByName() {}
 
 /**
@@ -94,8 +114,4 @@ export function GetTileTextureId(field: unknown[][]): number {
     });
 
     return result;
-}
-
-export function getObjectTileTexture(ts: TileSet, data: IObjectData) {
-    return ts.textures[data.gid - ts.source.firstgid];
 }
