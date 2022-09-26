@@ -1,7 +1,9 @@
+import { EVENTS } from "../../Events";
 import { IObjectData, ITile, ObjectProps, TileCompTypes } from "../../Models";
 import { getObjectTileTexture } from "../../TMAdditions/TMUtils";
 import TiledMap from "../../TMCore/TiledMap";
 import TileSet from "../../TMCore/TileSet";
+import { PopupData } from "../../TMObjectPopupController";
 import { Clickable } from "../Clickable";
 
 export class BaseTMObject {
@@ -37,6 +39,18 @@ export class BaseTMObject {
 
         this.sprite.visible = this.source.visible;
         this.sprite.rotation = this.source.rotation * (Math.PI / 180);
+    };
+
+    protected showPopup = (title?: string, buttons?: { [key: string]: () => void }) => {
+        const event = new CustomEvent<PopupData>(EVENTS.Actions.TMObject.Press, {
+            detail: {
+                target: this,
+                title: title,
+                buttons: buttons,
+            },
+        });
+
+        document.dispatchEvent(event);
     };
 
     public destroy = () => {

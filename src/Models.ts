@@ -144,10 +144,12 @@ export interface ITileConstructInfo extends ITileConfig {
     props?: ITile;
 }
 
+export type TreeTypes = "default" | "apple";
 export interface ObjectProps {
     type?: string;
     num?: number;
     underroof?: boolean;
+    kind?: TreeTypes;
 }
 
 export interface ObjectPropsRaw {
@@ -255,4 +257,16 @@ export interface IScreen {
     hide: () => void;
 }
 
-export type TileCompTypes = "dirt" | "plant" | "chest" | "wall" | "roof" | "unknown" | "bed" | "stone" | "decoration" | "waterwave";
+export type TileCompTypes =
+    | "dirt"
+    | "plant"
+    | "chest"
+    | "wall"
+    | "roof"
+    | "unknown"
+    | "bed"
+    | "stone"
+    | "decoration"
+    | "waterwave"
+    | "tree"
+    | "bridge";

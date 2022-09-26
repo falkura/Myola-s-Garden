@@ -4,10 +4,13 @@ import TiledMap from "../../TMCore/TiledMap";
 import { AnimatedDecoration } from "./AnimatedDecoration";
 import { StaticTMObject } from "./BaseTMObject";
 import { Bed } from "./Bed";
+import { Bridge } from "./Bridge";
 import { Chest } from "./Chest";
 import { Decoration } from "./Decoration";
+import { Dirt } from "./Dirt";
 import { Roof } from "./Roof";
 import { Stone } from "./Stone";
+import { Tree } from "./Tree";
 import { Wall } from "./Wall";
 import { WaterWave } from "./WaterWave";
 
@@ -83,9 +86,21 @@ export class ObjectsFactory {
                 TMObjectConstructor = WaterWave;
                 break;
 
+            case "tree":
+                TMObjectConstructor = Tree;
+                break;
+
+            case "dirt":
+                TMObjectConstructor = Dirt;
+                break;
+
+            case "bridge":
+                TMObjectConstructor = Bridge;
+                break;
+
             default:
                 TMObjectConstructor = StaticTMObject;
-                console.error("Incorrect type of TMObject!\n", objectData);
+                console.error(`Incorrect type of TMObject! (${type})\n`, objectData);
         }
 
         const TMObject = new TMObjectConstructor(TS, objectData, this.map);

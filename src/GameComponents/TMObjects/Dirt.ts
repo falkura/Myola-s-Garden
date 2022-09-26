@@ -3,16 +3,17 @@ import TiledMap from "../../TMCore/TiledMap";
 import TileSet from "../../TMCore/TileSet";
 import { StaticTMObject } from "./BaseTMObject";
 
-export class Stone extends StaticTMObject {
+export class Dirt extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
-        this.sprite.hoverScale = 1.03;
+        this.sprite.hoverScale = 1;
+        this.sprite.addHoverHighlight();
         this.sprite.addPress(this.onPress);
     }
 
     onPress = () => {
-        const title = "This is stone!";
+        const title = "This is dirt!";
         const button = {
             "  Log  ": () => {
                 console.log(this);

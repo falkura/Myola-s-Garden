@@ -74,7 +74,7 @@ export class TMObjectPopupController extends PIXI.Container {
         if (this.target) {
             this.popup.position.set(
                 this.target.sprite.getGlobalPosition().x - this.popup.width / 2,
-                this.target.sprite.getBounds().y - this.target.sprite.height + this.target.sprite.height / 2 - this.popup.height,
+                this.target.sprite.getBounds().y - this.popup.height,
             );
         }
     };

@@ -41,7 +41,7 @@ export class InventoryController extends PIXI.Container {
     constructInventory = () => {
         this.inventory = this.createList(8, 1, "inventoryBar");
         this.inventory.position.set(400, 900);
-        this.inventory.visible = true;
+        // this.inventory.visible = true;
     };
 
     getListByName = (name: string) => {

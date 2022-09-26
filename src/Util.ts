@@ -96,3 +96,47 @@ export function logImage(target: PIXI.Container, app: PIXI.Application, quality 
     console.log("%c ", style);
     console.groupEnd();
 }
+
+export function genHitmap(baseTex: PIXI.BaseTexture, threshold = 255): Uint32Array | undefined {
+    //check sprite props
+    if (!baseTex.resource) {
+        //renderTexture
+        return;
+    }
+    const imgSource = (baseTex.resource as PIXI.resources.Resource & { source: HTMLImageElement }).source;
+    let canvas = null;
+    if (!imgSource) {
+        return;
+    }
+    let context = null;
+    if (imgSource instanceof Image) {
+        canvas = document.createElement("canvas");
+        canvas.width = imgSource.width;
+        canvas.height = imgSource.height;
+        context = canvas.getContext("2d")!;
+        context.drawImage(imgSource, 0, 0);
+    } else {
+        //unknown source;
+        return;
+    }
+
+    const w = canvas.width;
+    const h = canvas.height;
+    const imageData = context.getImageData(0, 0, w, h);
+    //create array
+    const hitmap = new Uint32Array(Math.ceil((w * h) / 32));
+    //fill array
+    for (let i = 0; i < w * h; i++) {
+        //lower resolution to make it faster
+        const ind1 = i % 32;
+        const ind2 = (i / 32) | 0;
+        //check every 4th value of image data (alpha number; opacity of the pixel)
+        //if it's visible add to the array
+        if (imageData.data[i * 4 + 3] >= threshold) {
+            hitmap[ind2] = hitmap[ind2] | (1 << ind1);
+            // console.log(`hitmap[${ind2}]:`, hitmap[ind2]);
+        }
+    }
+
+    return hitmap;
+}

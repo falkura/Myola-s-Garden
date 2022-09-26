@@ -10,9 +10,13 @@ export class Clickable extends PIXI.AnimatedSprite {
     hoverScale = 1.1;
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;
-    /** Dispatch hover event if mouse is over the sprite after click */
+    /** Dispatch hover event if mouse is over the sprite after click
+     *
+     * Default: true
+     */
     hoverAfterUp = true;
     disableUnpress = false;
+    hoverFilter: PIXI.filters.ColorMatrixFilter | undefined;
 
     constructor(...textures: PIXI.Texture[]) {
         super([...textures]);
@@ -106,6 +110,8 @@ export class Clickable extends PIXI.AnimatedSprite {
         this.is_hovered = true;
         this.scale.set(this.defaultScale.x * this.hoverScale, this.defaultScale.y * this.hoverScale);
 
+        if (this.hoverFilter) this.filters = [this.hoverFilter];
+
         this.hoverEvents.forEach(callback => {
             // callback.apply(this);
             callback(e);
@@ -115,6 +121,8 @@ export class Clickable extends PIXI.AnimatedSprite {
     unhoverEvent = (e: InteractionEvent) => {
         this.is_hovered = false;
         this.scale.set(this.defaultScale.x, this.defaultScale.y);
+
+        this.filters = [];
 
         this.unhoverEvents.forEach(callback => {
             callback(e);
@@ -127,6 +135,15 @@ export class Clickable extends PIXI.AnimatedSprite {
 
     enableHoverScale = () => {
         this.hoverScale = 1.1;
+    };
+
+    addHoverHighlight = (amount = 0.5) => {
+        this.hoverFilter = new PIXI.filters.ColorMatrixFilter();
+        this.hoverFilter.saturate(amount);
+    };
+
+    removeHoverHighlight = () => {
+        this.hoverFilter = undefined;
     };
 
     cleanUp = () => {
