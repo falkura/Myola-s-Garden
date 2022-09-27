@@ -1,4 +1,5 @@
 import { ITile, ITileAnimation, ITileConfig, ITileLayerData, ITileset } from "../Models";
+import { core } from "../PIXI/core";
 import TileComponent from "./TileComponent";
 import TileSet from "./TileSet";
 
@@ -9,7 +10,7 @@ export default class Tile extends PIXI.Container {
     _x!: number;
     _y!: number;
 
-    sprite!: PIXI.AnimatedSprite; // external constructor
+    sprite!: core.AnimatedSprite; // external constructor
     additions?: TileComponent;
 
     constructor(tileSet: TileSet, tileConfig: ITileConfig, layerData: ITileLayerData) {
@@ -61,7 +62,7 @@ export default class Tile extends PIXI.Container {
 
         if (textures[0] === undefined) console.error("There is no textures for tile");
 
-        this.sprite = new PIXI.AnimatedSprite(textures);
+        this.sprite = new core.AnimatedSprite(textures);
         // this.sprite.textures = textures; // I dono why i did it
     };
 

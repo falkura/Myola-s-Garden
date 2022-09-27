@@ -1,4 +1,6 @@
-export class BaseComponent extends PIXI.Sprite {
+import { core } from "../../PIXI/core";
+
+export class BaseComponent extends core.Sprite {
     protected defaultScale = { x: 1, y: 1 };
 
     constructor(texture: PIXI.Texture) {

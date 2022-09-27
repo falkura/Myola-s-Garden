@@ -3,6 +3,7 @@ import { Config } from "../Config";
 import { EVENTS } from "../Events";
 import { Global_Vars } from "../GlobalVariables";
 import { IScreen } from "../Models";
+import { core } from "../PIXI/core";
 import { ResourceController } from "../ResourceLoader";
 import { Button } from "./Components/Button";
 import { Plate } from "./Components/Plate";
@@ -18,7 +19,7 @@ export type ScreensArray = Array<PIXI.Container & IScreen>;
 export class GuiController {
     app: PIXI.Application;
     container: PIXI.Container = new PIXI.Container();
-    bg!: PIXI.Sprite;
+    bg!: core.Sprite;
     btn!: Button;
     plate!: Plate;
     screens: ScreensArray = [];

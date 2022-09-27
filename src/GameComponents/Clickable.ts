@@ -1,6 +1,7 @@
 import { InteractionEvent } from "pixi.js";
+import { core } from "../PIXI/core";
 
-export class Clickable extends PIXI.AnimatedSprite {
+export class Clickable extends core.AnimatedSprite {
     is_hovered = false;
     pressEvents: Array<{ (e: InteractionEvent): void }> = [];
     hoverEvents: Array<{ (e: InteractionEvent): void }> = [];
@@ -137,9 +138,9 @@ export class Clickable extends PIXI.AnimatedSprite {
         this.hoverScale = 1.1;
     };
 
-    addHoverHighlight = (amount = 0.5) => {
+    addHoverHighlight = (amount = 0.5, multipliy = false) => {
         this.hoverFilter = new PIXI.filters.ColorMatrixFilter();
-        this.hoverFilter.saturate(amount);
+        this.hoverFilter.saturate(amount, multipliy);
     };
 
     removeHoverHighlight = () => {

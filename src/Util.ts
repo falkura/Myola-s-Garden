@@ -97,13 +97,49 @@ export function logImage(target: PIXI.Container, app: PIXI.Application, quality 
     console.groupEnd();
 }
 
-export function genHitmap(baseTex: PIXI.BaseTexture, threshold = 255): Uint32Array | undefined {
+export function genSimpleHitarea(texture: PIXI.Texture): PIXI.Rectangle {
+    const src = (texture.baseTexture.resource as PIXI.resources.Resource & { source: HTMLImageElement }).source;
+    const ctx = document.createElement("canvas").getContext("2d")!;
+    ctx.drawImage(src, 0, 0, src.width, src.height);
+    const data = ctx.getImageData(texture.frame.x, texture.frame.y, texture.frame.width, texture.frame.height);
+    const result: number[] = [];
+    data.data.forEach((el, i) => {
+        if (i !== 0 && (i + 1) % 4 === 0) result.push(el === 0 ? 0 : 1);
+    });
+    const mtrx = [];
+    const size = texture.frame.width;
+    for (let i = 0; i < size; i++) {
+        mtrx[i] = result.slice(i * size, i * size + size);
+    }
+    let x = size;
+    let w = 0;
+    let y = 0;
+    let h = size;
+    mtrx.forEach((r, i) => {
+        if (r.includes(1)) {
+            if (y === 0) y = i;
+            h = i;
+            const li = r.lastIndexOf(1);
+            if (li + 1 > w) w = li + 1;
+            if (r.indexOf(1) < x) x = r.indexOf(1);
+        }
+    });
+    y -= 1; // WHY MINUS 1 ????
+    h -= y - 1; // WHY PLUS 1 ????
+    w -= x;
+    mtrx.getMatrixSlise(x, y, w, h).logMatrix("Hit Area");
+    console.log(x, y, w, h);
+
+    return new PIXI.Rectangle(x, y, w, h);
+}
+
+export function genHitmap(baseTexure: PIXI.BaseTexture, threshold = 255): Uint32Array | undefined {
     //check sprite props
-    if (!baseTex.resource) {
+    if (!baseTexure.resource) {
         //renderTexture
         return;
     }
-    const imgSource = (baseTex.resource as PIXI.resources.Resource & { source: HTMLImageElement }).source;
+    const imgSource = (baseTexure.resource as PIXI.resources.Resource & { source: HTMLImageElement }).source;
     let canvas = null;
     if (!imgSource) {
         return;
@@ -139,4 +175,37 @@ export function genHitmap(baseTex: PIXI.BaseTexture, threshold = 255): Uint32Arr
     }
 
     return hitmap;
+    // Maybe later:)
+
+    // const PPCB = (e: PIXI.InteractionEvent) => {
+    //     if (!e || !e.data) {
+    //         // this.emit(event, fn);
+    //         // fn();
+    //         return;
+    //     }
+    //     const tempPoint = new PIXI.Point(0, 0);
+    //     const point = new PIXI.Point(e.data.global.x, e.data.global.y);
+    //     const hitmap = genHitmap(this.texture.baseTexture)!;
+    //     this.worldTransform.applyInverse(point, tempPoint);
+    //     const width = this.texture.orig.width;
+    //     const height = this.texture.orig.height;
+    //     const x1 = -width * this.anchor.x;
+    //     const y1 = -height * this.anchor.y;
+    //     const tex = this.texture;
+    //     const res = this.texture.baseTexture.resolution;
+    //     const dx = Math.round((tempPoint.x - x1 + tex.frame.x) * res);
+    //     const dy = Math.round((tempPoint.y - y1 + tex.frame.y) * res);
+    //     const ind = dx + dy * this.texture.baseTexture.realWidth;
+    //     const ind1 = ind % 32;
+    //     const ind2 = (ind / 32) | 0;
+    //     const result = (hitmap[ind2] & (1 << ind1)) !== 0;
+    //     console.log(result);
+    //     if (result) {
+    //         // console.log(event, fn);
+    //         // this.emit(event);
+    //         fn();
+    //     }
+    // };
+
+    // this.addListener(event, this.hitMap ? PPCB : fn, context);
 }

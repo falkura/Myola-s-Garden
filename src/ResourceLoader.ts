@@ -3,6 +3,7 @@ import { ANIMATIONS, ATLASES, FONTS, IMAGES, MAPS } from "./Assets";
 import { Global_Vars } from "./GlobalVariables";
 import { SessionConfig } from "./Config";
 import { LoaderScreen } from "./GUI/Screens/LoaderScreen";
+import { core } from "./PIXI/core";
 
 type ResourceType = "preload" | "main";
 export type LoadProcesses = ResourceType | "map";
@@ -66,9 +67,9 @@ class Loader {
         return texture;
     };
 
-    getSprite = (key: string): PIXI.Sprite => {
+    getSprite = (key: string): core.Sprite => {
         const texture = this.getTexture(key);
-        return new PIXI.Sprite(texture);
+        return new core.Sprite(texture);
     };
 
     getSpineData = (key: string): PIXI.spine.core.SkeletonData => {

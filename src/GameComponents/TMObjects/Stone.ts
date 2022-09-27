@@ -7,7 +7,7 @@ export class Stone extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
-        this.sprite.hoverScale = 1.03;
+        this.setHoverEffect("scale", 1.03);
         this.sprite.addPress(this.onPress);
     }
 

@@ -15,13 +15,6 @@ export class Chest extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
-        this.sprite.hitArea = new PIXI.Rectangle(
-            -this.sprite.width * this.sprite.anchor.x + this.sprite.width / 3,
-            -this.sprite.height * this.sprite.anchor.y + this.sprite.height / 3,
-            this.sprite.width / 3,
-            this.sprite.height / 3,
-        );
-
         this.setAnimation();
 
         this.sprite.addPress(() => {

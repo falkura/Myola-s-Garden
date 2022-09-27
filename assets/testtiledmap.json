@@ -467,11 +467,6 @@
                          "name":"type",
                          "type":"string",
                          "value":"stone"
-                        }, 
-                        {
-                         "name":"underroof",
-                         "type":"bool",
-                         "value":true
                         }],
                  "rotation":0,
                  "type":"",

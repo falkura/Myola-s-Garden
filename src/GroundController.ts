@@ -58,7 +58,7 @@ export class GroundController {
         // const targetTile = tilesArr[detail.y][detail.x];
         // if (!targetTile) return;
         // const tileset = this.mapController.map!.getTilesetByName(Other.Grass.tileset)!;
-        // const sprite = new PIXI.AnimatedSprite([tileset.textures[Other.Grass.ids[0]]]);
+        // const sprite = new core.AnimatedSprite([tileset.textures[Other.Grass.ids[0]]]);
         // const filter = new PIXI.filters.ColorMatrixFilter();
         // sprite.filters = [filter];
 

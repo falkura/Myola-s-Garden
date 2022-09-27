@@ -2,6 +2,7 @@ import { Clickable } from "../GameComponents/Clickable";
 import { Chest } from "../GameComponents/TMObjects/Chest";
 import { ObjectsFactory } from "../GameComponents/TMObjects/ObjectsFactory";
 import { Roof } from "../GameComponents/TMObjects/Roof";
+import { Tree } from "../GameComponents/TMObjects/Tree";
 import { IObjectLayerData } from "../Models";
 import { NonClickableController } from "../NonClickableController";
 import TiledMap from "./TiledMap";
@@ -11,6 +12,7 @@ export class ObjectLayers extends PIXI.Container {
     factory: ObjectsFactory;
     roofs: Roof[][] = [];
     chests: Chest[] = [];
+    trees: Tree[] = [];
     NCController: NonClickableController;
 
     constructor(map: TiledMap) {
@@ -36,9 +38,13 @@ export class ObjectLayers extends PIXI.Container {
                         this.roofs[object.props.num!] = [object];
                     }
                     break;
+
                 case "chest":
                     this.chests[object.props.num!] = object as Chest;
+                    break;
 
+                case "tree":
+                    this.trees.push(object as Tree);
                     break;
 
                 default:

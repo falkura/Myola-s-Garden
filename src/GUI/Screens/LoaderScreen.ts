@@ -1,12 +1,13 @@
 import { Config } from "../../Config";
 import { Global_Vars } from "../../GlobalVariables";
 import { IScreen } from "../../Models";
+import { core } from "../../PIXI/core";
 import { LoadProcesses, ResourceController } from "../../ResourceLoader";
 // import { delayedCallback } from "../../Util";
 
 export class LoaderScreen extends PIXI.Container implements IScreen {
-    bg!: PIXI.Sprite;
-    progress!: PIXI.AnimatedSprite;
+    bg!: core.Sprite;
+    progress!: core.AnimatedSprite;
     loadAnimSize = 37;
 
     constructor() {
@@ -30,7 +31,7 @@ export class LoaderScreen extends PIXI.Container implements IScreen {
             return arr;
         };
 
-        this.progress = new PIXI.AnimatedSprite(animArray());
+        this.progress = new core.AnimatedSprite(animArray());
         this.progress.anchor.set(0.5);
         this.progress.scale.set(5);
         this.addChild(this.progress);

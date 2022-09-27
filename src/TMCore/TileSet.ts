@@ -1,13 +1,19 @@
 import * as PIXI from "pixi.js";
 import { ITile, ITileset } from "../Models";
+import { core } from "../PIXI/core";
 import { ResourceController } from "../ResourceLoader";
+import { genSimpleHitarea as genSimpleHitArea } from "../Util";
+
+type ITMObjectData = { [key: number]: ITile | undefined };
+type IHitArea = { [key: number]: PIXI.Rectangle | undefined };
 
 export default class TileSet {
     textures!: PIXI.Texture[];
     baseTexture: PIXI.BaseTexture;
     source: ITileset;
-    /** Check for prop existing first! */
-    private objectsData: { [key: number]: ITile } = {};
+
+    private hitAreasCache: IHitArea = {};
+    private objectsData: ITMObjectData = {};
 
     constructor(tileSet: ITileset) {
         this.source = tileSet;
@@ -38,9 +44,25 @@ export default class TileSet {
         });
     };
 
-    public getTMObjectData = (gid: number): ITile | undefined => {
+    public getTMObjectData = (gid: number): ITMObjectData[number] => {
         const id = gid - this.source.firstgid;
 
         return this.objectsData[id] ? this.objectsData[id] : undefined;
+    };
+
+    public getTMObjectHitArea = (gid: number, sprite?: core.Sprite | core.AnimatedSprite): IHitArea[number] => {
+        const id = gid - this.source.firstgid;
+
+        if (this.hitAreasCache[id]) return this.hitAreasCache[id];
+        if (!sprite) return;
+
+        const hitArea = genSimpleHitArea(sprite.texture);
+
+        hitArea.x -= sprite.width * sprite.anchor.x;
+        hitArea.y -= sprite.height * sprite.anchor.y;
+
+        this.hitAreasCache[id] = hitArea;
+
+        return hitArea;
     };
 }

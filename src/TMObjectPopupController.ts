@@ -72,10 +72,16 @@ export class TMObjectPopupController extends PIXI.Container {
 
     resize = () => {
         if (this.target) {
-            this.popup.position.set(
-                this.target.sprite.getGlobalPosition().x - this.popup.width / 2,
-                this.target.sprite.getBounds().y - this.popup.height,
-            );
+            const hitArea = this.target.tileset.getTMObjectHitArea(this.target.source.gid);
+            let y = 0;
+
+            if (hitArea) {
+                y = this.target.sprite.getGlobalPosition().y - this.popup.height - hitArea.height - 10;
+            } else {
+                y = this.target.sprite.getBounds().y - this.popup.height;
+            }
+
+            this.popup.position.set(this.target.sprite.getGlobalPosition().x - this.popup.width / 2, y);
         }
     };
 }

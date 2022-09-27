@@ -7,8 +7,7 @@ export class Dirt extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
-        this.sprite.hoverScale = 1;
-        this.sprite.addHoverHighlight();
+        this.setHoverEffect("frame");
         this.sprite.addPress(this.onPress);
     }
 

@@ -1,5 +1,6 @@
 import { EVENTS } from "../Events";
 import { IMapData } from "../Models";
+import { core } from "../PIXI/core";
 import { createEmptyMatrix, matrixIterator } from "./MatrixUtils";
 
 export class TMCellMap extends PIXI.Container {
@@ -67,7 +68,7 @@ export class TMCellMap extends PIXI.Container {
     };
 }
 
-class TMCell extends PIXI.Sprite {
+class TMCell extends core.Sprite {
     private mapData: IMapData;
     private _alphaStatic = 0.2;
     private _alphaHover = 0.5;

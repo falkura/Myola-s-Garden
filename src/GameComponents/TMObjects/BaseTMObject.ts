@@ -6,6 +6,8 @@ import TileSet from "../../TMCore/TileSet";
 import { PopupData } from "../../TMObjectPopupController";
 import { Clickable } from "../Clickable";
 
+type HighlightStyles = "scale" | "saturate" | "frame";
+
 export class BaseTMObject {
     map: TiledMap;
     sprite!: Clickable;
@@ -13,6 +15,7 @@ export class BaseTMObject {
     type!: TileCompTypes;
     props: ObjectProps = {};
     tileset: TileSet;
+    private hitAreaHighlight?: PIXI.Graphics;
 
     constructor(texture: PIXI.Texture, tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         this.source = objectData;
@@ -39,6 +42,67 @@ export class BaseTMObject {
 
         this.sprite.visible = this.source.visible;
         this.sprite.rotation = this.source.rotation * (Math.PI / 180);
+
+        this.setHitArea();
+    };
+
+    private createFrameHighlight = (amount = 1, outter = false) => {
+        const hitArea = this.tileset.getTMObjectHitArea(this.source.gid, this.sprite);
+
+        if (!hitArea) {
+            console.error("HitArea not defined!");
+            return;
+        }
+
+        this.hitAreaHighlight = new PIXI.Graphics()
+            .beginFill(0xff0000, 0)
+            .lineStyle(amount, 0xffffff, 1, Number(outter))
+            .drawRect(hitArea.x + amount, hitArea.y + amount, hitArea.width - amount * 2, hitArea.height - amount * 2)
+            .endFill();
+
+        this.hitAreaHighlight.filters = [new PIXI.filters.BlurFilter(2)];
+        this.hitAreaHighlight.visible = false;
+
+        this.sprite.addChild(this.hitAreaHighlight);
+
+        this.sprite.addHover(this.showHighlight);
+        this.sprite.addUnhover(this.hideHighlight);
+    };
+
+    /** @TODO description */
+    protected setHoverEffect = (type: HighlightStyles, amount?: number, additionalParameter?: boolean) => {
+        switch (type) {
+            case "scale":
+                this.sprite.hoverScale = amount || this.sprite.hoverScale;
+                break;
+            case "saturate":
+                this.sprite.hoverScale = 1;
+                this.sprite.addHoverHighlight(amount, additionalParameter);
+                break;
+            case "frame":
+                this.sprite.hoverScale = 1;
+                this.createFrameHighlight(amount, additionalParameter);
+                break;
+        }
+    };
+
+    public showHighlight = () => {
+        if (!this.hitAreaHighlight) return;
+
+        this.hitAreaHighlight.visible = true;
+    };
+
+    public hideHighlight = () => {
+        if (!this.hitAreaHighlight) return;
+
+        this.hitAreaHighlight.visible = false;
+    };
+
+    private setHitArea = () => {
+        const hitArea = this.tileset.getTMObjectHitArea(this.source.gid, this.sprite);
+        if (!hitArea) return;
+
+        this.sprite.hitArea = hitArea;
     };
 
     protected showPopup = (title?: string, buttons?: { [key: string]: () => void }) => {
