@@ -80,8 +80,15 @@ export function pausable_sleep(time: number) {
     };
 }
 
+export function distanceBetweenTwoPoints(point1: PIXI.Point, point2: PIXI.Point): number {
+    const a = point1.x - point2.x;
+    const b = point1.y - point2.y;
+
+    return Math.sqrt(a * a + b * b);
+}
+
 /** LOL IT`S REALLY WORKS */
-export function logImage(target: PIXI.Container, app: PIXI.Application, quality = 1) {
+export function logImage(target: PIXI.Container, app: PIXI.Application, quality = 1, title?: string) {
     const w = target.getLocalBounds().width;
     const h = target.getLocalBounds().height;
 
@@ -92,7 +99,7 @@ export function logImage(target: PIXI.Container, app: PIXI.Application, quality 
         "background: url(" + app.renderer.extract.image(target, "image/png", quality).src + ");",
     ].join(" ");
 
-    console.groupCollapsed("Image Log");
+    console.groupCollapsed(`Image Log${title ? " (" + title + ")" : ""}`);
     console.log("%c ", style);
     console.groupEnd();
 }
@@ -125,10 +132,10 @@ export function genSimpleHitarea(texture: PIXI.Texture): PIXI.Rectangle {
         }
     });
     y -= 1; // WHY MINUS 1 ????
-    h -= y - 1; // WHY PLUS 1 ????
+    h -= y - 1;
     w -= x;
-    mtrx.getMatrixSlise(x, y, w, h).logMatrix("Hit Area");
-    console.log(x, y, w, h);
+    // mtrx.getMatrixSlise(x, y, w, h).logMatrix("Hit Area", true);
+    // console.log(x, y, w, h);
 
     return new PIXI.Rectangle(x, y, w, h);
 }

@@ -1,23 +1,34 @@
-import { Config } from "./Config";
 import { GroundController } from "./GroundController";
 import { InventoryController } from "./InventoryController";
 import { RoofController } from "./RoofController";
+import { TMCamera } from "./TMCamera";
 import TiledMap from "./TMCore/TiledMap";
 import { TMObjectPopupController } from "./TMObjectPopupController";
 import { logImage } from "./Util";
 
 export class MapController {
     app: PIXI.Application;
-    map?: TiledMap;
+    private _map?: TiledMap;
     groundController!: GroundController;
     roofController!: RoofController;
     inventoryController!: InventoryController;
     TMObjectPopupController!: TMObjectPopupController;
     container: PIXI.Container;
+    camera!: TMCamera;
 
     constructor(container: PIXI.Container, app: PIXI.Application) {
         this.container = container;
         this.app = app;
+    }
+
+    public get map(): TiledMap {
+        if (!this._map) throw new Error("NO MAP !!!");
+
+        return this._map;
+    }
+
+    public set map(_map: TiledMap) {
+        this._map = _map;
     }
 
     loadMap = (key: string) => {
@@ -42,9 +53,12 @@ export class MapController {
         this.TMObjectPopupController = new TMObjectPopupController(this.map!);
         this.container.addChild(this.TMObjectPopupController);
 
+        this.camera = new TMCamera(this.map, this.app);
+        this.camera.onResizeCb = this.resize;
+
         this.resize();
 
-        logImage(this.map!, this.app);
+        logImage(this.map!, this.app, undefined, "Map Init");
     };
 
     cleanUp = () => {
@@ -53,22 +67,17 @@ export class MapController {
             this.roofController.cleanUp();
             this.inventoryController.cleanUp();
             this.TMObjectPopupController.cleanUp();
+            this.camera.cleanUp();
 
             this.map.parent.removeChild(this.map);
             this.map.cleanUp();
-            this.map = undefined;
+
+            this._map = undefined;
         }
     };
 
     resize = () => {
-        if (this.map) {
-            this.map.scale.set(
-                Config.project_width / this.map._width > Config.project_height / this.map._height
-                    ? Config.project_width / this.map._width
-                    : Config.project_height / this.map._height,
-            );
-        }
-
+        this.camera?.resize();
         this.inventoryController?.resize();
         this.TMObjectPopupController?.resize();
     };
