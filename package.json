@@ -1,6 +1,6 @@
 {
     "name": "myola-s-garden",
-    "version": "1.0.38",
+    "version": "1.0.39",
     "description": "",
     "main": "src/index.ts",
     "scripts": {
@@ -32,9 +32,7 @@
         "node": ">=16.0.0"
     },
     "dependencies": {
-        "@types/animejs": "^3.1.1",
         "@types/howler": "^2.2.2",
-        "animejs": "^3.2.1",
         "fontfaceobserver": "^2.1.0",
         "howler": "^2.2.1",
         "pixi-spine": "^2.1.10",
@@ -53,6 +51,7 @@
         "eslint": "^8.21.0",
         "eslint-config-prettier": "^8.5.0",
         "eslint-plugin-prettier": "^4.2.1",
+        "gsap": "^3.11.3",
         "husky": "^8.0.1",
         "json-loader": "^0.5.7",
         "lint-staged": "^13.0.3",

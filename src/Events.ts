@@ -46,6 +46,9 @@ export const EVENTS = {
             Hover: "ActionsTMObjectHover",
             Unhover: "ActionsTMObjectUnhover",
         },
+        Dirt: {
+            Seed: "ActionsDirtSeed",
+        },
     },
 
     GUI: {

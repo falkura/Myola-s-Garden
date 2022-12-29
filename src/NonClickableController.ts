@@ -37,6 +37,7 @@ export class NonClickableController {
             }
         } else {
             this.sprites.forEach(sprite => {
+                // TODO add hit area
                 if (sprite.getBounds().contains(e.data.global.x, e.data.global.y)) {
                     this.hoveredSprite = sprite;
                     sprite.emit("pointerover");

@@ -1,4 +1,3 @@
-import anime from "animejs";
 import { EVENTS } from "../../Events";
 import { IObjectData } from "../../Models";
 import TiledMap from "../../TMCore/TiledMap";
@@ -38,12 +37,9 @@ export class Chest extends StaticTMObject {
 
         return new Promise(resolve => {
             this.list.visible = true;
-            anime({
-                targets: this.list,
-                duration: 150,
-                easing: "linear",
-                alpha: [0, 1],
-            });
+            this.list.alpha = 0;
+
+            gsap.to(this.list, { duration: 150 / 1000, ease: "none", alpha: 1 });
 
             this.sprite.onComplete = () => {
                 this.sprite.textures.reverse();
@@ -66,12 +62,11 @@ export class Chest extends StaticTMObject {
 
         return new Promise(resolve => {
             this.list.visible = true;
-            anime({
-                targets: this.list,
-                duration: 150,
-                easing: "linear",
-                alpha: [1, 0],
-                complete: () => {
+            gsap.to(this.list, {
+                duration: 150 / 1000,
+                ease: "none",
+                alpha: 0,
+                onComplete: () => {
                     this.list.visible = false;
                 },
             });

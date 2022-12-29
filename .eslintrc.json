@@ -47,7 +47,6 @@
                 ],
 
                 "no-unreachable": "error",
-                "no-warning-comments": "warn",
                 "no-return-await": "warn",
 
                 "@typescript-eslint/no-empty-function": ["off"],

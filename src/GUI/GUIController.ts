@@ -1,4 +1,3 @@
-import anime from "animejs";
 import { Config } from "../Config";
 import { EVENTS } from "../Events";
 import { Global_Vars } from "../GlobalVariables";
@@ -76,19 +75,10 @@ export class GuiController {
     };
 
     hideAllScreens = () => {
-        return new Promise<void>(resolve => {
-            anime({
-                targets: this.screens,
-                duration: 100,
-                easing: "linear",
-                alpha: [1, 0],
-                complete: () => {
-                    this.screens.forEach(screen => {
-                        screen.hide();
-                        screen.alpha = 1;
-                        resolve();
-                    });
-                },
+        return gsap.to(this.screens, { duration: 100 / 1000, ease: "none", alpha: 0 }).then(() => {
+            this.screens.forEach(screen => {
+                screen.hide();
+                screen.alpha = 1;
             });
         });
     };
@@ -103,14 +93,8 @@ export class GuiController {
 
         this[`${target}Screen`].show();
 
-        anime({
-            targets: this[`${target}Screen`],
-            duration: 100,
-            easing: "linear",
-            alpha: [0, 1],
-            complete: () => {
-                this[`${target}Screen`].alpha = 1;
-            },
+        gsap.to(this[`${target}Screen`], { duration: 100 / 1000, ease: "none", alpha: 1 }).then(() => {
+            this[`${target}Screen`].alpha = 1;
         });
     };
 

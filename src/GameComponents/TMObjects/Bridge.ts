@@ -7,6 +7,7 @@ export class Bridge extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
+        this.setHoverEffect("scale");
         this.sprite.addPress(this.onPress);
     }
 

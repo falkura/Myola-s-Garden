@@ -117,7 +117,7 @@ class Loader {
 
             if (Global_Vars.is_mobile) {
                 assetList[`${type}Mobile`]?.forEach(asset => {
-                    this.loader.add(asset.key, `${SessionConfig.ASSETS_ADDRESS}${asset.path}`);
+                    this.loader.add(asset.key, `${SessionConfig.ASSETS_ADDRESS}${assetList.defaultPath}${asset.path}`);
                 });
             }
         });

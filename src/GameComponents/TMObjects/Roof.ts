@@ -8,7 +8,6 @@ export class Roof extends StaticTMObject {
     constructor(tileset: TileSet, objectData: IObjectData, map: TiledMap) {
         super(tileset, objectData, map);
 
-        this.sprite.hoverScale = 1;
         this.sprite.hoverAfterUp = false;
         this.sprite.cursor = "auto";
         this.sprite.disableUnpress = true;

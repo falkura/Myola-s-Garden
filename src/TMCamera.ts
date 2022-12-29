@@ -1,4 +1,3 @@
-import anime from "animejs";
 import { Config } from "./Config";
 import { BaseTMObject } from "./GameComponents/TMObjects/BaseTMObject";
 import TiledMap from "./TMCore/TiledMap";
@@ -18,7 +17,7 @@ export class TMCamera {
     private lastMapScale = 0;
 
     private cameraMoveProcess?: { destroy: () => void; process: () => void };
-    private cameraMoveAnim?: anime.AnimeInstance;
+    private cameraMoveAnim?: gsap.core.Tween;
 
     public mapScale = 1;
     public onResizeCb?: () => void;
@@ -175,16 +174,15 @@ export class TMCamera {
         } else {
             if (showAnim) {
                 if (this.cameraMoveAnim) this.cameraMoveAnim.pause();
+
                 const dis = distanceBetweenTwoPoints(this.target as unknown as PIXI.Point, point);
                 const duration = clamp(dis / 2, 100, 800);
-
-                this.cameraMoveAnim = anime({
-                    targets: this.target,
+                this.cameraMoveAnim = gsap.to(this.target, {
                     x: point.x,
                     y: point.y,
-                    duration: duration,
-                    easing: "linear",
-                    update: () => {
+                    ease: "none",
+                    duration: duration / 1000,
+                    onUpdate: () => {
                         this.normalizeCameraPostion();
                     },
                 });

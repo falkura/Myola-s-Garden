@@ -1,11 +1,10 @@
-import anime from "animejs";
 import { EVENTS } from "./Events";
 import TiledMap from "./TMCore/TiledMap";
 import { delayedCallback, waitForEvent } from "./Util";
 
 export class RoofController {
     map: TiledMap;
-    hoveredRoofs: anime.AnimeInstance[] = [];
+    hoveredRoofs: gsap.core.Tween[] = [];
 
     constructor(map: TiledMap) {
         this.map = map;
@@ -35,7 +34,7 @@ export class RoofController {
 
         const show = delayedCallback(() => {
             this.showRoof(roofNumber);
-            this.hoveredRoofs[roofNumber] = undefined as unknown as anime.AnimeInstance;
+            this.hoveredRoofs[roofNumber] = undefined as unknown as gsap.core.Tween;
         }, 100);
 
         waitForEvent(EVENTS.Actions.Roof.Hover).then(show.destroy);
@@ -46,12 +45,7 @@ export class RoofController {
 
         const roofArr = this.map.objectLayers.roofs[num].map(_r => _r.sprite);
 
-        return anime({
-            targets: roofArr,
-            duration: 500,
-            easing: "linear",
-            alpha: 0.1,
-        });
+        return gsap.to(roofArr, { alpha: 0.1, ease: "none", duration: 500 / 1000 });
     };
 
     showRoof = (num: number) => {
@@ -59,12 +53,7 @@ export class RoofController {
 
         const roofArr = this.map.objectLayers.roofs[num].map(_r => _r.sprite);
 
-        return anime({
-            targets: roofArr,
-            duration: 500,
-            easing: "linear",
-            alpha: 1,
-        });
+        return gsap.to(roofArr, { alpha: 1, ease: "none", duration: 500 / 1000 });
     };
 
     cleanUp = () => {

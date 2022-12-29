@@ -73,14 +73,12 @@ export class BaseTMObject {
     protected setHoverEffect = (type: HighlightStyles, amount?: number, additionalParameter?: boolean) => {
         switch (type) {
             case "scale":
-                this.sprite.hoverScale = amount || this.sprite.hoverScale;
+                this.sprite.hoverScale = amount || 1.1;
                 break;
             case "saturate":
-                this.sprite.hoverScale = 1;
                 this.sprite.addHoverHighlight(amount, additionalParameter);
                 break;
             case "frame":
-                this.sprite.hoverScale = 1;
                 this.createFrameHighlight(amount, additionalParameter);
                 break;
         }

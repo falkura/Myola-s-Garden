@@ -1,10 +1,14 @@
 import { EVENTS } from "./Events";
+import { SeedOptionsPopup } from "./GameComponents/SeedPopup/SeedOptionsPopup";
 import { BaseTMObject } from "./GameComponents/TMObjects/BaseTMObject";
 import TiledMap from "./TMCore/TiledMap";
 import { TMObjectPopup } from "./TMObjectPopup";
 
-export interface PopupData {
+export interface PopupBase {
     target: BaseTMObject;
+}
+
+export interface PopupData extends PopupBase {
     title?: string;
     buttons?: { [key: string]: () => void };
 }
@@ -12,6 +16,7 @@ export interface PopupData {
 export class TMObjectPopupController extends PIXI.Container {
     map: TiledMap;
     popup!: TMObjectPopup;
+    seedPopup!: SeedOptionsPopup;
     activePopup?: TMObjectPopup;
     target?: BaseTMObject;
 
@@ -19,21 +24,27 @@ export class TMObjectPopupController extends PIXI.Container {
         super();
 
         this.map = map;
-        this.createPopup();
+        this.createPopups();
 
-        document.addEventListener(EVENTS.Actions.TMObject.Press, this.showPopup);
+        document.addEventListener(EVENTS.Actions.TMObject.Press, this.showOptionPopup);
+        document.addEventListener(EVENTS.Actions.Dirt.Seed, this.showSeedPopup);
 
         this.resize();
     }
 
-    createPopup = () => {
+    createPopups = () => {
         this.popup = new TMObjectPopup(this.map);
         this.popup.position.set(100, 100);
         this.addChild(this.popup);
+
+        this.seedPopup = new SeedOptionsPopup(this.map);
+        this.seedPopup.position.set(100, 100);
+        this.addChild(this.seedPopup);
     };
 
-    showPopup = async (e: Event) => {
-        await this.popup.hide();
+    showOptionPopup = async (e: Event) => {
+        await this.hidePopup();
+
         this.popup.clearPopup();
 
         const detail = (e as CustomEvent<PopupData>).detail;
@@ -59,15 +70,38 @@ export class TMObjectPopupController extends PIXI.Container {
             document.removeEventListener(EVENTS.Map.Click, this.hidePopup);
 
             this.target = undefined;
-            this.popup.hide()?.then(() => {
-                // this.popup.clearPopup();
-            });
+            return this.popup.hide();
         }
+
+        if (this.seedPopup.isShown) {
+            document.removeEventListener(EVENTS.Map.Click, this.hidePopup);
+
+            this.target = undefined;
+            return this.seedPopup.hide();
+        }
+
+        return Promise.resolve();
+    };
+
+    showSeedPopup = async (e: Event) => {
+        await this.hidePopup();
+
+        const detail = (e as CustomEvent<PopupBase>).detail;
+        this.target = detail.target;
+
+        this.seedPopup.show()?.then(() => {
+            document.addEventListener(EVENTS.Map.Click, this.hidePopup);
+        });
+
+        this.resize();
     };
 
     cleanUp = () => {
-        document.removeEventListener(EVENTS.Actions.TMObject.Press, this.showPopup);
+        document.removeEventListener(EVENTS.Actions.TMObject.Press, this.showOptionPopup);
+        document.removeEventListener(EVENTS.Actions.Dirt.Seed, this.showSeedPopup);
+
         this.popup.cleanUp();
+        this.seedPopup.cleanUp();
     };
 
     resize = () => {
@@ -82,6 +116,8 @@ export class TMObjectPopupController extends PIXI.Container {
             }
 
             this.popup.position.set(this.target.sprite.getGlobalPosition().x - this.popup.width / 2, y);
+
+            this.seedPopup.position.set(this.target.sprite.getGlobalPosition().x, this.target.sprite.getGlobalPosition().y);
         }
     };
 }

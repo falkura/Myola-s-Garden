@@ -7,8 +7,7 @@ export class Clickable extends core.AnimatedSprite {
     hoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     unhoverEvents: Array<{ (e: InteractionEvent): void }> = [];
     defaultScale = new PIXI.Point(1, 1);
-    /** Default: 1.1 */
-    hoverScale = 1.1;
+    hoverScale = 1;
     isActive = true;
     deactivateFilter: PIXI.filters.ColorMatrixFilter;
     /** Dispatch hover event if mouse is over the sprite after click

@@ -1,4 +1,3 @@
-import anime from "animejs";
 import { Button } from "./GUI/Components/Button";
 import { TextStyles } from "./TextStyles";
 import TiledMap from "./TMCore/TiledMap";
@@ -22,6 +21,7 @@ export class TMObjectPopup extends PIXI.Container {
 
         this.createPopup();
         this.visible = false;
+        this.alpha = 0;
     }
 
     createPopup = () => {
@@ -57,10 +57,10 @@ export class TMObjectPopup extends PIXI.Container {
         this.updateGraphics();
     };
 
-    addButtons = (...args: Array<{ [key: string]: () => void }>) => {
-        args.forEach(buttonConfig => {
-            const label = Object.keys(buttonConfig)[0];
-            const cb = Object.values(buttonConfig)[0];
+    addButtons = (buttons: { [key: string]: () => void }) => {
+        Object.entries(buttons).forEach(buttonConfig => {
+            const label = buttonConfig[0];
+            const cb = buttonConfig[1];
 
             const button = new Button("empty_long_on", "empty_long_off").setText(label).setScale(1.2);
             button.callback = cb;
@@ -133,39 +133,21 @@ export class TMObjectPopup extends PIXI.Container {
     show = () => {
         if (this.isShown) return;
 
-        return new Promise<void>(resolve => {
-            this.visible = true;
+        this.visible = true;
 
-            anime({
-                targets: this,
-                duration: 100,
-                easing: "linear",
-                alpha: [0, 1],
-                complete: () => {
-                    this.isShown = true;
-                    resolve();
-                },
-            });
+        return gsap.to(this, { duration: 100 / 1000, ease: "none", alpha: 1 }).then(() => {
+            this.isShown = true;
         });
     };
 
     hide = () => {
         if (!this.isShown) return;
 
-        return new Promise<void>(resolve => {
-            this.visible = true;
+        this.visible = true;
 
-            anime({
-                targets: this,
-                duration: 100,
-                easing: "linear",
-                alpha: [1, 0],
-                complete: () => {
-                    this.isShown = false;
-                    this.visible = false;
-                    resolve();
-                },
-            });
+        return gsap.to(this, { duration: 100 / 1000, ease: "none", alpha: 0 }).then(() => {
+            this.isShown = false;
+            this.visible = false;
         });
     };
 

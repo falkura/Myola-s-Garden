@@ -1,8 +1,10 @@
 import "pixi-spine";
-import packageInfo from "../package.json";
-import { App } from "./App";
-import "./TMAdditions/MatrixUtils";
+import "gsap";
 import "./GameConfigs/Globals";
+import "./TMAdditions/MatrixUtils";
+import packageInfo from "../package.json";
+
+import { App } from "./App";
 
 declare const __ENVIRONMENT__: string;
 
